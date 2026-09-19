@@ -10,10 +10,17 @@ public class CommandInput : MonoBehaviour
     {
         string command = inputField.text.Trim().ToLower();
 
-        if (command.Contains("move"))
+        if (command.Contains("call"))
         {
-            simulationController.MoveForward();
-            Debug.Log("Move command detected!");
+            simulationController.RecursiveCall();
+        }
+        else if (command.Contains("base"))
+        {
+            simulationController.ReachBaseCase();
+        }
+        else if (command.Contains("return"))
+        {
+            simulationController.ReturnFromCall();
         }
         else
         {
