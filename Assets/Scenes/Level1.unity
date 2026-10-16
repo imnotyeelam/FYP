@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: dc6d2a2bb41c2a243abf7fc015fbd57b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
+  runSpeed: 7
   rotationSpeed: 10
   gravity: -9.81
   cameraTransform: {fileID: 0}
@@ -602,6 +603,7 @@ GameObject:
   - component: {fileID: 1237068110}
   - component: {fileID: 1237068109}
   - component: {fileID: 1237068108}
+  - component: {fileID: 1237068111}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -622,9 +624,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
+  runSpeed: 7
   rotationSpeed: 10
   gravity: -9.81
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 961739753}
 --- !u!143 &1237068109
 CharacterController:
   m_ObjectHideFlags: 0
@@ -666,6 +669,22 @@ Transform:
   - {fileID: 4463868785089012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1237068111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237068107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ce327cbe0895e44a45b580f196e915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 95538263298317508}
+  walkSpeed: 4
+  runSpeed: 7
+  smoothTime: 0.1
 --- !u!1 &1003640976327260
 GameObject:
   m_ObjectHideFlags: 0
@@ -3116,7 +3135,7 @@ Animator:
   m_GameObject: {fileID: 1248815378514924}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: bed7a092d53e7c748bd65db98cebf9d6, type: 3}
-  m_Controller: {fileID: 9100000, guid: 2890c9060ce4f6b45b4082d87f47b27e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8452ee705878f944880c354de91de6ed, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
