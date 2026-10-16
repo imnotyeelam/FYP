@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 4f;
+    public float runSpeed = 7f;
     public float rotationSpeed = 10f;
     public float gravity = -9.81f;
 
@@ -83,8 +84,17 @@ public class PlayerMovement : MonoBehaviour
 
         verticalVelocity += gravity * Time.deltaTime;
 
+        bool isRunning =
+        Cursor.lockState == CursorLockMode.Locked &&
+        Keyboard.current != null &&
+        (Keyboard.current.leftShiftKey.isPressed ||
+        Keyboard.current.rightShiftKey.isPressed);
+
+        float currentMoveSpeed =
+            isRunning ? runSpeed : moveSpeed;
+
         Vector3 velocity =
-            movement * moveSpeed +
+            movement * currentMoveSpeed +
             Vector3.up * verticalVelocity;
 
         controller.Move(velocity * Time.deltaTime);
