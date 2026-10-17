@@ -13,46 +13,47 @@ public class BaseCaseChallenge : MonoBehaviour
 
     public void CheckAnswer()
     {
+        Debug.Log("NEW CheckAnswer() CALLED!");
+
         if (answerInput == null || feedbackText == null)
         {
-            Debug.LogError("Challenge UI references missing!");
+            Debug.LogError("Missing UI references!");
             return;
         }
+         
+        string playerAnswer = answerInput.text;
 
-        string answer = answerInput.text
-            .Replace(" ", "")
-            .Replace("\t", "")
-            .Replace("\n", "")
-            .Replace("\r", "")
-            .TrimEnd(':');
+        Debug.Log("Player submitted: " + playerAnswer);
 
-        if (answer == "n==0" || answer == "0==n")
+        bool isCorrect =
+            CodeValidator.ValidateBaseCase(playerAnswer);
+
+        if (isCorrect)
         {
+            feedbackText.color = new Color(
+                0.1f, 0.5f, 0.2f
+            );
+
             feedbackText.text =
-                "Correct! The base case stops recursion when n reaches 0.";
+                "Correct! The spell stops when n reaches 0.";
 
-            feedbackText.color = Color.green;
+            Debug.Log("Base Case Challenge Completed!");
 
-            Debug.Log("Base case challenge completed!");
-
-            if (portalInteraction != null)
-                portalInteraction.CompletePortal();
+            // We will activate the portal after
+            // showing the explanation to the player.
         }
         else
         {
+            feedbackText.color = new Color(
+                0.7f, 0.2f, 0.2f
+            );
+
             feedbackText.text =
-                "Not quite! Think about when the recursive calls should stop.";
+                "Analyzing your spell...";
 
-            feedbackText.color = Color.red;
+            Debug.Log("Incorrect answer: " + playerAnswer);
+
+            // AI Feedback will be added here.
         }
-    }
-
-    public void ResetChallenge()
-    {
-        if (answerInput != null)
-            answerInput.text = "";
-
-        if (feedbackText != null)
-            feedbackText.text = "";
     }
 }
