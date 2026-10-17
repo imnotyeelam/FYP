@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class PortalInteraction : MonoBehaviour
 {
+    public CursorManager cursorManager;
+
     [Header("References")]
     public Transform player;
     public GameObject interactionHint;
@@ -59,6 +61,9 @@ public class PortalInteraction : MonoBehaviour
     {
         challengeOpen = true;
 
+        if (cursorManager != null)
+            cursorManager.allowCursorLock = false;
+
         if (interactionHint != null)
             interactionHint.SetActive(false);
 
@@ -75,6 +80,9 @@ public class PortalInteraction : MonoBehaviour
     {
         challengeOpen = false;
 
+        if (cursorManager != null)
+            cursorManager.allowCursorLock = true;
+
         if (challengePanel != null)
             challengePanel.SetActive(false);
 
@@ -86,6 +94,9 @@ public class PortalInteraction : MonoBehaviour
     {
         portalCompleted = true;
         challengeOpen = false;
+
+        if (cursorManager != null)
+            cursorManager.allowCursorLock = true;
 
         if (challengePanel != null)
             challengePanel.SetActive(false);

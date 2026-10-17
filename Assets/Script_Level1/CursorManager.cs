@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class CursorManager : MonoBehaviour
 {
     public bool lockCursorOnStart = false;
+    public bool allowCursorLock = true;
 
     void Start()
     {
@@ -19,7 +20,8 @@ public class CursorManager : MonoBehaviour
             SetCursorLock(false);
         }
 
-        if (Mouse.current != null &&
+        if (allowCursorLock &&
+            Mouse.current != null &&
             Mouse.current.leftButton.wasPressedThisFrame &&
             Cursor.lockState != CursorLockMode.Locked)
         {
