@@ -8,28 +8,44 @@ public class BaseCaseChallenge : MonoBehaviour
     public TMP_InputField answerInput;
     public TMP_Text feedbackText;
 
-    [Header("Portal Reference")]
+    [Header("Game References")]
     public PortalInteraction portalInteraction;
+    public AIFeedbackManager aiFeedbackManager;
+
+    private bool isGeneratingFeedback = false;
+    private bool challengeCompleted = false;
 
     public void CheckAnswer()
     {
-        Debug.Log("NEW CheckAnswer() CALLED!");
+        Debug.Log("CheckAnswer() CALLED!");
 
         if (answerInput == null || feedbackText == null)
         {
             Debug.LogError("Missing UI references!");
             return;
         }
-         
-        string playerAnswer = answerInput.text;
+
+        if (isGeneratingFeedback || challengeCompleted)
+            return;
+
+        string playerAnswer = answerInput.text.Trim();
 
         Debug.Log("Player submitted: " + playerAnswer);
+
+        if (string.IsNullOrWhiteSpace(playerAnswer))
+        {
+            feedbackText.text =
+                "Please enter a base case condition.";
+            return;
+        }
 
         bool isCorrect =
             CodeValidator.ValidateBaseCase(playerAnswer);
 
         if (isCorrect)
         {
+            challengeCompleted = true;
+
             feedbackText.color = new Color(
                 0.1f, 0.5f, 0.2f
             );
@@ -39,21 +55,39 @@ public class BaseCaseChallenge : MonoBehaviour
 
             Debug.Log("Base Case Challenge Completed!");
 
-            // We will activate the portal after
-            // showing the explanation to the player.
+            // Portal activation will be added later.
         }
         else
         {
+            if (aiFeedbackManager == null)
+            {
+                Debug.LogError(
+                    "AI Feedback Manager is not assigned!"
+                );
+                feedbackText.text =
+                    "Magic Tutor is unavailable.";
+                return;
+            }
+
+            isGeneratingFeedback = true;
+
             feedbackText.color = new Color(
-                0.7f, 0.2f, 0.2f
+                0.4f, 0.2f, 0.1f
             );
 
             feedbackText.text =
-                "Analyzing your spell...";
+                "The Magic Tutor is analyzing your spell...";
 
-            Debug.Log("Incorrect answer: " + playerAnswer);
-
-            // AI Feedback will be added here.
+            StartCoroutine(
+                aiFeedbackManager.GenerateFeedback(
+                    playerAnswer,
+                    feedback =>
+                    {
+                        feedbackText.text = feedback;
+                        isGeneratingFeedback = false;
+                    }
+                )
+            );
         }
     }
 }
