@@ -7,6 +7,8 @@ public class BaseCaseChallenge : MonoBehaviour
     [Header("UI References")]
     public TMP_InputField answerInput;
     public TMP_Text feedbackText;
+    public GameObject submitButton;
+    public GameObject continueButton;
 
     [Header("Game References")]
     public PortalInteraction portalInteraction;
@@ -14,6 +16,12 @@ public class BaseCaseChallenge : MonoBehaviour
 
     private bool isGeneratingFeedback = false;
     private bool challengeCompleted = false;
+
+    void Start()
+    {
+        if (continueButton != null)
+            continueButton.SetActive(false);
+    }
 
     public void CheckAnswer()
     {
@@ -45,6 +53,12 @@ public class BaseCaseChallenge : MonoBehaviour
         if (isCorrect)
         {
             challengeCompleted = true;
+
+            if (submitButton != null)
+                submitButton.SetActive(false);
+
+            if (continueButton != null)
+                continueButton.SetActive(true);
 
             feedbackText.color = new Color(
                 0.1f, 0.5f, 0.2f
