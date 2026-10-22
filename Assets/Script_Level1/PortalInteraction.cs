@@ -62,7 +62,7 @@ public class PortalInteraction : MonoBehaviour
         challengeOpen = true;
 
         if (cursorManager != null)
-            cursorManager.allowCursorLock = false;
+            CursorManager.allowCursorLock = false;
 
         if (interactionHint != null)
             interactionHint.SetActive(false);
@@ -81,7 +81,7 @@ public class PortalInteraction : MonoBehaviour
         challengeOpen = false;
 
         if (cursorManager != null)
-            cursorManager.allowCursorLock = true;
+            CursorManager.allowCursorLock = true;
 
         if (challengePanel != null)
             challengePanel.SetActive(false);
@@ -96,7 +96,7 @@ public class PortalInteraction : MonoBehaviour
         challengeOpen = false;
 
         if (cursorManager != null)
-            cursorManager.allowCursorLock = true;
+            CursorManager.allowCursorLock = true;
 
         if (challengePanel != null)
             challengePanel.SetActive(false);
