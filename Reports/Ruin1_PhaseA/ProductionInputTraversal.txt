@@ -1,0 +1,6 @@
+PRODUCTION PlayerMovement.Update, actual Player CharacterController, real Play Mode frames, virtual WASD/Shift keyboard; no movement/controller settings changed.
+PASS walk 4 forward end=(-432.1000, 52.8548, 204.9231) seconds=38.73 maxUngroundedSeconds=0.016 maxPivotHeightAboveSurface=1.971
+PASS walk 4 reverse end=(-432.1000, 48.5765, 50.0910) seconds=38.73 maxUngroundedSeconds=0.097 maxPivotHeightAboveSurface=2.212
+PASS run 7 forward end=(-432.1000, 52.8543, 204.9167) seconds=22.14 maxUngroundedSeconds=0.052 maxPivotHeightAboveSurface=1.971
+PASS run 7 reverse end=(-432.1000, 48.5763, 50.0986) seconds=22.13 maxUngroundedSeconds=0.232 maxPivotHeightAboveSurface=1.973
+Console error/exception/assert count during tests=0

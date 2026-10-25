@@ -1,0 +1,14 @@
+ACTUAL PLAYER CharacterController.Move in Unity Play Mode; fixed 1/60s, production speeds/gravity, movement input disabled only for deterministic route QA.
+height=1.95 radius=0.3 center=(0.00, 1.05, 0.00) step=0.3 slope=45 skin=0.08
+PASS -432.1/4/forward end=(-432.1000, 52.8557, 204.9333) minY=48.00253 maxAirFrames=0 grounded=2324/2324 
+PASS -432.1/4/reverse end=(-432.1000, 48.5773, 50.0666) minY=48.00253 maxAirFrames=6 grounded=2269/2324 
+PASS -432.1/7/forward end=(-432.1000, 52.8557, 204.9333) minY=48.01316 maxAirFrames=3 grounded=1320/1328 
+PASS -432.1/7/reverse end=(-432.1000, 48.5773, 50.0667) minY=48.01568 maxAirFrames=14 grounded=1252/1328 
+PASS -433.5/4/forward end=(-433.5000, 52.9164, 204.9333) minY=48.06555 maxAirFrames=0 grounded=2324/2324 
+PASS -433.5/4/reverse end=(-433.5000, 48.4750, 50.0666) minY=48.06555 maxAirFrames=6 grounded=2264/2324 
+PASS -433.5/7/forward end=(-433.5000, 52.9164, 204.9333) minY=48.06755 maxAirFrames=2 grounded=1325/1328 
+PASS -433.5/7/reverse end=(-433.5000, 48.4750, 50.0667) minY=48.07055 maxAirFrames=19 grounded=1257/1328 
+PASS -430.7/4/forward end=(-430.7000, 52.7630, 204.9333) minY=48.00274 maxAirFrames=1 grounded=2323/2324 
+PASS -430.7/4/reverse end=(-430.7000, 48.5935, 50.0666) minY=48.00867 maxAirFrames=5 grounded=2267/2324 
+PASS -430.7/7/forward end=(-430.7000, 52.7630, 204.9333) minY=48.03381 maxAirFrames=7 grounded=1315/1328 
+PASS -430.7/7/reverse end=(-430.7000, 48.5935, 50.0667) minY=48.03492 maxAirFrames=11 grounded=1255/1328 

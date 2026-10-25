@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Fyp.Development.Recursion;
 
 public class AncientSpellbookUI : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class AncientSpellbookUI : MonoBehaviour
     [Header("Player References")]
     public MonoBehaviour playerMovement;
     public MonoBehaviour cameraFollow;
+
+    [Header("Optional development-only fourth page (leave empty for the original three pages)")]
+    public SpellbookRecursionSimulation guidedSimulation;
+    private bool movementWasEnabled, cameraWasEnabled, sessionOpen;
+    private int PageCount => titles.Length + (guidedSimulation != null ? 1 : 0);
 
     private int currentPage = 0;
 
@@ -73,6 +79,10 @@ public class AncientSpellbookUI : MonoBehaviour
 
     public void OpenBook()
     {
+        if (sessionOpen) return;
+        sessionOpen = true;
+        movementWasEnabled = playerMovement != null && playerMovement.enabled;
+        cameraWasEnabled = cameraFollow != null && cameraFollow.enabled;
         currentPage = 0;
         UpdatePage();
 
@@ -97,21 +107,31 @@ public class AncientSpellbookUI : MonoBehaviour
 
     void UpdatePage()
     {
-        titleText.text = titles[currentPage];
-        knowledgeText.text = explanations[currentPage];
-        codeText.text = codeExamples[currentPage];
+        bool simulationPage = guidedSimulation != null && currentPage == titles.Length;
+        if (guidedSimulation != null)
+        {
+            guidedSimulation.gameObject.SetActive(simulationPage);
+            knowledgeText.gameObject.SetActive(!simulationPage);
+            codeText.gameObject.SetActive(!simulationPage);
+        }
+        titleText.text = simulationPage ? "Guided Bridge Simulation" : titles[currentPage];
+        if (!simulationPage)
+        {
+            knowledgeText.text = explanations[currentPage];
+            codeText.text = codeExamples[currentPage];
+        }
 
         pageNumberText.text =
-            (currentPage + 1) + " / " + titles.Length;
+            (currentPage + 1) + " / " + PageCount;
 
         previousButton.interactable = currentPage > 0;
         nextButton.interactable =
-            currentPage < titles.Length - 1;
+            currentPage < PageCount - 1;
     }
 
     public void NextPage()
     {
-        if (currentPage < titles.Length - 1)
+        if (currentPage < PageCount - 1)
         {
             currentPage++;
             UpdatePage();
@@ -129,13 +149,15 @@ public class AncientSpellbookUI : MonoBehaviour
 
     public void CloseBook()
     {
+        if (!sessionOpen) return;
+        sessionOpen = false;
         spellbookPanel.SetActive(false);
 
         if (playerMovement != null)
-            playerMovement.enabled = true;
+            playerMovement.enabled = guidedSimulation != null ? movementWasEnabled : true;
 
         if (cameraFollow != null)
-            cameraFollow.enabled = true;
+            cameraFollow.enabled = guidedSimulation != null ? cameraWasEnabled : true;
 
         if (CursorManager.Instance != null)
         {

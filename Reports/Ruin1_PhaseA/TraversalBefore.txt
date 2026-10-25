@@ -1,0 +1,14 @@
+ACTUAL PLAYER CharacterController.Move in Unity Play Mode; fixed 1/60s, production speeds/gravity, movement input disabled only for deterministic route QA.
+height=1.95 radius=0.3 center=(0.00, 1.05, 0.00) step=0.3 slope=45 skin=0.08
+FAIL -432.1/4/forward end=(-430.8419, 48.3934, 180.2725) minY=48.00253 maxAirFrames=0 grounded=2183/2182 collision snag
+PASS -432.1/4/reverse end=(-432.1000, 48.5773, 50.0666) minY=48.00253 maxAirFrames=30 grounded=2280/2324 
+FAIL -432.1/7/forward end=(-428.1996, 48.2684, 180.9742) minY=48.01316 maxAirFrames=3 grounded=1611/1618 collision snag
+PASS -432.1/7/reverse end=(-432.1000, 48.5773, 50.0667) minY=48.01568 maxAirFrames=37 grounded=1277/1328 
+FAIL -433.5/4/forward end=(-433.3204, 48.4228, 180.0112) minY=48.06555 maxAirFrames=0 grounded=1996/1995 collision snag
+PASS -433.5/4/reverse end=(-433.5000, 48.4750, 50.0666) minY=48.06556 maxAirFrames=29 grounded=2277/2324 
+FAIL -433.5/7/forward end=(-433.1947, 48.4146, 180.0149) minY=48.06755 maxAirFrames=2 grounded=1158/1160 collision snag
+PASS -433.5/7/reverse end=(-433.5000, 48.4750, 50.0667) minY=48.07055 maxAirFrames=38 grounded=1281/1328 
+FAIL -430.7/4/forward end=(-427.2514, 48.0807, 181.1469) minY=48.00274 maxAirFrames=1 grounded=2487/2487 collision snag
+PASS -430.7/4/reverse end=(-430.7000, 48.5935, 50.0666) minY=48.00867 maxAirFrames=29 grounded=2276/2324 
+FAIL -430.7/7/forward end=(-426.8401, 47.9021, 181.2217) minY=47.90207 maxAirFrames=7 grounded=1541/1555 collision snag
+PASS -430.7/7/reverse end=(-430.7000, 48.5935, 50.0667) minY=48.03492 maxAirFrames=35 grounded=1277/1328 
