@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PortalInteraction : MonoBehaviour
+public class PortalInteraction : MonoBehaviour, ISharedInteractionTarget
 {
     public CursorManager cursorManager;
 
@@ -13,13 +13,25 @@ public class PortalInteraction : MonoBehaviour
 
     [Header("Interaction Settings")]
     public float interactionDistance = 3f;
+    public bool useSharedInteraction;
+
+    public bool UsesSharedInteraction => useSharedInteraction;
+    public Transform InteractionOrigin => transform;
+    public float SharedInteractionRange => interactionDistance;
+    public bool CanSharedInteract => isActiveAndEnabled && player != null && challengePanel != null &&
+        !challengeOpen && !portalCompleted;
+    public string SharedHint => "Press [E] to Open the Portal Challenge";
+    public void InteractFromShared()
+    {
+        if (useSharedInteraction && CanSharedInteract) OpenChallenge();
+    }
 
     private bool challengeOpen = false;
     private bool portalCompleted = false;
 
     void Start()
     {
-        if (interactionHint != null)
+        if (!useSharedInteraction && interactionHint != null)
             interactionHint.SetActive(false);
 
         if (challengePanel != null)
@@ -28,6 +40,7 @@ public class PortalInteraction : MonoBehaviour
 
     void Update()
     {
+        if (useSharedInteraction) return;
         if (player == null)
             return;
 
@@ -38,7 +51,7 @@ public class PortalInteraction : MonoBehaviour
 
         bool isNear = distance <= interactionDistance;
 
-        if (interactionHint != null)
+        if (!useSharedInteraction && interactionHint != null)
         {
             interactionHint.SetActive(
                 isNear &&
@@ -64,7 +77,7 @@ public class PortalInteraction : MonoBehaviour
         if (cursorManager != null)
             CursorManager.allowCursorLock = false;
 
-        if (interactionHint != null)
+        if (!useSharedInteraction && interactionHint != null)
             interactionHint.SetActive(false);
 
         if (challengePanel != null)
@@ -101,7 +114,7 @@ public class PortalInteraction : MonoBehaviour
         if (challengePanel != null)
             challengePanel.SetActive(false);
 
-        if (interactionHint != null)
+        if (!useSharedInteraction && interactionHint != null)
             interactionHint.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;

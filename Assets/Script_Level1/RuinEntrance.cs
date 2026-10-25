@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RuinEntrance : MonoBehaviour
+public class RuinEntrance : MonoBehaviour, ISharedInteractionTarget
 {
     [Header("References")]
     public Transform player;
@@ -12,9 +12,22 @@ public class RuinEntrance : MonoBehaviour
 
     [Header("Settings")]
     public float interactionDistance = 3f;
+    public bool useSharedInteraction;
+    public string sharedHint = "Press [E] to Travel";
+
+    public bool UsesSharedInteraction => useSharedInteraction;
+    public Transform InteractionOrigin => transform;
+    public float SharedInteractionRange => interactionDistance;
+    public bool CanSharedInteract => isActiveAndEnabled && player != null && destination != null && teleportManager != null;
+    public string SharedHint => sharedHint;
+    public void InteractFromShared()
+    {
+        if (useSharedInteraction && CanSharedInteract) teleportManager.TeleportTo(destination);
+    }
 
     void Update()
     {
+        if (useSharedInteraction) return;
         if (player == null)
             return;
 

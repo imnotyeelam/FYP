@@ -2,17 +2,30 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KnowledgeInteractable : MonoBehaviour
+public class KnowledgeInteractable : MonoBehaviour, ISharedInteractionTarget
 {
     public Transform player;
     public AncientSpellbookUI spellbookUI;
 
     public float interactionDistance = 3f;
+    public bool useSharedInteraction;
+
+    public bool UsesSharedInteraction => useSharedInteraction;
+    public Transform InteractionOrigin => transform;
+    public float SharedInteractionRange => interactionDistance;
+    public bool CanSharedInteract => isActiveAndEnabled && player != null && spellbookUI != null &&
+        spellbookUI.isActiveAndEnabled && !spellbookUI.IsBookOpen;
+    public string SharedHint => "Press [E] to Read the Ancient Spellbook";
+    public void InteractFromShared()
+    {
+        if (useSharedInteraction && CanSharedInteract) spellbookUI.OpenBook();
+    }
 
     private bool hintShowing = false;
 
     void Update()
     {
+        if (useSharedInteraction) return;
         if (player == null || spellbookUI == null)
             return;
 
@@ -51,6 +64,7 @@ public class KnowledgeInteractable : MonoBehaviour
 
     void OnDisable()
     {
+        if (useSharedInteraction) return;
         InteractionHintManager.Instance?.HideHint(this);
         hintShowing = false;
     }

@@ -20,8 +20,13 @@ public class CallStackBlock : MonoBehaviour
 
     public void Initialize(int n)
     {
+        Initialize("countdown", n);
+    }
+
+    public void Initialize(string functionName, int n)
+    {
         if (functionLabel != null)
-            functionLabel.text = $"countdown({n})";
+            functionLabel.text = $"{functionName}({n})";
     }
 
     public void SetBaseCase()

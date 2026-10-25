@@ -104,3 +104,47 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Local environment files and secrets (including Unity-generated sidecars)
+.env
+.env.*
+!.env.example
+!.env.template
+.env.meta
+.env.*.meta
+!.env.example.meta
+!.env.template.meta
+secrets.json
+secrets.json.meta
+secrets.*.json
+secrets.*.json.meta
+credentials.json
+credentials.json.meta
+credentials.*.json
+credentials.*.json.meta
+api_key.txt
+api_key.txt.meta
+api_keys.json
+api_keys.json.meta
+*.key
+*.key.meta
+*.pem
+*.pem.meta
+*.p12
+*.p12.meta
+*.pfx
+*.pfx.meta
+
+# Local Python virtual environments and caches
+.venv/
+.venv.meta
+venv/
+venv.meta
+env/
+env.meta
+__pycache__/
+__pycache__.meta
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
