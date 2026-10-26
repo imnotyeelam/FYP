@@ -1,0 +1,25 @@
+ONE FLOATING BRIDGE - B2 actual Unity Play Mode checks
+Startup: all three broken, ten original colliders off, connector moved with third module; endpoint bounds clear.
+Independent repair PASS Bridge (1)
+Independent reset PASS Bridge (1)
+Independent repair PASS Bridge (2)
+Independent reset PASS Bridge (2)
+Independent repair PASS Bridge (3)
+Independent reset PASS Bridge (3)
+REPAIRED ROUTE lane=-0.6 speed=4 reverse=False PASS end=(-435.930, 45.679, 166.238)
+REPAIRED ROUTE lane=-0.6 speed=4 reverse=True PASS end=(-435.930, 43.229, 59.700)
+REPAIRED ROUTE lane=-0.6 speed=7 reverse=False PASS end=(-435.930, 45.679, 166.271)
+REPAIRED ROUTE lane=-0.6 speed=7 reverse=True PASS end=(-435.930, 43.230, 59.667)
+REPAIRED ROUTE lane=0 speed=4 reverse=False PASS end=(-435.330, 45.639, 166.238)
+REPAIRED ROUTE lane=0 speed=4 reverse=True PASS end=(-435.330, 43.247, 59.700)
+REPAIRED ROUTE lane=0 speed=7 reverse=False PASS end=(-435.330, 45.640, 166.271)
+REPAIRED ROUTE lane=0 speed=7 reverse=True PASS end=(-435.330, 43.248, 59.667)
+REPAIRED ROUTE lane=0.6 speed=4 reverse=False PASS end=(-434.730, 45.600, 166.238)
+REPAIRED ROUTE lane=0.6 speed=4 reverse=True PASS end=(-434.730, 43.212, 59.700)
+REPAIRED ROUTE lane=0.6 speed=7 reverse=False PASS end=(-434.730, 45.601, 166.271)
+REPAIRED ROUTE lane=0.6 speed=7 reverse=True PASS end=(-434.730, 43.211, 59.667)
+MISSING Bridge (1) straight traversal sweeps=144 crossings=0; all owned colliders disabled including connector when applicable.
+MISSING Bridge (2) straight traversal sweeps=110 crossings=0; all owned colliders disabled including connector when applicable.
+MISSING Bridge (3) straight traversal sweeps=174 crossings=0; all owned colliders disabled including connector when applicable.
+Sequential missing-module gating passed; full route restored. No recursion/lesson code invoked.
+PASS assertions=89450 samples=4502 Console errors=0

@@ -1,0 +1,56 @@
+{
+  "originalChanged": [
+    {
+      "id": "322610843",
+      "type": "1001",
+      "object": "flying_stone_003"
+    },
+    {
+      "id": "440718358",
+      "type": "1001",
+      "object": "flying_stone_006"
+    },
+    {
+      "id": "496727517",
+      "type": "4",
+      "object": "Bridge (2)"
+    },
+    {
+      "id": "785069450",
+      "type": "1001",
+      "object": "PhaseA_EndConnector"
+    },
+    {
+      "id": "1058405121",
+      "type": "4",
+      "object": "Bridge (3)"
+    },
+    {
+      "id": "1318287343",
+      "type": "1001",
+      "object": "flying_stone_008"
+    },
+    {
+      "id": "1337851393",
+      "type": "1001",
+      "object": "flying_stone_008"
+    },
+    {
+      "id": "1646058272",
+      "type": "1001",
+      "object": "flying_stone_006"
+    },
+    {
+      "id": "2144629228",
+      "type": "1001",
+      "object": "flying_stone_003"
+    },
+    {
+      "id": "710000000000000008",
+      "type": "4",
+      "object": "Gameplay"
+    }
+  ],
+  "addedCount": 28,
+  "removedCount": 0
+}

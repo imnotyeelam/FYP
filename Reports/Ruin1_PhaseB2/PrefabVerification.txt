@@ -1,0 +1,1 @@
+PASS: all ten source prefab links unchanged in Edit Mode.

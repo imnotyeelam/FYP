@@ -1,0 +1,10 @@
+Bridge (1)/MotionRoot/flying_stone_006 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_006.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_006.fbx
+Bridge (1)/MotionRoot/flying_stone_008 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_008.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_008.fbx
+Bridge (1)/MotionRoot/flying_stone_003 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_003.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_003.fbx
+Bridge (2)/MotionRoot/flying_stone_006 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_006.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_006.fbx
+Bridge (2)/MotionRoot/flying_stone_008 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_008.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_008.fbx
+Bridge (2)/MotionRoot/flying_stone_003 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_003.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_003.fbx
+Bridge (3)/MotionRoot/flying_stone_006 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_006.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_006.fbx
+Bridge (3)/MotionRoot/flying_stone_008 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_008.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_008.fbx
+Bridge (3)/MotionRoot/flying_stone_003 -> Assets/ithappy/Fantasy/Prefabs/flying_stone/flying_stone_003.prefab mesh=Assets/ithappy/Fantasy/Meshes/flying_stone/flying_stone_003.fbx
+Bridge (3)/MotionRoot/PhaseA_EndConnector -> Assets/ithappy/Fantasy/Prefabs/prop/stair_003.prefab mesh=Assets/ithappy/Fantasy/Meshes/prop/stair_003.fbx

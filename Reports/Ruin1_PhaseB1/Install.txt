@@ -1,0 +1,5 @@
+Max child world matrix error=7.152557E-07
+RepairedPivot=(-435.330000, 43.237880, 82.680000) R=(0.00000, 51.08001, 0.00000)
+BrokenPivot=(-457.10000, 64.75000, 84.00000) R=(10.00000, 71.07999, 348.00000)
+Motion world scale=(0.577466, 0.577466, 0.577466)
+Existing colliders=3 meshes=3

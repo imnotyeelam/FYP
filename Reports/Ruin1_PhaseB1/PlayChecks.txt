@@ -1,0 +1,18 @@
+B1 actual Unity Play Mode animation/collision checks
+Broken startup: all three MeshColliders off; repaired location has no module ray hits; endpoint bounds clear.
+Broken -> repaired settled at exact marker; duplicate Repair idempotent; collider ray hit restored.
+CC traversal lane=-0.6 speed=4 direction=1 PASS end=(-435.9300, 43.3475, 100.6133)
+CC traversal lane=-0.6 speed=4 direction=-1 PASS end=(-435.9300, 42.9539, 66.7467)
+CC traversal lane=-0.6 speed=7 direction=1 PASS end=(-435.9300, 43.3483, 100.6300)
+CC traversal lane=-0.6 speed=7 direction=-1 PASS end=(-435.9300, 42.9553, 66.7300)
+CC traversal lane=0 speed=4 direction=1 PASS end=(-435.3300, 43.3585, 100.6133)
+CC traversal lane=0 speed=4 direction=-1 PASS end=(-435.3300, 42.9742, 66.7467)
+CC traversal lane=0 speed=7 direction=1 PASS end=(-435.3300, 43.3587, 100.6300)
+CC traversal lane=0 speed=7 direction=-1 PASS end=(-435.3300, 42.9737, 66.7300)
+CC traversal lane=0.6 speed=4 direction=1 PASS end=(-434.7300, 43.3681, 100.6133)
+CC traversal lane=0.6 speed=4 direction=-1 PASS end=(-434.7299, 42.9945, 66.7467)
+CC traversal lane=0.6 speed=7 direction=1 PASS end=(-434.7300, 43.3691, 100.6300)
+CC traversal lane=0.6 speed=7 direction=-1 PASS end=(-434.7299, 42.9940, 66.7300)
+Repaired -> broken reset passed, all collision removed before movement.
+Mid-animation reversal, invariant child transforms/meshes/materials, and collision gating passed.
+PASS: assertions=7719, sampled frames=1096, Console errors=0

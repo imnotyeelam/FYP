@@ -1,0 +1,5 @@
+ONE FLOATING BRIDGE - B2 actual Unity Play Mode checks
+FAIL assertions=16 samples=0 Console errors=0
+System.InvalidOperationException: B2: source prefab references remain intact
+  at Fyp.Development.Recursion.Editor.FloatingIslandMotionPlayChecks.Check (System.Boolean condition, System.String label) [0x00020] in E:\FYP\Assets\Development\Recursion\Editor\FloatingIslandMotionPlayChecks.cs:53 
+  at Fyp.Development.Recursion.Editor.FloatingIslandMotionPlayChecks.Tick () [0x004ec] in E:\FYP\Assets\Development\Recursion\Editor\FloatingIslandMotionPlayChecks.cs:102 
