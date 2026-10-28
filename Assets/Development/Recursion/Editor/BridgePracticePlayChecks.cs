@@ -85,7 +85,8 @@ namespace Fyp.Development.Recursion.Editor
                     Check(controller.rig.fixedStartingSection==BridgePracticeTools.Exact("Bridge"),"fixed starting section retained");
                     Check(BridgePracticeTools.Exact("Ruin01_Area/Gameplay/RuinRecursionVisualizer").GetComponent<RuinRecursionVisualizer>().enabled==false,"Cube fallback interaction inactive");
                     Check(BridgePracticeTools.Exact("Magic Book").GetComponent<KnowledgeInteractable>().enabled,"Spellbook enabled before modal");
-                    Check(BridgePracticeTools.Exact("Ruin01_Area/Interactables/ReturnInteractionPoint").position==new Vector3(-432.5f,53.45658f,230f),"return interaction position retained");
+                    Check(Vector3.Distance(BridgePracticeTools.Exact("Ruin01_Area/Interactables/ReturnInteractionPoint").position,
+                        new Vector3(-440f,46.08545f,166f))<.001f,"aligned return interaction position retained");
                     ApproachTraversal();
                     var landmark=BridgePracticeTools.Exact("Ruin01_Area/Interactables/BridgePracticeInteractionPoint/PracticeMagicRock");
                     Check(landmark.GetComponentsInChildren<Collider>(true).All(x=>!x.enabled),"landmark scene colliders cannot obstruct walking");
