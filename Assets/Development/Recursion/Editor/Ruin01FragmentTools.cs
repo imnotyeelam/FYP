@@ -12,22 +12,11 @@ using Object=UnityEngine.Object;
 
 namespace Fyp.Development.Recursion.Editor
 {
-    [InitializeOnLoad]
     public static class Ruin01FragmentTools
     {
         internal const string Output="Temp/Ruin01PhaseD";
         internal const string GemPath="Assets/BTM_Assets/BTM_Items_Gems/Prefabs/Diamondo.prefab";
         static Transform Exact(string path)=>FloatingIslandPrototypeTools.Exact(path);
-        static Ruin01FragmentTools()
-        {
-            EditorApplication.delayCall+=()=>
-            {
-                if(File.Exists(Output+"/Audit.txt") || EditorApplication.isPlayingOrWillChangePlaymode ||
-                    EditorSceneManager.GetActiveScene().path!=SpellbookStageTools.ScenePath)return;
-                try{Audit();}catch(Exception ex){Debug.LogError("Phase D read-only audit failed: "+ex);}
-            };
-        }
-
         [MenuItem("Tools/FYP/Ruin 1/Phase D/Audit Fragment Destination")]
         public static void Audit()
         {
@@ -51,7 +40,7 @@ namespace Fyp.Development.Recursion.Editor
             foreach(float x in new[]{destination.position.x-4,destination.position.x-2,destination.position.x,destination.position.x+2,destination.position.x+4})
             foreach(float z in new[]{destination.position.z-4,destination.position.z-2,destination.position.z,destination.position.z+2,destination.position.z+4,destination.position.z+6,destination.position.z+8})
             {
-                var hits=Physics.RaycastAll(new Vector3(x,110,z),Vector3.down,150,~0,QueryTriggerInteraction.Ignore)
+                var hits=Physics.RaycastAll(new Vector3(x,destination.position.y+80,z),Vector3.down,150,~0,QueryTriggerInteraction.Ignore)
                     .Where(h=>h.collider.transform.IsChildOf(destination) && Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit)
                     .OrderByDescending(h=>h.point.y).ToArray();
                 if(hits.Length==0){s.AppendLine("GRID x="+x.ToString("F2")+" z="+z.ToString("F2")+" NO DESTINATION SURFACE");continue;}

@@ -25,12 +25,14 @@ namespace Fyp.Development.Recursion.Editor
         public static void TestLesson() => Debug.Log("PASS: recursion lesson unit checks: " + BridgePracticeLessonChecks.Run());
         private static bool Manual(Collider c)
         {
-            string root = c.transform.root.name;
-            return root == "Ruin1_Ground" || root == "flying_stone_003" || root == "Bridge" || root.StartsWith("Bridge (");
+            for(var t=c.transform;t!=null;t=t.parent)
+                if(t.name=="Ruin1_Ground" || t.name=="flying_stone_003" || t.name=="Bridge" || t.name.StartsWith("Bridge ("))return true;
+            return false;
         }
         private static RaycastHit? Surface(Vector3 point)
         {
-            var hits = Physics.RaycastAll(new Vector3(point.x, 80, point.z), Vector3.down, 100,
+            var originY=FloatingIslandPrototypeTools.Exact("Ruin01_Area").position.y+150;
+            var hits = Physics.RaycastAll(new Vector3(point.x, originY, point.z), Vector3.down, 200,
                 ~0, QueryTriggerInteraction.Ignore).Where(h => Manual(h.collider)).OrderByDescending(h => h.point.y).ToArray();
             return hits.Length == 0 ? (RaycastHit?)null : hits[0];
         }
@@ -42,8 +44,8 @@ namespace Fyp.Development.Recursion.Editor
             var scene = EditorSceneManager.GetActiveScene();
             var all = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Transform>(true)).ToArray();
             var text = new StringBuilder("LIVE SCENE AUDIT (read only)\nDirty=" + scene.isDirty + "\n");
-            foreach (var t in all.Where(t => t.name == "L1_Spawnpoint" || t.name == "L1_ReturnPoint" ||
-                t.name == "Magic Book" || t.name == "Bridge" || t.name.StartsWith("Bridge (") || t.name == "ReturnInteractionPoint"))
+            foreach (var t in all.Where(t => t.name == "L1_Spawnpoint" || t.name == "ReturnInteractionPoint" ||
+                t.name == "Magic Book" || t.name == "Bridge" || t.name.StartsWith("Bridge (")))
             {
                 text.AppendLine(PathOf(t) + " | active=" + t.gameObject.activeInHierarchy + " | P=" + t.position.ToString("F5") +
                     " R=" + t.eulerAngles.ToString("F5") + " S=" + t.lossyScale.ToString("F5"));
@@ -54,7 +56,7 @@ namespace Fyp.Development.Recursion.Editor
                         text.AppendLine("  " + PathOf(c.transform) + " | " + c.GetType().Name + " enabled=" + c.enabled +
                             " trigger=" + c.isTrigger + " colliderBounds=" + c.bounds + (r != null ? " rendererBounds=" + r.bounds : ""));
                     }
-                if (t.name == "L1_Spawnpoint" || t.name == "L1_ReturnPoint" || t.name == "Magic Book")
+                if (t.name == "L1_Spawnpoint" || t.name == "Magic Book")
                 {
                     var hit = Surface(t.position);
                     text.AppendLine(hit.HasValue ? "  island surface=" + PathOf(hit.Value.collider.transform) + " hit=" + hit.Value.point.ToString("F5") +
@@ -66,6 +68,12 @@ namespace Fyp.Development.Recursion.Editor
                 }
             }
             text.AppendLine("Bridge (4) exists=" + all.Any(t=>t.name=="Bridge (4)"));
+            if(FloatingIslandPrototypeTools.Exact("Ruin01_Area").parent!=null)
+            {
+                text.AppendLine("Historical fixed-coordinate gap scan omitted after area reparenting; live object transforms and surfaces above were checked.");
+                Directory.CreateDirectory("Temp/SpellbookChecks");
+                File.WriteAllText("Temp/SpellbookChecks/LiveLayoutAudit.txt",text.ToString());Debug.Log(text.ToString());return;
+            }
             text.AppendLine("Candidate gaps along x=-432.1, z=25..235; surface must be y>40. Sample step=.25m (not a capsule path proof):");
             float? start=null; RaycastHit? last=null;
             for(float z=25;z<=235;z+=.25f)

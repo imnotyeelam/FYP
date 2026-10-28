@@ -15,8 +15,9 @@ namespace Fyp.Development.Recursion.Editor
         static Transform Exact(string path)=>FloatingIslandPrototypeTools.Exact(path);
         static RaycastHit? Ground(float x,float z)
         {
-            var hits=Physics.RaycastAll(new Vector3(x,110,z),Vector3.down,150,~0,QueryTriggerInteraction.Ignore)
-                .Where(h=>h.point.y>30 && Vector3.Angle(h.normal,Vector3.up)<45)
+            var point=BridgePracticeTools.Controller().interactionPoint.position;
+            var hits=Physics.RaycastAll(new Vector3(x,point.y+80,z),Vector3.down,150,~0,QueryTriggerInteraction.Ignore)
+                .Where(h=>h.point.y>point.y-12 && Vector3.Angle(h.normal,Vector3.up)<45)
                 .OrderByDescending(h=>h.point.y).ToArray();
             return hits.Length>0?hits[0]:(RaycastHit?)null;
         }
@@ -43,9 +44,9 @@ namespace Fyp.Development.Recursion.Editor
                     var hit=Ground(point.position.x+dx,point.position.z+dz);
                     if(hit.HasValue)sb.AppendLine("Support dx="+dx+" dz="+dz+" y="+hit.Value.point.y.ToString("F3")+" collider="+FloatingIslandPrototypeTools.P(hit.Value.collider.transform)+" fixed="+hit.Value.collider.transform.IsChildOf(fixedBridge));
                 }
-            foreach(var z in new[]{9f,15f,20f,25f,30f,35f,40f,45f,50f,53.638f})
+            foreach(var offset in new[]{-44.638f,-38.638f,-33.638f,-28.638f,-23.638f,-18.638f,-13.638f,-8.638f,-3.638f,0f})
             {
-                var h=Ground(point.position.x,z);
+                var z=point.position.z+offset;var h=Ground(point.position.x,z);
                 sb.AppendLine("Approach x="+point.position.x.ToString("F2")+" z="+z+" "+(h.HasValue?"y="+h.Value.point.y.ToString("F2")+" "+FloatingIslandPrototypeTools.P(h.Value.collider.transform):"NO_SUPPORT"));
             }
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(MagicRock);

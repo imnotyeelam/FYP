@@ -20,12 +20,13 @@ namespace Fyp.Development.Recursion.Editor
         internal static Transform Named(string name)=>All().Single(t=>t.name==name);
         internal static bool Island(Collider c)
         {
-            string n=c.transform.root.name;
-            return n=="Ruin1_Ground" || n=="flying_stone_003" || n=="Bridge" || n.StartsWith("Bridge (");
+            for(var t=c.transform;t!=null;t=t.parent)
+                if(t.name=="Ruin1_Ground" || t.name=="flying_stone_003" || t.name=="Bridge" || t.name.StartsWith("Bridge ("))return true;
+            return false;
         }
         internal static RaycastHit? Ground(float x,float z)
         {
-            var hits=Physics.RaycastAll(new Vector3(x,80,z),Vector3.down,100,~0,QueryTriggerInteraction.Ignore)
+            var hits=Physics.RaycastAll(new Vector3(x,Return().transform.position.y+80,z),Vector3.down,160,~0,QueryTriggerInteraction.Ignore)
                 .Where(h=>Island(h.collider)).OrderByDescending(h=>h.point.y).ToArray();
             return hits.Length==0?(RaycastHit?)null:hits[0];
         }
@@ -41,8 +42,8 @@ namespace Fyp.Development.Recursion.Editor
         }
         internal static Vector3 SafeReturnPosition()
         {
-            var marker=Named("L1_ReturnPoint");var cc=PlayerController();
-            foreach(var offset in new[]{new Vector3(2,0,0),new Vector3(-2,0,0),new Vector3(0,0,-2),new Vector3(0,0,2)})
+            var marker=Return().transform;var cc=PlayerController();
+            foreach(var offset in new[]{Vector3.zero,new Vector3(2,0,0),new Vector3(-2,0,0),new Vector3(0,0,-2),new Vector3(0,0,2)})
             {
                 var xz=marker.position+offset;var hit=Ground(xz.x,xz.z);
                 if(!hit.HasValue || Vector3.Angle(hit.Value.normal,Vector3.up)>cc.slopeLimit)continue;
@@ -71,13 +72,17 @@ namespace Fyp.Development.Recursion.Editor
                 .Where(e=>e.gameObject.scene.path==SpellbookStageTools.ScenePath))
                 text.AppendLine("TELEPORT "+P(entry.transform)+" origin="+entry.transform.position.ToString("F5")+
                     " -> "+P(entry.destination)+" "+entry.destination.position.ToString("F5")+" range="+entry.interactionDistance+" shared="+entry.useSharedInteraction);
-            var marker=Named("L1_ReturnPoint");
-            text.AppendLine("L1_ReturnPoint components: "+string.Join(",",marker.GetComponents<Component>().Select(c=>c.GetType().Name)));
+            text.AppendLine("Return interaction path: "+P(ret.transform)+" destination: "+P(ret.destination));
             text.AppendLine("ReturnInteractionPoint components: "+string.Join(",",ret.GetComponents<Component>().Select(c=>c.GetType().Name)));
             foreach(var c in ret.GetComponents<Collider>())text.AppendLine("Return collider: "+c.GetType().Name+" enabled="+c.enabled+" bounds="+c.bounds);
-            var returnPos=SafeReturnPosition();text.AppendLine("SAFE RETURN INTERACTION CANDIDATE "+returnPos.ToString("F5")+" (2m lateral offset from marker, .45m above sampled mesh surface)");
+            var returnPos=SafeReturnPosition();text.AppendLine("SAFE RETURN INTERACTION CANDIDATE "+returnPos.ToString("F5")+" (sampled near current interaction)");
             var standHit=Ground(returnPos.x,returnPos.z-2).Value;
             text.AppendLine("Return standing point="+(standHit.point+Vector3.up*.03f).ToString("F5")+" slope="+Vector3.Angle(standHit.normal,Vector3.up)+" capsule clear="+Clear(standHit.point+Vector3.up*.03f,cc));
+            if(FloatingIslandPrototypeTools.Exact("Ruin01_Area").parent!=null)
+            {
+                text.AppendLine("Historical fixed-coordinate repair-span proposal omitted after area reparenting; current return wiring and footing above were checked.");
+                Directory.CreateDirectory(Output);File.WriteAllText(Output+"/Audit.txt",text.ToString());Debug.Log(text.ToString());return;
+            }
             text.AppendLine("GAP EDGES, actual MeshCollider ray hits, .05m resolution, z=52..75:");
             for(float x=-445.5f;x<=-440.5f;x+=.5f)
             {
@@ -144,6 +149,8 @@ namespace Fyp.Development.Recursion.Editor
         public static void AlignReturn()
         {
             SpellbookStageTools.RequireScene();var scene=EditorSceneManager.GetActiveScene();
+            if(Return().transform.Find("ReturnMagicRock")!=null)
+                throw new InvalidOperationException("Return interaction is already aligned and has its landmark. No edit made.");
             if(scene.isDirty)throw new InvalidOperationException("Unsaved scene changes detected. No object was moved or saved.");
             Physics.SyncTransforms();var target=Return();var newPosition=SafeReturnPosition();
             var before=All().ToDictionary(t=>t,t=>EditorJsonUtility.ToJson(t));

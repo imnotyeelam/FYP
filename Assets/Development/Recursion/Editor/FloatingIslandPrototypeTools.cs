@@ -32,9 +32,12 @@ namespace Fyp.Development.Recursion.Editor
         internal static string P(Transform t)=>SpellbookStageTools.PathOf(t);
         internal static Transform Exact(string path)
         {
-            var parts=path.Split('/');var roots=EditorSceneManager.GetActiveScene().GetRootGameObjects().Where(g=>g.name==parts[0]).ToArray();
-            if(roots.Length!=1)throw new InvalidOperationException("Expected one exact scene root: "+path);
-            var t=roots[0].transform;
+            var parts=path.Split('/');
+            var matches=EditorSceneManager.GetActiveScene().GetRootGameObjects()
+                .SelectMany(g=>g.GetComponentsInChildren<Transform>(true))
+                .Where(t=>t.name==parts[0] && (t.parent==null || t.parent.name=="Ruin01_RelocationRoot")).ToArray();
+            if(matches.Length!=1)throw new InvalidOperationException("Expected one exact scene object: "+path+"; found "+matches.Length);
+            var t=matches[0];
             foreach(var name in parts.Skip(1))
             {
                 var children=t.Cast<Transform>().Where(c=>c.name==name).ToArray();
@@ -50,7 +53,7 @@ namespace Fyp.Development.Recursion.Editor
             SpellbookStageTools.RequireScene();Directory.CreateDirectory(Output);Physics.SyncTransforms();var scene=EditorSceneManager.GetActiveScene();
             if(!File.Exists(Output+"/LiveBefore.unity"))EditorSceneManager.SaveScene(scene,Output+"/LiveBefore.unity",true);
             var text=new StringBuilder("B2 LIVE SCENE AUDIT dirty="+scene.isDirty+"\n");
-            foreach(var path in new[]{"Bridge","Bridge (1)","Bridge (2)","Bridge (3)","flying_stone_003","Magic Book","Ruin01_Area/SpawnPoints/L1_Spawnpoint","Ruin01_Area/SpawnPoints/L1_ReturnPoint","Ruin01_Area/Interactables/ReturnInteractionPoint"})
+            foreach(var path in new[]{"Bridge","Bridge (1)","Bridge (2)","Bridge (3)","flying_stone_003","Magic Book","Ruin01_Area/SpawnPoints/L1_Spawnpoint","Ruin01_Area/Interactables/ReturnInteractionPoint"})
             {
                 var root=Exact(path);text.AppendLine(P(root)+" P="+root.position.ToString("F6")+" R="+root.eulerAngles.ToString("F5")+" S="+root.lossyScale.ToString("F7"));
                 if(!ModulePaths.Contains(path) && path!="Bridge")continue;

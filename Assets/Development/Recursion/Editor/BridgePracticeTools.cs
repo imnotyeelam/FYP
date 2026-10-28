@@ -20,13 +20,13 @@ namespace Fyp.Development.Recursion.Editor
         static Vector3 SafePoint(FloatingBridgeMotionRig rig)
         {
             var p=rig.fixedStartingSection.position+Vector3.back*6;var cc=Exact("Player").GetComponent<CharacterController>();
-            var hits=Physics.RaycastAll(new Vector3(p.x,110,p.z),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
+            var hits=Physics.RaycastAll(new Vector3(p.x,p.y+80,p.z),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
                 .Where(h=>h.collider.transform.IsChildOf(rig.fixedStartingSection) && Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit).OrderByDescending(h=>h.point.y).ToArray();
             if(hits.Length==0)throw new InvalidOperationException("No safe fixed-bank interaction surface.");
             var ground=hits[0].point;
             foreach(float dx in new[]{-.4f,0,.4f})foreach(float dz in new[]{-.4f,0,.4f})
             {
-                var support=Physics.RaycastAll(new Vector3(ground.x+dx,110,ground.z+dz),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
+                var support=Physics.RaycastAll(new Vector3(ground.x+dx,p.y+80,ground.z+dz),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
                     .Any(h=>h.collider.transform.IsChildOf(rig.fixedStartingSection) && Mathf.Abs(h.point.y-ground.y)<.3f && Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit);
                 if(!support)throw new InvalidOperationException("Interaction footprint is not fully supported.");
             }
@@ -43,7 +43,7 @@ namespace Fyp.Development.Recursion.Editor
             s.AppendLine("Fallback enabled="+legacy.enabled+" panel="+FloatingIslandPrototypeTools.P(legacy.panelView.transform)+" interaction="+FloatingIslandPrototypeTools.P(legacy.interactionPoint)+" "+legacy.interactionPoint.position);
             s.AppendLine("Canvas="+FloatingIslandPrototypeTools.P(legacy.existingCanvas.transform)+" mode="+legacy.existingCanvas.renderMode+" scaler="+legacy.existingCanvas.GetComponent<UnityEngine.UI.CanvasScaler>().uiScaleMode);
             s.AppendLine("Practice candidate="+SafePoint(rig).ToString("F6"));
-            foreach(var path in new[]{"Ruin01_Area/SpawnPoints/L1_Spawnpoint","Ruin01_Area/SpawnPoints/L1_ReturnPoint","Ruin01_Area/Interactables/ReturnInteractionPoint","Magic Book"})
+            foreach(var path in new[]{"Ruin01_Area/SpawnPoints/L1_Spawnpoint","Ruin01_Area/Interactables/ReturnInteractionPoint","Magic Book"})
             {var t=Exact(path);s.AppendLine(path+" "+t.position.ToString("F5")+" components="+string.Join(",",t.GetComponents<Component>().Select(c=>c.GetType().Name)));}
             var ret=Exact("Ruin01_Area/Interactables/ReturnInteractionPoint").GetComponent<RuinEntrance>();
             s.AppendLine("Return interaction destination="+FloatingIslandPrototypeTools.P(ret.destination)+" "+ret.destination.position+" range="+ret.interactionDistance);

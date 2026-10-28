@@ -9,21 +9,11 @@ using Object = UnityEngine.Object;
 
 namespace Fyp.Development.Recursion.Editor
 {
-    [InitializeOnLoad]
     public static class Ruin01ReturnFixTools
     {
         const string Output = "Temp/Ruin01ReturnFix";
         static Transform Exact(string path) => FloatingIslandPrototypeTools.Exact(path);
         static string Path(Transform t) => FloatingIslandPrototypeTools.P(t);
-        static Ruin01ReturnFixTools()
-        {
-            EditorApplication.delayCall += () =>
-            {
-                if (File.Exists(Output + "/Audit.txt") || EditorApplication.isPlayingOrWillChangePlaymode ||
-                    EditorSceneManager.GetActiveScene().path != SpellbookStageTools.ScenePath) return;
-                try { Audit(); } catch (Exception error) { Debug.LogException(error); }
-            };
-        }
         [MenuItem("Tools/FYP/Ruin 1/Return Fix/Audit Live Navigation %#&F3")]
         public static void Audit()
         {
@@ -33,7 +23,7 @@ namespace Fyp.Development.Recursion.Editor
             Directory.CreateDirectory(Output);
             EditorSceneManager.SaveScene(scene, Output + "/Before.unity", true);
             Physics.SyncTransforms();
-            var returnPoint = Exact("Ruin01_Area/SpawnPoints/L1_ReturnPoint");
+            var spawn = Exact("Ruin01_Area/SpawnPoints/L1_Spawnpoint");
             var exit = Exact("Ruin01_Area/Interactables/ReturnInteractionPoint");
             var reward = Exact("Ruin01_Area/Interactables/FragmentOfCalling");
             var returnEntrance = exit.GetComponent<RuinEntrance>();
@@ -45,9 +35,9 @@ namespace Fyp.Development.Recursion.Editor
             var cc = player.GetComponent<CharacterController>();
             var s = new StringBuilder();
             s.AppendLine("Ruin 1 return live audit; dirty=" + scene.isDirty);
-            foreach (var t in new[]{entry, returnPoint, exit, reward, destination, Exact("flying_stone_003"), Exact("Bridge (3)")})
+            foreach (var t in new[]{entry, spawn, exit, reward, destination, Exact("flying_stone_003"), Exact("Bridge (3)")})
                 s.AppendLine(Path(t) + " P=" + t.position.ToString("F4") + " R=" + t.eulerAngles.ToString("F2") + " active=" + t.gameObject.activeInHierarchy);
-            s.AppendLine("L1_ReturnPoint components=" + string.Join(",", returnPoint.GetComponents<Component>().Select(c=>c.GetType().Name)));
+            s.AppendLine("Return interaction components=" + string.Join(",", exit.GetComponents<Component>().Select(c=>c.GetType().Name)));
             s.AppendLine("Return components=" + string.Join(",", exit.GetComponents<Component>().Select(c=>c.GetType().Name)));
             s.AppendLine("Return enabled=" + returnEntrance.enabled + " range=" + returnEntrance.interactionDistance + " shared=" + returnEntrance.useSharedInteraction + " hint=" + returnEntrance.sharedHint);
             s.AppendLine("Return refs player=" + Path(returnEntrance.player) + " destination=" + Path(returnEntrance.destination) +
@@ -60,18 +50,18 @@ namespace Fyp.Development.Recursion.Editor
             foreach (var root in new[]{Exact("flying_stone_003"),Exact("Ruin1_Ground"),Exact("Bridge (3)")})
                 foreach (var col in root.GetComponentsInChildren<Collider>(true))
                     s.AppendLine("COLLIDER " + Path(col.transform) + " enabled=" + col.enabled + " bounds=" + col.bounds);
-            for (float z=164; z<=234; z+=2)
+            for (float z=exit.position.z-2; z<=exit.position.z+68; z+=2)
             {
-                var hits = Physics.RaycastAll(new Vector3(-434.5f, 120, z), Vector3.down, 150, ~0, QueryTriggerInteraction.Ignore)
+                var hits = Physics.RaycastAll(new Vector3(exit.position.x, exit.position.y+80, z), Vector3.down, 150, ~0, QueryTriggerInteraction.Ignore)
                     .Where(h => Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit)
                     .OrderByDescending(h => h.point.y).Take(3).ToArray();
                 s.AppendLine("PATH z=" + z.ToString("F1") + " " + string.Join(" | ", hits.Select(h=>Path(h.collider.transform) + " y=" + h.point.y.ToString("F2"))));
             }
             var island = Exact("flying_stone_003").GetComponent<MeshCollider>();
-            for (float x=-444; x<=-430; x+=2)
-            for (float z=160; z<=190; z+=2)
+            for (float x=exit.position.x-4; x<=exit.position.x+10; x+=2)
+            for (float z=exit.position.z-6; z<=exit.position.z+24; z+=2)
             {
-                if (!island.Raycast(new Ray(new Vector3(x,120,z),Vector3.down),out var ground,150)) continue;
+                if (!island.Raycast(new Ray(new Vector3(x,exit.position.y+80,z),Vector3.down),out var ground,150)) continue;
                 if (Vector3.Angle(ground.normal,Vector3.up)>cc.slopeLimit) continue;
                 var foot = ground.point+Vector3.up*.08f;
                 var center = foot+cc.center;
@@ -81,10 +71,10 @@ namespace Fyp.Development.Recursion.Editor
                 if (blockers.Length>0) continue;
                 bool support=true;
                 foreach(float dx in new[]{-.4f,0,.4f})foreach(float dz in new[]{-.4f,0,.4f})
-                    if(!island.Raycast(new Ray(new Vector3(x+dx,120,z+dz),Vector3.down),out var sample,150) ||
+                    if(!island.Raycast(new Ray(new Vector3(x+dx,exit.position.y+80,z+dz),Vector3.down),out var sample,150) ||
                         Mathf.Abs(sample.point.y-ground.point.y)>.3f || Vector3.Angle(sample.normal,Vector3.up)>cc.slopeLimit) support=false;
                 if(!support)continue;
-                var planarMarker=Vector2.Distance(new Vector2(x,z),new Vector2(returnPoint.position.x,returnPoint.position.z));
+                var planarMarker=Vector2.Distance(new Vector2(x,z),new Vector2(exit.position.x,exit.position.z));
                 var planarReward=Vector2.Distance(new Vector2(x,z),new Vector2(reward.position.x,reward.position.z));
                 if(planarMarker<=10 && planarReward>=6)
                     s.AppendLine("SAFE CANDIDATE x="+x+" z="+z+" groundY="+ground.point.y.ToString("F3")+

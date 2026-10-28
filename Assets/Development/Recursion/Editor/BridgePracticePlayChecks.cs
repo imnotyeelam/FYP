@@ -85,8 +85,10 @@ namespace Fyp.Development.Recursion.Editor
                     Check(controller.rig.fixedStartingSection==BridgePracticeTools.Exact("Bridge"),"fixed starting section retained");
                     Check(BridgePracticeTools.Exact("Ruin01_Area/Gameplay/RuinRecursionVisualizer").GetComponent<RuinRecursionVisualizer>().enabled==false,"Cube fallback interaction inactive");
                     Check(BridgePracticeTools.Exact("Magic Book").GetComponent<KnowledgeInteractable>().enabled,"Spellbook enabled before modal");
-                    Check(Vector3.Distance(BridgePracticeTools.Exact("Ruin01_Area/Interactables/ReturnInteractionPoint").position,
-                        new Vector3(-440f,46.08545f,166f))<.001f,"aligned return interaction position retained");
+                    var returnEntrance=BridgePracticeTools.Exact("Ruin01_Area/Interactables/ReturnInteractionPoint").GetComponent<RuinEntrance>();
+                    Check(returnEntrance!=null && returnEntrance.enabled && returnEntrance.destination==BridgePracticeTools.Exact("MainHub/Ruin1/Destination") &&
+                        returnEntrance.useSharedInteraction && returnEntrance.interactionDistance==5,
+                        "return interaction remains active and wired to Main Hub");
                     ApproachTraversal();
                     var landmark=BridgePracticeTools.Exact("Ruin01_Area/Interactables/BridgePracticeInteractionPoint/PracticeMagicRock");
                     Check(landmark.GetComponentsInChildren<Collider>(true).All(x=>!x.enabled),"landmark scene colliders cannot obstruct walking");
@@ -259,8 +261,9 @@ namespace Fyp.Development.Recursion.Editor
             for(int frame=0;frame<1500;frame++)
             {
                 var p=cc.transform.position;var delta=new Vector2(target.x-p.x,target.y-p.z);
-                if(delta.magnitude<.5f)return p.y>38;
-                if(p.y<38)return false;
+                float floor=controller.interactionPoint.position.y-6;
+                if(delta.magnitude<.5f)return p.y>floor;
+                if(p.y<floor)return false;
                 if(cc.isGrounded && vertical<0)vertical=-2;
                 vertical+=movement.gravity/60f;
                 var move=delta.normalized*speed/60f;
@@ -277,13 +280,14 @@ namespace Fyp.Development.Recursion.Editor
                 foreach(var start in new[]{BridgePracticeTools.Exact("Ruin01_Area/SpawnPoints/L1_Spawnpoint"),BridgePracticeTools.Exact("Magic Book")})
                 {
                     var p=start.position;
-                    var hits=Physics.RaycastAll(new Vector3(p.x,110,p.z),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
-                        .Where(h=>h.point.y>38 && Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit)
+                    var hits=Physics.RaycastAll(new Vector3(p.x,p.y+80,p.z),Vector3.down,140,~0,QueryTriggerInteraction.Ignore)
+                        .Where(h=>h.point.y>controller.interactionPoint.position.y-6 && Vector3.Angle(h.normal,Vector3.up)<=cc.slopeLimit)
                         .OrderByDescending(h=>h.point.y).ToArray();
                     Check(hits.Length>0,"walkable start surface near "+start.name);
                     cc.enabled=false;cc.transform.position=hits[0].point+Vector3.up*.2f;cc.enabled=true;Physics.SyncTransforms();
                     for(int i=0;i<25;i++)cc.Move(Vector3.down*.05f);
-                    foreach(var waypoint in new[]{new Vector2(-435.33f,p.z),new Vector2(-435.33f,15f),new Vector2(-435.33f,53.638f)})
+                    var target=controller.interactionPoint.position;
+                    foreach(var waypoint in new[]{new Vector2(target.x,p.z),new Vector2(target.x,target.z-38.638f),new Vector2(target.x,target.z)})
                         Check(ApproachSegment(cc,movement,waypoint,movement.moveSpeed),"actual CharacterController reaches "+waypoint+" from "+start.name);
                     Check(Vector3.Distance(cc.transform.position,controller.interactionPoint.position)<controller.interactionDistance,"walked into practice interaction range from "+start.name);
                     log.AppendLine("Actual Player CharacterController walked from "+start.name+" to practice point on existing surfaces.");
@@ -293,7 +297,7 @@ namespace Fyp.Development.Recursion.Editor
         }
         static RaycastHit? Ground(float x,float z)
         {
-            var hits=Physics.RaycastAll(new Vector3(x,110,z),Vector3.down,130,~0,QueryTriggerInteraction.Ignore)
+            var hits=Physics.RaycastAll(new Vector3(x,controller.interactionPoint.position.y+80,z),Vector3.down,130,~0,QueryTriggerInteraction.Ignore)
                 .Where(h=>Allowed(h.collider)).OrderByDescending(h=>h.point.y).ToArray();
             return hits.Length>0?hits[0]:(RaycastHit?)null;
         }

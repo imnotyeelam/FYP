@@ -38,7 +38,7 @@ namespace Fyp.Development.Recursion.Editor
                 FindObjectsSortMode.None).Where(v => v.gameObject.scene == scene).ToArray();
             if (visualizers.Length != 1) throw new InvalidOperationException("Expected exactly one existing RuinRecursionVisualizer.");
             var visualizer = visualizers[0];
-            var area = scene.GetRootGameObjects().Single(g => g.name == "Ruin01_Area").transform;
+            var area = FloatingIslandPrototypeTools.Exact("Ruin01_Area");
             var gameplay = area.Find("Gameplay");
             if (gameplay == null || visualizer.interactionPoint == null || visualizer.existingCanvas == null)
                 throw new InvalidOperationException("Preserved Gameplay, observation point and Canvas references are required.");

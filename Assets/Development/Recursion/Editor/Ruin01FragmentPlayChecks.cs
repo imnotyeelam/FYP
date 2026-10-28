@@ -94,7 +94,7 @@ namespace Fyp.Development.Recursion.Editor
                 {
                     if (EditorApplication.timeSinceStartup - began < 1) return;
                     reward = FloatingIslandPrototypeTools.Exact("Ruin01_Area/Interactables/FragmentOfCalling").GetComponent<Ruin01FragmentReward>();
-                    progress = FloatingIslandPrototypeTools.Exact("Ruin01_Area/Gameplay/FragmentProgressTracker").GetComponent<FragmentProgressTracker>();
+                    progress = FloatingIslandPrototypeTools.Exact("FragmentProgressTracker").GetComponent<FragmentProgressTracker>();
                     practice = BridgePracticeTools.Controller();
                     Check(reward.practice == practice && reward.progress == progress, "explicit practice and tracker references");
                     Check(InteractionHintManager.Instance.interactionTargets.Count(x => x == reward) == 1, "one shared interaction registration");
@@ -133,7 +133,7 @@ namespace Fyp.Development.Recursion.Editor
                     if (EditorApplication.timeSinceStartup - stageAt < .35) return;
                     var cc = FloatingIslandPrototypeTools.Exact("Player").GetComponent<CharacterController>();
                     Check(Vector2.Distance(new Vector2(cc.transform.position.x,cc.transform.position.z),
-                        new Vector2(entry.destination.position.x,entry.destination.position.z)) < .35f && cc.transform.position.y > 38,
+                        new Vector2(entry.destination.position.x,entry.destination.position.z)) < .35f && cc.transform.position.y > entry.destination.position.y-2,
                         "E teleports from Main Hub to Ruin 1 spawn");
                     Check(cc.enabled && CursorManager.allowCursorLock && Cursor.lockState == CursorLockMode.Locked,
                         "entry restores active controller and locked cursor");
@@ -175,9 +175,11 @@ namespace Fyp.Development.Recursion.Editor
                         FloatingIslandPrototypeTools.Exact("Main Camera").GetComponent<CameraFollow>().enabled,
                         "cursor, movement and camera restored after practice");
                     var returnPoint = FloatingIslandPrototypeTools.Exact("Ruin01_Area/Interactables/ReturnInteractionPoint");
-                    Check(returnPoint.GetComponent<RuinEntrance>().enabled &&
-                        Vector3.Distance(returnPoint.position, new Vector3(-440f, 46.08545f, 166f)) < .001f,
-                        "aligned return teleport remains enabled on the destination island");
+                    var returnEntrance=returnPoint.GetComponent<RuinEntrance>();
+                    Check(returnEntrance!=null && returnEntrance.enabled &&
+                        returnEntrance.destination==FloatingIslandPrototypeTools.Exact("MainHub/Ruin1/Destination") &&
+                        returnEntrance.useSharedInteraction && returnEntrance.interactionDistance==5,
+                        "return teleport remains enabled and wired to Main Hub");
                     WalkFromFinalModuleToReward();
                     Check(reward.CanSharedInteract, "real Player CharacterController reached collection range");
                     keyboard.MakeCurrent();
@@ -288,7 +290,7 @@ namespace Fyp.Development.Recursion.Editor
                 {
                     var p=cc.transform.position;var delta=new Vector2(goal.x-p.x,goal.z-p.z);
                     if(delta.magnitude<.45f){reached=true;break;}
-                    if(p.y<40)break;
+                    if(p.y<reward.transform.position.y-8)break;
                     if(cc.isGrounded && vertical<0)vertical=-2;
                     vertical+=movement.gravity/60f;
                     var move=delta.normalized*movement.moveSpeed/60f;
@@ -306,7 +308,7 @@ namespace Fyp.Development.Recursion.Editor
             movement.enabled = false;
             var target = reward.interactionPoint.position;
             var start = practice.rig.placeStone1.repairedPose.position;
-            var ground = Physics.RaycastAll(new Vector3(start.x, 110, start.z + 2), Vector3.down, 130, ~0, QueryTriggerInteraction.Ignore)
+            var ground = Physics.RaycastAll(new Vector3(start.x, start.y+80, start.z + 2), Vector3.down, 130, ~0, QueryTriggerInteraction.Ignore)
                 .Where(h => h.collider.transform.IsChildOf(practice.rig.placeStone1.transform)).OrderByDescending(h => h.point.y).First();
             cc.enabled = false; cc.transform.position = ground.point + Vector3.up * .2f; cc.enabled = true; Physics.SyncTransforms();
             for (int i = 0; i < 30; i++) cc.Move(Vector3.down * .05f);
@@ -325,7 +327,7 @@ namespace Fyp.Development.Recursion.Editor
                     var move = delta.normalized * movement.moveSpeed / 60f;
                     cc.Move(new Vector3(move.x, vertical / 60f, move.y));
                 }
-                Check(reached && cc.transform.position.y > 38, "CharacterController traverses repaired far-side route to fragment");
+                Check(reached && cc.transform.position.y > reward.transform.position.y-8, "CharacterController traverses repaired far-side route to fragment");
             }
             movement.enabled = wasEnabled;
             log.AppendLine("Actual Player CharacterController traversed from Bridge (3) to fragment on destination island.");
