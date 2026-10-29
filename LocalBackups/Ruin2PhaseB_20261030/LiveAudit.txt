@@ -1,0 +1,118 @@
+DIRTY=False SKYBOX=Assets/Fantasy Skybox FREE/Panoramics/FS003/FS003_Day.mat
+BOOK=Ruin01_RelocationRoot/Magic Book pos=(-1526.370, 343.555, 9.400) rot=(0.000, 0.000, 0.000) scale=(11.549, 11.549, 11.549) prefab=Assets/Low Poly Casual Magic Book/Objects/Magic Book/Prefabs/Magic Book.prefab
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book local=(-426.370, 43.555, 9.400) components=Transform,Animator,KnowledgeInteractable,BoxCollider
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root local=(0.000, 0.000, -0.001) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm1 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm1/book2 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm1/book2/book2_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm2 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm2/book1 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/bm2/book1/book1_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper1 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper1/movepaper1.001 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper1/movepaper1.001/movepaper1.001_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper2 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper2/movepaper2.001 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper2/movepaper2.001/movepaper2.001_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper3 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper3/movepaper3.001 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper3/movepaper3.001/movepaper3.001_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper4 local=(0.000, 0.001, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper4/movepaper4.001 local=(0.000, 0.000, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/Armature/root/movepaper4/movepaper4.001/movepaper4.001_end local=(0.000, 0.002, 0.000) components=Transform
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/cover local=(0.000, 0.000, 0.000) components=Transform,SkinnedMeshRenderer
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/cover.001 local=(0.000, 0.000, 0.000) components=Transform,SkinnedMeshRenderer
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/movepaper local=(0.000, 0.000, 0.000) components=Transform,SkinnedMeshRenderer
+  BOOK_CHILD=Ruin01_RelocationRoot/Magic Book/paper1 local=(0.000, 0.000, 0.000) components=Transform,SkinnedMeshRenderer
+  RENDER=Ruin01_RelocationRoot/Magic Book/cover bounds=Center: (-1526.37, 344.42, 8.54), Extents: (0.49, 1.70, 1.49)
+  RENDER=Ruin01_RelocationRoot/Magic Book/cover.001 bounds=Center: (-1526.37, 344.21, 9.70), Extents: (0.17, 1.42, 0.27)
+  RENDER=Ruin01_RelocationRoot/Magic Book/movepaper bounds=Center: (-1526.37, 344.41, 8.54), Extents: (0.02, 1.62, 1.40)
+  RENDER=Ruin01_RelocationRoot/Magic Book/paper1 bounds=Center: (-1526.37, 344.41, 8.54), Extents: (0.35, 1.62, 1.41)
+  COLLIDER=Ruin01_RelocationRoot/Magic Book enabled=True bounds=Center: (-1526.37, 343.56, 9.40), Extents: (4.62, 4.62, 4.62)
+UI=AncientSpellbookManager panel=Canvas/AncientSpellbookPanel parent=Canvas
+  TEXT=Canvas/AncientSpellbookPanel/TitleText
+  TEXT=Canvas/AncientSpellbookPanel/PageNumberText
+  TEXT=Canvas/AncientSpellbookPanel/KnowledgeText
+  TEXT=Canvas/AncientSpellbookPanel/CodeText
+  BUTTON=Canvas/AncientSpellbookPanel/NextButton persistent=0
+  BUTTON=Canvas/AncientSpellbookPanel/PreviousButton (1) persistent=0
+  BUTTON=Canvas/AncientSpellbookPanel/CloseButton persistent=1
+  SIM=Canvas/AncientSpellbookPanel/GuidedSimulationPage DETAILS=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails FRAMES=4
+  UI_CHILD=Canvas/AncientSpellbookPanel
+  UI_CHILD=Canvas/AncientSpellbookPanel/Background
+  UI_CHILD=Canvas/AncientSpellbookPanel/TitleText
+  UI_CHILD=Canvas/AncientSpellbookPanel/PageNumberText
+  UI_CHILD=Canvas/AncientSpellbookPanel/KnowledgeText
+  UI_CHILD=Canvas/AncientSpellbookPanel/CodeText
+  UI_CHILD=Canvas/AncientSpellbookPanel/NextButton
+  UI_CHILD=Canvas/AncientSpellbookPanel/NextButton/Text (TMP)
+  UI_CHILD=Canvas/AncientSpellbookPanel/PreviousButton (1)
+  UI_CHILD=Canvas/AncientSpellbookPanel/PreviousButton (1)/Text (TMP)
+  UI_CHILD=Canvas/AncientSpellbookPanel/CloseButton
+  UI_CHILD=Canvas/AncientSpellbookPanel/CloseButton/Text (TMP)
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Title
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Code
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/State
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/StackHeading
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/EmptyStack
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_0
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_0/Function
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_1
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_1/Function
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_2
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_2/Function
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_3
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CallStack/Frame_3/Function
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Explanation
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Progress
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CheckpointSlider
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CheckpointSlider/Background
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CheckpointSlider/Fill
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CheckpointSlider/HandleArea
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/CheckpointSlider/HandleArea/Handle
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/PreviousStep
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/PreviousStep/Label
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/NextStep
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/NextStep/Label
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Replay
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Replay/Label
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Close
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/ExecutionDetails/Close/Label
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Heading
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/LearningOnly
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/NearBank
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/FarBank
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_1
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_1/Action
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_2
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_2/Action
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_3
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Stone_3/Action
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Status
+  UI_CHILD=Canvas/AncientSpellbookPanel/GuidedSimulationPage/BridgeDiagram/Legend
+HINT=InteractionHintManager coordinate=True targets=10 panels=4
+  TARGET[0]=Ruin01_RelocationRoot/Ruin01_Area/Gameplay/BridgePractice
+  TARGET[1]=MainHub/BrokenPortal
+  TARGET[2]=Ruin01_RelocationRoot/Magic Book
+  TARGET[3]=MainHub/Ruin1
+  TARGET[4]=Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint
+  TARGET[5]=MainHub/Ruin02_Gateway
+  TARGET[6]=Ruin02_Area/Interactables/ReturnInteractionPoint
+  TARGET[7]=MainHub/Ruin03_Gateway
+  TARGET[8]=Ruin03_Area/Interactables/ReturnInteractionPoint
+  TARGET[9]=Ruin01_RelocationRoot/Ruin01_Area/Interactables/FragmentOfCalling
+  PANEL[0]=Canvas/AncientSpellbookPanel
+  PANEL[1]=Canvas/ChallengePanel
+  PANEL[2]=Canvas/RecursionVisualizationPanel
+  PANEL[3]=Canvas/RecursionPracticePanel
+AREA=Ruin02_Area/SpawnPoints/EntrySpawn pos=(800.000, 10.250, 192.000)
+AREA=Ruin02_Area/Interactables/ReturnInteractionPoint pos=(800.000, 10.250, 208.000)
+AREA=Ruin02_Area/Interactables/Ruin02ChallengeLandmark pos=(803.000, 10.000, 195.000)
+CANDIDATE=(796.000, 10.000, 193.000) rockHits= floors=Ruin02_Area/Environment/Ground@10.00
+CANDIDATE=(797.000, 10.000, 194.000) rockHits= floors=Ruin02_Area/Environment/Ground@10.00
+CANDIDATE=(797.000, 10.000, 191.000) rockHits= floors=Ruin02_Area/Environment/Ground@10.00

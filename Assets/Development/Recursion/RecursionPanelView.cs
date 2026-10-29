@@ -9,6 +9,7 @@ namespace Fyp.Development.Recursion
     // Serialized scene UI. Create() is also used by the Editor installer and as a legacy fallback.
     public sealed class RecursionPanelView : MonoBehaviour
     {
+        public string lessonLabel = "Ruin I";
         public TMP_Text title, code, state, explanation, progress, emptyStack;
         public TMP_Text[] frameLabels;
         public Image[] frameBackgrounds;
@@ -50,7 +51,7 @@ namespace Fyp.Development.Recursion
         public void Present(RecursionPlayback playback)
         {
             var step = playback.Current;
-            title.text = "Ruin I | " + playback.Trace.FunctionName;
+            title.text = lessonLabel + " | " + playback.Trace.FunctionName;
             var text = new StringBuilder("<mspace=11>");
             for (int i = 0; i < playback.Trace.Code.Count; i++)
             {
