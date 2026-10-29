@@ -1,0 +1,6 @@
+Air pos=(794.000, 10.000, 204.000) caveCapsuleOverlap=[] topDownHits=[Ruin02_Area/Environment/Ground@10.00] centerRay=[] cameraRay=[]
+Earth pos=(806.000, 10.000, 204.000) caveCapsuleOverlap=[] topDownHits=[Ruin02_Area/Environment/Ground@10.00] centerRay=[] cameraRay=[]
+Fire pos=(796.000, 10.000, 210.000) caveCapsuleOverlap=[] topDownHits=[Ruin02_Area/Environment/Ground@10.00] centerRay=[] cameraRay=[]
+Ice pos=(804.000, 10.000, 210.000) caveCapsuleOverlap=[] topDownHits=[Ruin02_Area/Environment/Ground@10.00] centerRay=[] cameraRay=[]
+Landmark pos=(802.000, 10.000, 196.500) caveCapsuleOverlap=[] topDownHits=[Ruin02_Area/Environment/Ground@10.00] centerRay=[] cameraRay=[]
+CENTER_TO_CAMERA_ROCKS=

@@ -1,0 +1,173 @@
+SCENE=Assets/Scenes/MagicWorld_Development.unity DIRTY_BEFORE=True DIRTY_AFTER_BACKUP=True
+LIVE_SKYBOX=Assets/Fantasy Skybox FREE/Panoramics/FS003/FS003_Day.mat
+BACKUP=Temp/Ruin2RockReplacement/BeforeLive.unity
+DESCENDANTS=21
+OBJECT=Ruin2 Environment/rock_001 PARENT=Ruin2 Environment SIBLING=0 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_001.prefab EXIST=True
+ POSITION=(798.690000, 21.560000, 198.290000) ROTATION=(0.000000, 319.634600, 0.000000) LOCAL_SCALE=(5.174500, 5.000000, 6.982501) LOSSY_SCALE=(5.174500, 5.000000, 6.982501)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_001.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_001 rock_001 [Assets/ithappy/Fantasy/Meshes/rock/rock_001.fbx#f4ea48ed883ea0b4ea42351f3aa10ed5:-7481085904417074962]
+ RENDERER=Ruin2 Environment/rock_001 BOUNDS=Center: (800.21, 20.79, 204.03), Extents: (46.47, 22.66, 45.31) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_001 [Assets/ithappy/Fantasy/Meshes/rock/rock_001.fbx#f4ea48ed883ea0b4ea42351f3aa10ed5:-7481085904417074962]
+OBJECT=Ruin2 Environment/rock_003 PARENT=Ruin2 Environment SIBLING=1 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_003.prefab EXIST=True
+ POSITION=(807.620000, 8.081600, 180.500000) ROTATION=(0.000000, 319.733300, 0.000000) LOCAL_SCALE=(7.407599, 6.901200, 6.000000) LOSSY_SCALE=(7.407599, 6.901200, 6.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_003 rock_003 [Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx#66cb8b93d58f96944b04d1422abf9c33:6099771041145418198]
+ RENDERER=Ruin2 Environment/rock_003 BOUNDS=Center: (804.75, 14.35, 180.40), Extents: (13.91, 6.79, 13.45) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_003 [Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx#66cb8b93d58f96944b04d1422abf9c33:6099771041145418198]
+OBJECT=Ruin2 Environment/rock_003 (1) PARENT=Ruin2 Environment SIBLING=2 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_003.prefab EXIST=True
+ POSITION=(824.470000, 5.375000, 204.700000) ROTATION=(0.000000, 245.040900, 0.000000) LOCAL_SCALE=(5.686591, 7.527707, 4.606019) LOSSY_SCALE=(5.686591, 7.527707, 4.606019)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_003 (1) rock_003 [Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx#66cb8b93d58f96944b04d1422abf9c33:6099771041145418198]
+ RENDERER=Ruin2 Environment/rock_003 (1) BOUNDS=Center: (823.96, 12.21, 202.56), Extents: (9.17, 7.41, 10.63) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_003 [Assets/ithappy/Fantasy/Meshes/rock/rock_003.fbx#66cb8b93d58f96944b04d1422abf9c33:6099771041145418198]
+OBJECT=Ruin2 Environment/rock_004 PARENT=Ruin2 Environment SIBLING=3 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_004.prefab EXIST=True
+ POSITION=(818.700000, 10.265680, 182.610000) ROTATION=(0.000000, 352.269100, 0.000000) LOCAL_SCALE=(5.000000, 5.000000, 5.000000) LOSSY_SCALE=(5.000000, 5.000000, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_004 rock_004 [Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx#34fecffb4106dcf48a926a8c7b1ad0d2:-3868138433202652808]
+ RENDERER=Ruin2 Environment/rock_004 BOUNDS=Center: (818.87, 15.06, 185.14), Extents: (8.57, 6.12, 11.43) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_004 [Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx#34fecffb4106dcf48a926a8c7b1ad0d2:-3868138433202652808]
+OBJECT=Ruin2 Environment/rock_006 PARENT=Ruin2 Environment SIBLING=4 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_006.prefab EXIST=True
+ POSITION=(806.200000, 18.083000, 184.600000) ROTATION=(0.000000, 0.000000, 0.000000) LOCAL_SCALE=(5.000000, 6.293500, 5.000000) LOSSY_SCALE=(5.000000, 6.293500, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_006.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_006 rock_006 [Assets/ithappy/Fantasy/Meshes/rock/rock_006.fbx#90981c43660329b48a39b31d8d9f49e4:-5454440999370243940]
+ RENDERER=Ruin2 Environment/rock_006 BOUNDS=Center: (805.66, 22.06, 184.05), Extents: (9.44, 5.65, 10.42) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_006 [Assets/ithappy/Fantasy/Meshes/rock/rock_006.fbx#90981c43660329b48a39b31d8d9f49e4:-5454440999370243940]
+OBJECT=Ruin2 Environment/rock_005 PARENT=Ruin2 Environment SIBLING=5 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_005.prefab EXIST=True
+ POSITION=(820.000000, 9.080999, 194.580000) ROTATION=(0.000000, 325.976700, 0.000000) LOCAL_SCALE=(5.000000, 5.735500, 5.000000) LOSSY_SCALE=(5.000000, 5.735500, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_005 rock_005 [Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx#c82e7dbe3cd268943b1e724af4062563:-395773563730729490]
+ RENDERER=Ruin2 Environment/rock_005 BOUNDS=Center: (821.91, 15.47, 192.17), Extents: (9.76, 6.97, 9.79) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_005 [Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx#c82e7dbe3cd268943b1e724af4062563:-395773563730729490]
+OBJECT=Ruin2 Environment/rock_007 PARENT=Ruin2 Environment SIBLING=6 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_007.prefab EXIST=True
+ POSITION=(804.140000, 28.200000, 195.820000) ROTATION=(347.184400, 359.203600, 344.081600) LOCAL_SCALE=(5.223300, 5.273500, 5.934000) LOSSY_SCALE=(5.223300, 5.273499, 5.934001)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_007 rock_007 [Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx#f6ce6b757fd7fd042bc4b1ae22a228bc:3224776871013962244]
+ RENDERER=Ruin2 Environment/rock_007 BOUNDS=Center: (804.47, 31.87, 192.56), Extents: (10.61, 11.14, 12.36) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_007 [Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx#f6ce6b757fd7fd042bc4b1ae22a228bc:3224776871013962244]
+OBJECT=Ruin2 Environment/rock_009 PARENT=Ruin2 Environment SIBLING=7 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_009.prefab EXIST=True
+ POSITION=(822.610000, 16.680000, 205.050000) ROTATION=(0.000000, 319.655800, 0.000000) LOCAL_SCALE=(4.758000, 4.000000, 4.000000) LOSSY_SCALE=(4.758000, 4.000000, 4.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_009.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_009 rock_009 [Assets/ithappy/Fantasy/Meshes/rock/rock_009.fbx#d61f5bc0458f7044da8282dec1f0f019:1453391643641891581]
+ RENDERER=Ruin2 Environment/rock_009 BOUNDS=Center: (821.60, 21.32, 204.67), Extents: (7.66, 5.07, 7.57) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_009 [Assets/ithappy/Fantasy/Meshes/rock/rock_009.fbx#d61f5bc0458f7044da8282dec1f0f019:1453391643641891581]
+OBJECT=Ruin2 Environment/rock_011 PARENT=Ruin2 Environment SIBLING=8 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_011.prefab EXIST=True
+ POSITION=(816.000000, 18.135000, 189.800000) ROTATION=(0.000000, 12.808220, 0.000000) LOCAL_SCALE=(5.000000, 6.041000, 5.000000) LOSSY_SCALE=(5.000000, 6.041000, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_011 rock_011 [Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx#84feb4bd1fbab66418aa64f01c187b95:-7126827754579369325]
+ RENDERER=Ruin2 Environment/rock_011 BOUNDS=Center: (817.39, 23.21, 191.71), Extents: (10.82, 5.57, 12.02) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_011 [Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx#84feb4bd1fbab66418aa64f01c187b95:-7126827754579369325]
+OBJECT=Ruin2 Environment/rock_014 PARENT=Ruin2 Environment SIBLING=9 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_014.prefab EXIST=True
+ POSITION=(815.850000, 19.421000, 201.647100) ROTATION=(22.604390, 264.308300, 357.806200) LOCAL_SCALE=(5.000000, 8.602000, 5.000000) LOSSY_SCALE=(5.000000, 8.602000, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_014.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_014 rock_014 [Assets/ithappy/Fantasy/Meshes/rock/rock_014.fbx#90ee81cf150431040a344de36aaf0b64:-1480036160157574093]
+ RENDERER=Ruin2 Environment/rock_014 BOUNDS=Center: (813.52, 28.33, 200.84), Extents: (14.24, 16.11, 11.63) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_014 [Assets/ithappy/Fantasy/Meshes/rock/rock_014.fbx#90ee81cf150431040a344de36aaf0b64:-1480036160157574093]
+OBJECT=Ruin2 Environment/rock_015 PARENT=Ruin2 Environment SIBLING=10 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_015.prefab EXIST=True
+ POSITION=(778.700000, 8.400000, 200.100000) ROTATION=(0.000000, 0.000000, 0.000000) LOCAL_SCALE=(5.000000, 5.000000, 5.000000) LOSSY_SCALE=(5.000000, 5.000000, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_015.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_015 rock_015 [Assets/ithappy/Fantasy/Meshes/rock/rock_015.fbx#f57eb24c5c175584faa71d162fd7b9eb:-2844620405585390394]
+ RENDERER=Ruin2 Environment/rock_015 BOUNDS=Center: (777.69, 13.71, 200.42), Extents: (5.35, 5.49, 4.72) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_015 [Assets/ithappy/Fantasy/Meshes/rock/rock_015.fbx#f57eb24c5c175584faa71d162fd7b9eb:-2844620405585390394]
+OBJECT=Ruin2 Environment/rock_016 PARENT=Ruin2 Environment SIBLING=11 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_016.prefab EXIST=True
+ POSITION=(778.000000, 10.128520, 199.900000) ROTATION=(90.000000, 0.000000, 0.000000) LOCAL_SCALE=(3.000000, 3.000000, 3.000000) LOSSY_SCALE=(3.000000, 3.000001, 3.000001)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_016.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_016 rock_016 [Assets/ithappy/Fantasy/Meshes/rock/rock_016.fbx#47a004974643a8e4cbc9b39c79a87b8b:-5696002660850993174]
+ RENDERER=Ruin2 Environment/rock_016 BOUNDS=Center: (777.89, 10.28, 207.56), Extents: (4.51, 3.53, 8.05) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_016 [Assets/ithappy/Fantasy/Meshes/rock/rock_016.fbx#47a004974643a8e4cbc9b39c79a87b8b:-5696002660850993174]
+OBJECT=Ruin2 Environment/rock_017 PARENT=Ruin2 Environment SIBLING=12 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_017.prefab EXIST=True
+ POSITION=(778.385600, 10.400000, 207.671600) ROTATION=(0.000000, 31.975340, 0.000000) LOCAL_SCALE=(5.000000, 5.000000, 5.000000) LOSSY_SCALE=(5.000000, 5.000000, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_017.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_017 rock_017 [Assets/ithappy/Fantasy/Meshes/rock/rock_017.fbx#f98a461f7cc681244827deb839d49859:-7952531801694684275]
+ RENDERER=Ruin2 Environment/rock_017 BOUNDS=Center: (778.65, 14.82, 208.13), Extents: (8.53, 4.86, 8.62) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_017 [Assets/ithappy/Fantasy/Meshes/rock/rock_017.fbx#f98a461f7cc681244827deb839d49859:-7952531801694684275]
+OBJECT=Ruin2 Environment/rock_019 PARENT=Ruin2 Environment SIBLING=13 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_019.prefab EXIST=True
+ POSITION=(783.200000, 7.432199, 217.100000) ROTATION=(0.000000, 59.312320, 0.000000) LOCAL_SCALE=(3.000000, 3.304500, 3.614700) LOSSY_SCALE=(3.000000, 3.304500, 3.614701)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_019.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_019 rock_019 [Assets/ithappy/Fantasy/Meshes/rock/rock_019.fbx#0c13f81665c943d49bdcd454d1fb1490:1134448939522876100]
+ RENDERER=Ruin2 Environment/rock_019 BOUNDS=Center: (782.26, 13.70, 217.74), Extents: (13.94, 7.26, 12.27) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_019 [Assets/ithappy/Fantasy/Meshes/rock/rock_019.fbx#0c13f81665c943d49bdcd454d1fb1490:1134448939522876100]
+OBJECT=Ruin2 Environment/rock_024 PARENT=Ruin2 Environment SIBLING=14 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_024.prefab EXIST=True
+ POSITION=(812.100000, 8.400000, 224.700000) ROTATION=(0.000000, 20.058720, 0.000000) LOCAL_SCALE=(4.605554, 5.069407, 3.803100) LOSSY_SCALE=(4.605554, 5.069407, 3.803099)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_024.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_024 rock_024 [Assets/ithappy/Fantasy/Meshes/rock/rock_024.fbx#813223d489ef52147a8d09cde44efe51:7584761922843961961]
+ RENDERER=Ruin2 Environment/rock_024 BOUNDS=Center: (813.05, 15.65, 225.10), Extents: (11.66, 8.10, 10.86) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_024 [Assets/ithappy/Fantasy/Meshes/rock/rock_024.fbx#813223d489ef52147a8d09cde44efe51:7584761922843961961]
+OBJECT=Ruin2 Environment/rock_026 PARENT=Ruin2 Environment SIBLING=15 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_026.prefab EXIST=True
+ POSITION=(792.820000, 9.710001, 225.370500) ROTATION=(358.970500, 350.344700, 353.971300) LOCAL_SCALE=(2.000000, 2.378400, 2.000000) LOSSY_SCALE=(2.000000, 2.378401, 2.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_026.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_026 rock_026 [Assets/ithappy/Fantasy/Meshes/rock/rock_026.fbx#1516fe03b9c116b478697326e528ae67:-5241936941013357325]
+ RENDERER=Ruin2 Environment/rock_026 BOUNDS=Center: (796.36, 11.97, 223.70), Extents: (8.68, 3.78, 6.43) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_026 [Assets/ithappy/Fantasy/Meshes/rock/rock_026.fbx#1516fe03b9c116b478697326e528ae67:-5241936941013357325]
+OBJECT=Ruin2 Environment/rock_027 PARENT=Ruin2 Environment SIBLING=16 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_027.prefab EXIST=True
+ POSITION=(793.540000, 14.700000, 220.890000) ROTATION=(0.000000, 166.523100, 0.000000) LOCAL_SCALE=(2.480400, 2.344800, 2.000000) LOSSY_SCALE=(2.480401, 2.344800, 2.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_027.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_027 rock_027 [Assets/ithappy/Fantasy/Meshes/rock/rock_027.fbx#3773080a50359764199b32ebe13eba49:4826767878959498756]
+ RENDERER=Ruin2 Environment/rock_027 BOUNDS=Center: (795.89, 18.35, 221.52), Extents: (11.19, 5.06, 6.47) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_027 [Assets/ithappy/Fantasy/Meshes/rock/rock_027.fbx#3773080a50359764199b32ebe13eba49:4826767878959498756]
+OBJECT=Ruin2 Environment/rock_005 (1) PARENT=Ruin2 Environment SIBLING=17 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_005.prefab EXIST=True
+ POSITION=(783.010000, 18.434000, 211.010600) ROTATION=(16.066600, 123.077900, 10.218510) LOCAL_SCALE=(5.000000, 6.032500, 5.000000) LOSSY_SCALE=(5.000000, 6.032500, 5.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_005 (1) rock_005 [Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx#c82e7dbe3cd268943b1e724af4062563:-395773563730729490]
+ RENDERER=Ruin2 Environment/rock_005 (1) BOUNDS=Center: (782.61, 25.67, 212.42), Extents: (11.56, 10.09, 9.66) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_005 [Assets/ithappy/Fantasy/Meshes/rock/rock_005.fbx#c82e7dbe3cd268943b1e724af4062563:-395773563730729490]
+OBJECT=Ruin2 Environment/rock_004 (1) PARENT=Ruin2 Environment SIBLING=18 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_004.prefab EXIST=True
+ POSITION=(788.420000, 20.070000, 220.640000) ROTATION=(4.215813, 78.585630, 330.893300) LOCAL_SCALE=(4.000000, 4.000000, 4.000000) LOSSY_SCALE=(4.000000, 4.000000, 4.000000)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_004 (1) rock_004 [Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx#34fecffb4106dcf48a926a8c7b1ad0d2:-3868138433202652808]
+ RENDERER=Ruin2 Environment/rock_004 (1) BOUNDS=Center: (791.03, 23.07, 218.90), Extents: (9.83, 7.69, 8.92) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_004 [Assets/ithappy/Fantasy/Meshes/rock/rock_004.fbx#34fecffb4106dcf48a926a8c7b1ad0d2:-3868138433202652808]
+OBJECT=Ruin2 Environment/rock_007 (1) PARENT=Ruin2 Environment SIBLING=19 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_007.prefab EXIST=True
+ POSITION=(800.830000, 23.461000, 220.360000) ROTATION=(11.131740, 149.318400, 2.576417) LOCAL_SCALE=(3.969600, 3.969600, 3.969600) LOSSY_SCALE=(3.969601, 3.969600, 3.969601)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_007 (1) rock_007 [Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx#f6ce6b757fd7fd042bc4b1ae22a228bc:3224776871013962244]
+ RENDERER=Ruin2 Environment/rock_007 (1) BOUNDS=Center: (801.06, 26.85, 221.60), Extents: (10.03, 6.71, 10.19) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_007 [Assets/ithappy/Fantasy/Meshes/rock/rock_007.fbx#f6ce6b757fd7fd042bc4b1ae22a228bc:3224776871013962244]
+OBJECT=Ruin2 Environment/rock_011 (1) PARENT=Ruin2 Environment SIBLING=20 ACTIVE=True PREFAB=Assets/ithappy/Fantasy/Prefabs/rock/rock_011.prefab EXIST=True
+ POSITION=(789.000000, 27.650000, 218.080000) ROTATION=(3.991761, 51.370640, 347.588000) LOCAL_SCALE=(5.000000, 5.000000, 7.292500) LOSSY_SCALE=(5.000000, 5.000000, 7.292501)
+ SOURCE_PREFAB=Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx COMPONENTS=Transform,MeshFilter,MeshRenderer CHILDREN=0
+ MESH=Ruin2 Environment/rock_011 (1) rock_011 [Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx#84feb4bd1fbab66418aa64f01c187b95:-7126827754579369325]
+ RENDERER=Ruin2 Environment/rock_011 (1) BOUNDS=Center: (792.81, 31.32, 218.80), Extents: (17.85, 7.42, 16.73) MATERIALS=Lit [Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat#31321ba15b8f8eb4c954353edc038b1d:2100000]
+ PREFAB_MESHES=1 PREFAB_RENDERERS=1 PREFAB_COLLIDERS=1 SAME_MESH=True SAME_MATERIALS=False SOLID=True SIMPLE_ORIGINAL=True
+ PREFAB_MATERIALS=Color [Assets/ithappy/Fantasy/Materials/Color.mat#73ac82d59a7a2c349a18f2d9ab7420ab:2100000]
+ PREFAB_COLLIDER=MeshCollider enabled=True trigger=False mesh=rock_011 [Assets/ithappy/Fantasy/Meshes/rock/rock_011.fbx#84feb4bd1fbab66418aa64f01c187b95:-7126827754579369325]
+TOTAL_ROCK_LIKE=21 PRELIMINARY_READY=0
