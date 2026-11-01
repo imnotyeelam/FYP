@@ -1,0 +1,4 @@
+Air: staff=(794.000, 10.000, 204.000), focus=(794.000, 13.720, 204.000), orb=(799.100, 12.050, 203.150), renderers=7, prefab=vfx_Projectile_Spell01Violet.prefab, bodies=1, colliders=1, camera=clear
+Earth: staff=(806.000, 10.000, 204.000), focus=(806.000, 14.195, 204.000), orb=(800.550, 11.700, 203.150), renderers=7, prefab=vfx_Projectile_Spell02Green.prefab, bodies=1, colliders=1, camera=clear
+Fire: staff=(796.000, 10.000, 210.000), focus=(796.000, 13.900, 210.000), orb=(799.300, 11.650, 204.000), renderers=7, prefab=vfx_Projectile_Fireball01Orange.prefab, bodies=1, colliders=1, camera=clear
+Ice: staff=(804.000, 10.000, 210.000), focus=(804.000, 14.084, 210.000), orb=(800.350, 12.100, 204.050), renderers=7, prefab=vfx_Projectile_Comet_Blue.prefab, bodies=1, colliders=1, camera=clear

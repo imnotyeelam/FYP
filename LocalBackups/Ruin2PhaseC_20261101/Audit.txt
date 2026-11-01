@@ -1,0 +1,13 @@
+scene=Assets/Scenes/MagicWorld_Development.unity dirty=False
+landmark=Ruin02_Area/Interactables/Ruin02ChallengeLandmark at (803.0000, 10.0000, 195.0000)
+interaction=Ruin02_Area/Interactables/Ruin02ChallengeLandmark/Ruin02ChallengeInteractionPoint at (801.7000, 10.8000, 195.3000)
+book=Ruin02_Area/Interactables/Ruin02MagicBook at (797.0000, 10.8500, 194.0000)
+player radius=0.3 height=1.95 step=0.3
+landmark components=Transform
+point components=Transform
+hint targets=Ruin01_RelocationRoot/Ruin01_Area/Gameplay/BridgePractice,MainHub/BrokenPortal,Ruin01_RelocationRoot/Magic Book,MainHub/Ruin1,Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint,MainHub/Ruin02_Gateway,Ruin02_Area/Interactables/ReturnInteractionPoint,MainHub/Ruin03_Gateway,Ruin03_Area/Interactables/ReturnInteractionPoint,Ruin01_RelocationRoot/Ruin01_Area/Interactables/FragmentOfCalling,Ruin02_Area/Interactables/Ruin02MagicBook
+modal panels=Canvas/AncientSpellbookPanel,Canvas/ChallengePanel,Canvas/RecursionVisualizationPanel,Canvas/RecursionPracticePanel,Canvas/Ruin02AncientSpellbookPanel
+backend URL=http://127.0.0.1:8000/feedback
+ground hit=Ruin02_Area/Environment/Ground y=10.000 normal=(0.000, 1.000, 0.000)
+landmark collider=Ruin02_Area/Interactables/Ruin02ChallengeLandmark/RitualStoneBase enabled=True bounds=Center: (802.94, 10.03, 195.16), Extents: (0.72, 0.45, 1.18)
+landmark collider=Ruin02_Area/Interactables/Ruin02ChallengeLandmark/MagicLampBeacon enabled=True bounds=Center: (803.00, 11.44, 195.00), Extents: (0.40, 0.92, 0.30)

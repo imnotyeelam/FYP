@@ -1,0 +1,5 @@
+fragmentAnchor=(799.930, 11.875, 203.410)
+placement=(800.000, 12.450, 204.000)
+parent=Ruin02_Area/Gameplay/RitualChamber
+prefab=Assets/BTM_Assets/BTM_Items_Gems/Prefabs/Diamondo.prefab
+colliders=disabled on scene instance (D3-A has no collection yet)

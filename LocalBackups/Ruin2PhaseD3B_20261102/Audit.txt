@@ -1,0 +1,4 @@
+fragment=Ruin02_Area/Gameplay/RitualChamber/FragmentOfReturningMagic at (800.00, 12.45, 204.00)
+collectionPoint=(800.000, 10.150, 204.000) reachable from chamber floor
+sharedHint=Press [E] to Collect Fragment
+progress=FragmentProgressTracker.Ruin02
