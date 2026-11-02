@@ -114,6 +114,9 @@ namespace Fyp.Development.Recursion
         public Ruin02PracticeQuestion Question=>questionIndex<Lesson.Questions.Count?Lesson.Questions[questionIndex]:null;
         public int QuestionNumber=>Math.Min(questionIndex+1,6);
         public bool Advancing { get; private set; }
+        // Only the initial descent is deliberately player-paced. The return ranges retain their
+        // existing timed/cinematic behaviour and action events.
+        public bool RequiresCallDownContinue => Advancing && questionIndex==0;
         public bool Complete=>questionIndex==6 && !Advancing && Index==27 && Current.Phase==RecursionPhase.Complete && Current.Frames.Count==0 && emitted.Count==4;
         public event Action<int,RecursionStep> SnapshotPresented;
         public event Action<int> AbsorbMagic;
@@ -151,6 +154,12 @@ namespace Fyp.Development.Recursion
                 if(Complete)ChallengeCompleted?.Invoke();
             }
             return true;
+        }
+
+        public bool TryContinueCallDown()
+        {
+            if(!RequiresCallDownContinue)return false;
+            return TryAdvanceApprovedStep();
         }
     }
 }

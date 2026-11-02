@@ -100,6 +100,23 @@ namespace Fyp.Development.Recursion.Editor
             Debug.Log("PASS Ruin 2 Phase C lesson: six gates, strict text validation, 28 checkpoints, five frames, ordered 1-4 events once, empty-stack completion, independent guided playback.");
         }
 
+        [MenuItem("Tools/FYP/Ruin 2/Phase C/Test Call-Down Continue Playback")]
+        public static void TestCallDownContinuePlayback()
+        {
+            var session=new Ruin02PracticeSession();
+            var first=session.Question;
+            if(session.Submit(first.Id,first.Expected).Status!=Ruin02AnswerStatus.Correct || !session.RequiresCallDownContinue)
+                throw new InvalidOperationException("Initial correct answer did not enter manual call-down playback.");
+            var observed=new System.Collections.Generic.List<int>();
+            session.SnapshotPresented+=(index,step)=>{if(step.Parameter.HasValue)observed.Add(step.Parameter.Value);};
+            while(session.RequiresCallDownContinue)
+                if(!session.TryContinueCallDown())throw new InvalidOperationException("Continue did not advance the call-down.");
+            if(session.Index!=13 || session.Question==null || !session.Question.Id.Contains("base.0") ||
+                !observed.Contains(2) || !observed.Contains(1) || !observed.Contains(0) || session.Advancing)
+                throw new InvalidOperationException("Call-down did not expose 2, 1, 0 before the base-case question.");
+            Debug.Log("PASS Ruin 2 call-down playback: Continue advances the initial descent through sealMagic(2), (1), (0), then exposes the base-case question.");
+        }
+
         [MenuItem("Tools/FYP/Ruin 2/Phase C/Test Syntax-Aware Feedback")]
         public static void TestSyntaxAwareFeedback()
         {
@@ -262,10 +279,23 @@ namespace Fyp.Development.Recursion.Editor
             controller.Open();
             if(controller.Session.Question!=q || controller.Session.Index!=before)
                 throw new InvalidOperationException("Reopen did not preserve progress.");
+            if(controller.Submit(q.Expected).Status!=Ruin02AnswerStatus.Correct || !controller.CanContinueCallDown)
+                throw new InvalidOperationException("Initial correct call did not enable Continue playback.");
+            int callDownStart=controller.Session.Index;
+            controller.ContinueCallDown();
+            if(controller.Session.Index<=callDownStart || !controller.CanContinueCallDown)
+                throw new InvalidOperationException("Continue did not advance a single call-down snapshot.");
+            controller.Close();
+            controller.Open();
+            if(!controller.CanContinueCallDown)
+                throw new InvalidOperationException("Close/reopen did not preserve call-down Continue state.");
+            while(controller.CanContinueCallDown)controller.ContinueCallDown();
+            if(controller.Session.Question==null || !controller.Session.Question.Id.Contains("base.0"))
+                throw new InvalidOperationException("Base-case question appeared before or after the wrong call-down state.");
             controller.Close();
             book.OpenBook();if(!book.IsBookOpen || controller.CanSharedInteract)throw new InvalidOperationException("Spellbook did not block challenge.");
             book.CloseBook();old.OpenBook();if(!old.IsBookOpen)throw new InvalidOperationException("Ruin 1 book failed.");old.CloseBook();
-            Debug.Log("PASS Ruin 2 Phase C Play: initial E eligibility, modal controls, wrong answer, close/reopen preservation, Ruin 1 and Ruin 2 book exclusion.");
+            Debug.Log("PASS Ruin 2 Phase C Play: initial E eligibility, modal controls, paced call-down Continue, close/reopen preservation, and Ruin 1/Ruin 2 book exclusion.");
         }
 
         [MenuItem("Tools/FYP/Ruin 2/Phase C/Open Challenge Visual (Play Mode)")]

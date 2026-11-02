@@ -18,11 +18,13 @@ namespace Fyp.Development.Recursion
             controller=owner;details.Disconnect();
             details.closeButton.onClick.AddListener(Close);
             submit.onClick.AddListener(Submit);
+            details.nextButton.onClick.AddListener(ContinueCallDown);
             input.onSubmit.AddListener(SubmitText);
         }
         void Close()=>controller.Close();
         void Submit()=>controller.Submit(input.text);
         void SubmitText(string value){if(controller.CanSubmit)controller.Submit(value);}
+        void ContinueCallDown()=>controller.ContinueCallDown();
 
         public void Present()
         {
@@ -51,21 +53,31 @@ namespace Fyp.Development.Recursion
                 details.frameLabels[row].text="sealMagic("+n+")"+(row==0?" [active]":" [waiting]");
                 details.frameBackgrounds[row].color=row==0?new Color(.15f,.34f,.4f):new Color(.12f,.16f,.21f);
             }
+            bool continueCallDown=controller.CanContinueCallDown;
             question.text=session.Complete?"The call stack is empty. The ritual is solved.":
+                continueCallDown?"Observe the call stack, then continue to the next call.":
                 session.Advancing?"Watch the current execution range.":session.Question.Prompt;
             feedback.text=controller.Feedback;
             feedback.color=controller.Incorrect?new Color(1,.65f,.55f):new Color(.66f,.94f,.79f);
             details.progress.text="Decision "+session.QuestionNumber+" / 6 | Checkpoint "+(session.Index+1)+" / "+trace.Steps.Count;
             input.interactable=controller.CanSubmit;
             submit.interactable=controller.CanSubmit && !string.IsNullOrWhiteSpace(input.text);
-            input.gameObject.SetActive(!session.Complete);
-            submit.gameObject.SetActive(!session.Complete);
+            input.gameObject.SetActive(!session.Complete && !continueCallDown);
+            submit.gameObject.SetActive(!session.Complete && !continueCallDown);
+            details.nextButton.gameObject.SetActive(continueCallDown);
+            if(continueCallDown)
+            {
+                details.nextButton.interactable=true;
+                var label=details.nextButton.GetComponentInChildren<TMP_Text>();
+                if(label!=null)label.text="Continue";
+            }
         }
         void Update(){if(controller!=null && submit.gameObject.activeSelf)submit.interactable=controller.CanSubmit && !string.IsNullOrWhiteSpace(input.text);}
         void OnDestroy()
         {
             if(details!=null && details.closeButton!=null)details.closeButton.onClick.RemoveListener(Close);
             if(submit!=null)submit.onClick.RemoveListener(Submit);
+            if(details!=null && details.nextButton!=null)details.nextButton.onClick.RemoveListener(ContinueCallDown);
             if(input!=null)input.onSubmit.RemoveListener(SubmitText);
         }
     }

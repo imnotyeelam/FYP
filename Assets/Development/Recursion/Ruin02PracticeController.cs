@@ -40,6 +40,7 @@ namespace Fyp.Development.Recursion
         public Ruin02FeedbackSource LastFeedbackSource { get; private set; } = Ruin02FeedbackSource.LocalFallback;
         public bool Incorrect=>incorrect;
         public bool CanSubmit=>open && !cinematicActive && session!=null && !session.Advancing && !session.Complete;
+        public bool CanContinueCallDown=>open && !cinematicActive && session!=null && session.RequiresCallDownContinue;
         public bool UsesSharedInteraction=>true;
         public Transform InteractionOrigin=>interactionPoint;
         public float SharedInteractionRange=>interactionDistance;
@@ -134,11 +135,24 @@ namespace Fyp.Development.Recursion
             else if(result.Status==Ruin02AnswerStatus.Correct)
             {
                 incorrect=false;message=result.Message;LastFeedbackSource=Ruin02FeedbackSource.LocalFallback;
-                nextAt=Time.unscaledTime+checkpointSeconds;
+                if(session.RequiresCallDownContinue)
+                    message="Observe the next call and stack frame, then press Continue.";
+                else nextAt=Time.unscaledTime+checkpointSeconds;
                 panel.input.SetTextWithoutNotify("");
             }
             else message=result.Message;
             panel.Present();return result;
+        }
+
+        public void ContinueCallDown()
+        {
+            if(!CanContinueCallDown)return;
+            session.TryContinueCallDown();
+            incorrect=false;
+            message=session.RequiresCallDownContinue?
+                "Observe the next call and stack frame, then press Continue.":
+                "Call-down complete. Answer the base-case question.";
+            panel.Present();
         }
 
         void CancelFeedback()
@@ -188,7 +202,7 @@ namespace Fyp.Development.Recursion
             if(session==null)return;
             if(open && Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame)Close();
             if(cinematicActive)return;
-            if(!session.Advancing || Time.unscaledTime<nextAt)return;
+            if(!session.Advancing || session.RequiresCallDownContinue || Time.unscaledTime<nextAt)return;
             session.TryAdvanceApprovedStep();nextAt=Time.unscaledTime+checkpointSeconds;
             if(session.Advancing)
                 message="Tracing each call and return in order…";
