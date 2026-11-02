@@ -23,6 +23,7 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
     int page;
     bool open, movementBefore, cameraBefore;
     public bool IsBookOpen => open;
+    public bool GuidedLessonCompleted => guidedSimulation != null && guidedSimulation.IsCompleted;
 
     void Start()
     {
@@ -36,12 +37,16 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
         if (open && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) CloseBook();
     }
     public void OpenBook()
+    { OpenBookAtPage(0); }
+    public void OpenGuidedSimulationForChallenge()
+    { OpenBookAtPage(3); }
+    void OpenBookAtPage(int requestedPage)
     {
         if (open || spellbookPanel == null || !CursorManager.allowCursorLock) return;
         open = true;
         movementBefore = playerMovement != null && playerMovement.enabled;
         cameraBefore = cameraFollow != null && cameraFollow.enabled;
-        page = 0;
+        page = Mathf.Clamp(requestedPage,0,3);
         ShowPage();
         spellbookPanel.SetActive(true);
         if (playerMovement != null) playerMovement.enabled = false;
@@ -56,7 +61,7 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
         guidedSimulation.gameObject.SetActive(sim);
         knowledgeText.gameObject.SetActive(!sim);
         codeText.gameObject.SetActive(!sim);
-        titleText.text = sim ? "Guided Return-Flow Simulation" : Titles[page];
+        titleText.text = sim ? "Guided Return-Flow Simulation — Complete the guided simulation to unlock this challenge" : Titles[page];
         if (!sim)
         {
             knowledgeText.text = Knowledge[page];

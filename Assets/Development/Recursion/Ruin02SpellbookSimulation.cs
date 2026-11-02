@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Fyp.Development.Recursion
@@ -8,9 +9,12 @@ namespace Fyp.Development.Recursion
         public Ruin02StaffDiagramView diagram;
         RecursionPlayback playback;
         bool initialized;
+        bool completed;
         public int CheckpointIndex => playback == null ? 0 : playback.Index;
         public RecursionStep Current => playback == null ? null : playback.Current;
         public RecursionPlayback Playback => playback;
+        public bool IsCompleted => completed;
+        public event Action Completed;
 
         void EnsureInitialized()
         {
@@ -29,6 +33,11 @@ namespace Fyp.Development.Recursion
             details.Present(playback);
             details.title.text = "Guided return flow | sealMagic(4)";
             diagram.Present(playback.Current);
+            if(!completed && playback.Index==playback.Trace.Steps.Count-1)
+            {
+                completed=true;
+                Completed?.Invoke();
+            }
         }
         void OnDestroy() { if (initialized && details != null) details.Disconnect(); }
     }
