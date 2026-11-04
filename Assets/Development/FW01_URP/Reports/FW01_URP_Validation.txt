@@ -1,0 +1,7 @@
+FW01 Summer static reference validation (Unity import pending)
+Development scene: Assets\Development\FW01_URP\Scenes\FW01_MainMap_Summer_URP.unity
+Migrated materials: 81
+Migrated prefabs: 414
+Remaining original high-risk/prefab/TerrainData GUID references: 0
+Material errors: 0
+Warnings: 5 materials without identified base map

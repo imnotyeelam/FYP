@@ -14,6 +14,7 @@ namespace Fyp.Development.Recursion
         public Transform player,interactionPoint;
         public BridgePracticePanel panel;
         public BridgePracticeCamera presentation;
+        public global::AncientSpellbookUI guidedBook;
         public GameObject[] otherModalPanels;
         public float interactionDistance=3f;
         [Min(.15f)] public float stepSeconds=.65f;
@@ -50,6 +51,8 @@ namespace Fyp.Development.Recursion
         public string Feedback=>feedback;
         public string SelectedAnswerId=>selectedAnswer;
         public bool LastAnswerIncorrect=>incorrect;
+        global::AncientSpellbookUI GuidedBook=>guidedBook!=null?guidedBook:(guidedBook=FindFirstObjectByType<global::AncientSpellbookUI>());
+        public bool GuidedLessonCompleted=>GuidedBook!=null && GuidedBook.GuidedLessonCompleted;
         public int DecisionNumber=>complete?6:session==null?1:Mathf.Clamp(session.Lesson.Decisions.IndexOf(session.CurrentDecision)+1,1,6);
         bool Waiting=>modules!=null && Enumerable.Range(0,3).Any(i=>restored[i] && (!modules[i].IsRepaired || modules[i].walkableColliders.Any(c=>c==null || !c.enabled)));
         public bool IsBusy=>!seeded || Waiting || (session!=null && session.IsAdvancing) || pendingClose;
@@ -59,8 +62,13 @@ namespace Fyp.Development.Recursion
         public Transform InteractionOrigin=>interactionPoint;
         public float SharedInteractionRange=>interactionDistance;
         public bool CanSharedInteract=>initialized && isActiveAndEnabled && !open && player!=null && interactionPoint!=null && !OtherModalOpen;
-        public string SharedHint=>complete?"Press [E] to Review the Restored Bridge":"Press [E] to Restore the Bridge";
-        public void InteractFromShared(){if(CanSharedInteract)Open();}
+        public string SharedHint=>!GuidedLessonCompleted?"Press [E] to Study the Guided Simulation":complete?"Press [E] to Review the Restored Bridge":"Press [E] to Restore the Bridge";
+        public void InteractFromShared()
+        {
+            if(!CanSharedInteract)return;
+            if(!GuidedLessonCompleted){GuidedBook?.OpenGuidedSimulationForChallenge();return;}
+            Open();
+        }
         void Start()
         {
             if(rig==null || player==null || interactionPoint==null || panel==null || presentation==null)

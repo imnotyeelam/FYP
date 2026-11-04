@@ -1,0 +1,15 @@
+FW01 Summer URP development recovery (offline prepared; Unity import and visual validation pending)
+Development scene: Assets/Development/FW01_URP/Scenes/FW01_MainMap_Summer_URP.unity
+Migrated materials: 81
+Migrated prefabs (development copies): 414
+Migrated TerrainData: 1
+Recovered shader families: TriForge, <builtin or missing>
+Likely visible after Unity import: rocks, ruins, bark, ground, leaves, flowers, grass and bushes with source base maps.
+Manual checks: vegetation silhouette/cutout, terrain tree/detail prototypes, lighting, skybox, transparent VFX.
+Known limits: wind/custom shader behavior not retained; baked lighting not rebuilt; no Unity render or compilation validation was possible.
+Materials without identified base texture: 5
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Terrain.mat
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Scenes\BackgroundMat.mat
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Candle_Flame_01.mat
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Flame_Particle_01.mat
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Candle_Flame_02.mat

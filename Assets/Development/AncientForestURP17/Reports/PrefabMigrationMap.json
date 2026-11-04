@@ -1,0 +1,114 @@
+[
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Flowers\\P_ENV_flower_ancient_06_01.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Flowers\\P_ENV_flower_ancient_06_01.prefab",
+    "SourcePrefabGuid": "4afce7cd31ee52242820aba0743dc077",
+    "CompatiblePrefabGuid": "b935466eb84b4cd7a5724e5067e9f3ab",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Flowers\\P_ENV_flower_ancient_06_02.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Flowers\\P_ENV_flower_ancient_06_02.prefab",
+    "SourcePrefabGuid": "ebe550ca4800d4a42b2a00ed6f80fba9",
+    "CompatiblePrefabGuid": "35edb12fa5554f6e821308f362235598",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Misc\\P_ENV_birdnest_egg_ancient.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Misc\\P_ENV_birdnest_egg_ancient.prefab",
+    "SourcePrefabGuid": "cda1e5d9ebac4bc46a9a091bd3a97aa5",
+    "CompatiblePrefabGuid": "f8c4892c1aeb4200b09e48abdd11889f",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Misc\\P_ENV_water_ancient.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Misc\\P_ENV_water_ancient.prefab",
+    "SourcePrefabGuid": "b2f78ac01a78c3541b42a2af64283958",
+    "CompatiblePrefabGuid": "185801b93ce144ef9179feb8371d9f9f",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Props\\P_PROP_head_ancient.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Props\\P_PROP_head_ancient.prefab",
+    "SourcePrefabGuid": "656f32a3a7d82fa449f42417b836c67a",
+    "CompatiblePrefabGuid": "fed76c0b4be24d3eb3257f46c5786a13",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_01.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_01.prefab",
+    "SourcePrefabGuid": "0da67aa787819c641a8d7eb86e01b37c",
+    "CompatiblePrefabGuid": "e7bddd932f63445790242b8e2c94d12c",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_02.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_02.prefab",
+    "SourcePrefabGuid": "7b0dfaa7cf89cff40bdcc3c5fffbff51",
+    "CompatiblePrefabGuid": "b4f3d58f32434677844fa39582bae365",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_03.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_03.prefab",
+    "SourcePrefabGuid": "a1b52e567f1a15149a43d7f30ecccda4",
+    "CompatiblePrefabGuid": "2c97ea48796649bb906404b40d6d9f7a",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_04.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_04.prefab",
+    "SourcePrefabGuid": "ee69ad6dcd7161b43b278316eb88397d",
+    "CompatiblePrefabGuid": "7f46740b291e4517a432e49dcb1c7d1e",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_05.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_05.prefab",
+    "SourcePrefabGuid": "542b1cdfbe85391469c523fca22ecf6a",
+    "CompatiblePrefabGuid": "adccf5bcb14a4841af38b4580391dae6",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Stones\\P_ENV_stone_ancient_06.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Stones\\P_ENV_stone_ancient_06.prefab",
+    "SourcePrefabGuid": "a05a152729161b74d883391a049dd71a",
+    "CompatiblePrefabGuid": "14275fe2e5d940edbac47171ffba65e3",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Trees\\P_ENV_treeroot_ancient_01.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Trees\\P_ENV_treeroot_ancient_01.prefab",
+    "SourcePrefabGuid": "315786f4972167441be3273a5287d3b7",
+    "CompatiblePrefabGuid": "329186387ccf4c0eaa71ae2d46661e5a",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Trees\\P_ENV_treeroot_ancient_02.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Trees\\P_ENV_treeroot_ancient_02.prefab",
+    "SourcePrefabGuid": "8b486c011c491434db90968f7039481e",
+    "CompatiblePrefabGuid": "3c6c845bb72441db930c01c6cabf14c5",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Trees\\P_ENV_treeroot_ancient_03.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Trees\\P_ENV_treeroot_ancient_03.prefab",
+    "SourcePrefabGuid": "54e22326f25ad8f419b52a0a633b3abc",
+    "CompatiblePrefabGuid": "cb255e0cf22a41938e1a5cd6cee1bae9",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Trees\\P_ENV_treeroot_ancient_04.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Trees\\P_ENV_treeroot_ancient_04.prefab",
+    "SourcePrefabGuid": "44e921ab555a70442a3176299a0f64cf",
+    "CompatiblePrefabGuid": "7f862231fe55444e87c1dfb67c661394",
+    "MaterialReferenceGroupsReplaced": 1
+  },
+  {
+    "Original": "Assets\\Fantastic Ancient Forest\\Prefabs\\Trees\\P_ENV_treeroot_ancient_05.prefab",
+    "Compatible": "Assets\\Development\\AncientForestURP17\\Prefabs\\Trees\\P_ENV_treeroot_ancient_05.prefab",
+    "SourcePrefabGuid": "33b6e49ac3eb6f34d9ef9b7753a92d51",
+    "CompatiblePrefabGuid": "9e980fcecfb640a9939648fbdaf8f006",
+    "MaterialReferenceGroupsReplaced": 1
+  }
+]

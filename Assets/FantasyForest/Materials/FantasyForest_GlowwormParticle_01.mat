@@ -38,7 +38,7 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - SHADOWCASTER
-  - ALWAYS
+  - GRABPASS
   - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:

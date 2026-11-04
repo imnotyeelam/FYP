@@ -31,6 +31,7 @@ public class AncientSpellbookUI : MonoBehaviour
 
     public bool IsBookOpen =>
     spellbookPanel != null && spellbookPanel.activeSelf;
+    public bool GuidedLessonCompleted => guidedSimulation != null && guidedSimulation.IsCompleted;
 
     private readonly string[] titles =
     {
@@ -79,11 +80,21 @@ public class AncientSpellbookUI : MonoBehaviour
 
     public void OpenBook()
     {
-        if (sessionOpen) return;
+        OpenBookAtPage(0);
+    }
+
+    public void OpenGuidedSimulationForChallenge()
+    {
+        OpenBookAtPage(titles.Length);
+    }
+
+    private void OpenBookAtPage(int requestedPage)
+    {
+        if (sessionOpen || spellbookPanel == null || !CursorManager.allowCursorLock) return;
         sessionOpen = true;
         movementWasEnabled = playerMovement != null && playerMovement.enabled;
         cameraWasEnabled = cameraFollow != null && cameraFollow.enabled;
-        currentPage = 0;
+        currentPage = Mathf.Clamp(requestedPage, 0, PageCount - 1);
         UpdatePage();
 
         spellbookPanel.SetActive(true);
@@ -93,6 +104,8 @@ public class AncientSpellbookUI : MonoBehaviour
 
         if (cameraFollow != null)
             cameraFollow.enabled = false;
+
+        InteractionHintManager.Instance?.HideAll();
 
         if (CursorManager.Instance != null)
         {
@@ -114,7 +127,9 @@ public class AncientSpellbookUI : MonoBehaviour
             knowledgeText.gameObject.SetActive(!simulationPage);
             codeText.gameObject.SetActive(!simulationPage);
         }
-        titleText.text = simulationPage ? "Guided Bridge Simulation" : titles[currentPage];
+        titleText.text = simulationPage
+            ? "Guided Bridge Simulation — Complete the guided simulation to unlock this challenge"
+            : titles[currentPage];
         if (!simulationPage)
         {
             knowledgeText.text = explanations[currentPage];

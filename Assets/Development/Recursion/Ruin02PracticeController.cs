@@ -14,6 +14,7 @@ namespace Fyp.Development.Recursion
         public Transform player, interactionPoint;
         public Ruin02PracticePanel panel;
         public Ruin02SpellbookUI guidedBook;
+        public Ruin02GuidedSimulationUI guidedSimulationUi;
         public Ruin02FeedbackClient feedbackClient;
         public MonoBehaviour playerMovement, cameraFollow;
         public float interactionDistance=3f;
@@ -42,18 +43,28 @@ namespace Fyp.Development.Recursion
         public bool Incorrect=>incorrect;
         public bool CanSubmit=>open && !cinematicActive && session!=null && !session.Advancing && !session.Complete;
         public bool CanContinueCallDown=>open && !cinematicActive && session!=null && session.RequiresCallDownContinue;
-        Ruin02SpellbookUI GuidedBook=>guidedBook!=null?guidedBook:(guidedBook=FindFirstObjectByType<Ruin02SpellbookUI>());
-        public bool GuidedLessonCompleted=>GuidedBook!=null && GuidedBook.GuidedLessonCompleted;
+        Ruin02GuidedSimulationUI GuidedSimulationUi=>guidedSimulationUi!=null?guidedSimulationUi:(guidedSimulationUi=FindFirstObjectByType<Ruin02GuidedSimulationUI>());
+        public bool GuidedLessonCompleted=>GuidedSimulationUi!=null && GuidedSimulationUi.GuidedLessonCompleted;
         public bool UsesSharedInteraction=>true;
         public Transform InteractionOrigin=>interactionPoint;
         public float SharedInteractionRange=>interactionDistance;
         public bool CanSharedInteract=>isActiveAndEnabled && player!=null && interactionPoint!=null &&
             panel!=null && session!=null && !open && CursorManager.allowCursorLock;
+        public string InteractionDiagnostic =>
+            $"enabled={isActiveAndEnabled}, player={(player!=null)}, point={(interactionPoint!=null)}, panel={(panel!=null)}, session={(session!=null)}, practiceOpen={open}, cursorAllowed={CursorManager.allowCursorLock}, guidedUi={(GuidedSimulationUi!=null)}, lessonDone={GuidedLessonCompleted}";
         public string SharedHint=>GuidedLessonCompleted?"Press [E] to Seal the Magic":"Press [E] to Study the Guided Simulation";
         public void InteractFromShared()
         {
-            if(!CanSharedInteract)return;
-            if(!GuidedLessonCompleted){GuidedBook?.OpenGuidedSimulationForChallenge();return;}
+            Debug.Log("[Ruin02 Interaction] Practice callback received. "+InteractionDiagnostic,this);
+            if(!CanSharedInteract){Debug.LogWarning("[Ruin02 Interaction] Practice callback blocked: "+InteractionDiagnostic,this);return;}
+            if(!GuidedLessonCompleted)
+            {
+                Debug.Log("[Ruin02 Interaction] Prerequisite incomplete; requesting standalone guided UI.",this);
+                GuidedSimulationUi?.Open();
+                Debug.Log("[Ruin02 Interaction] Guided UI open result: "+(GuidedSimulationUi!=null && GuidedSimulationUi.IsOpen),this);
+                return;
+            }
+            Debug.Log("[Ruin02 Interaction] Lesson complete; opening practice.",this);
             Open();
         }
 

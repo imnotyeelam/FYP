@@ -1,0 +1,93 @@
+FW01 Summer source audit (YAML dependency graph; Unity import pending)
+Scene: Assets/TriForge Assets/Fantasy Worlds - Forest/Scenes/S_FW01_Demo_Summer.unity
+Direct/indirect material assets: 83
+Already URP: 1
+Pink high risk: 81
+Prefab dependencies: 414
+TerrainData dependencies: 1
+Shader families:
+  TriForge: 68
+  <builtin or missing>: 15
+Priority: tree bark, leaves, flowers, grass, bushes, rocks, ruins, ground, Terrain trees/details.
+High-risk materials:
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Bricks_Debris_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_ForestDebris_Branches_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rocks_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Terrain.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_ForestDebris_Logs.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Soil_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_fwOF_Grass_01.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Scenes\BackgroundMat.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_ForestDebris_Stumps_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_01.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rocks_L_LOD.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rocks_L_Clean_LOD.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_Clean_02.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Treasure_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_CampProps_Sacks_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Bottles_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_CampProps_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Camp_Furniture_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_CampProps_Food_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Bottles_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Treasure_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Treasure_03.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Mushrooms_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_fwOF_ForestClutter_01.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_ParticleButterfly_01.mat | TriForge/Butterfly | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_fwOF_Tree_Med_2B.mat | TriForge/Tree Bark | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_fwOF_Tree_Med_2A.mat | TriForge/Tree Bark | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_fwOF_TreeLOD_01.mat | TriForge/Tree Bark | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_fwOF_TreeBillboard_01.mat | TriForge/Tree Branch | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_fwOF_Leaf_Branches_01.mat | TriForge/Tree Branch | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Crate_A_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Standing_Stones_03.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_fwOF_Cloud.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_IvySet_01.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_FWOF_Flower_Large_A_02.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Particle_Leaf_01.mat | <builtin or missing> | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_fwOF_ForestPlants_01.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_FWOF_Flower_Large_C_02.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Rubble_Edges_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Rubble_Edges_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Candles_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_RocksClean_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Standing_Stones_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Foliage\M_fwOF_Ferns_01.mat | TriForge/FWGrass | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_CampProps_Sacks_03.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_LightRays_01.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Coin_Tile_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_Clean_01.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_FW01_Coin_Tile_03.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_fwOF_Particle_Dust 1.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_FW01_Tree_B_Tile_01.mat | TriForge/Tree Bark | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Trees\M_FW01_Tree_Leaf_01.mat | TriForge/Tree Branch | vegetation
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_fwOF_Particle_Dust.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Particle_Sparkle_01.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Particle_Sparkle_02.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Wall_01.mat | TriForge/Four Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_03.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Standing_Stones_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_fwOF_Mist_01.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Campfire_Lit_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_WindTrails_01.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_fwOF_Mist_02.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_02.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Corners_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_FW01_Ruins_FloorTiles_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Arches_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_FW01_Ruins_Floor_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Doorways_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Rock_L_Clean_03.mat | TriForge/Mask Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_TentPoles_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_02_C.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\Ruins\M_fwOF_Ruins_Windows_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Candle_Flame_01.mat | TriForge/Particle Scrolling Unlit | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Flame_Particle_01.mat | TriForge/Particle Scrolling Unlit | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_Ember_Particle.mat | <builtin or missing> | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_03.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\VFX\M_FW01_Candle_Flame_02.mat | TriForge/Particle Scrolling Unlit | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_02_A.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_02.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_01.mat | TriForge/Two Layer Blend | hard surface
+  Assets\TriForge Assets\Fantasy Worlds - Forest\Materials\M_fwOF_Tent_01_B.mat | TriForge/Two Layer Blend | hard surface

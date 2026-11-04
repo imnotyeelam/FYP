@@ -22,6 +22,7 @@ public class InteractionHintManager : MonoBehaviour
     private readonly SharedInteractionPressGate pressGate = new SharedInteractionPressGate();
 
     private object currentOwner;
+    private int lastSelectedIndex = int.MinValue;
 
     void Awake()
     {
@@ -90,7 +91,12 @@ public class InteractionHintManager : MonoBehaviour
 
     private void Refresh(bool dispatch)
     {
-        if (player == null || interactionTargets == null || ModalOpen()) { HideAll(); return; }
+        if (player == null || interactionTargets == null || ModalOpen())
+        {
+            if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+                Debug.Log($"[Ruin02 Interaction] Shared interaction blocked before selection: player={(player!=null)}, targets={(interactionTargets!=null)}, modal={ModalOpen()}, cursorAllowed={CursorManager.allowCursorLock}, cursorLock={Cursor.lockState}");
+            HideAll(); return;
+        }
         candidates.Clear();
         foreach (var behaviour in interactionTargets)
         {
@@ -102,13 +108,23 @@ public class InteractionHintManager : MonoBehaviour
                 eligible ? target.SharedInteractionRange : 0));
         }
         int selected = SharedInteractionSelection.Nearest(candidates);
-        if (selected < 0) { HideAll(); return; }
+        if (selected < 0)
+        {
+            if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+                Debug.Log("[Ruin02 Interaction] E pressed but no eligible shared target was within range.");
+            lastSelectedIndex = -1; HideAll(); return;
+        }
         var chosen = (ISharedInteractionTarget)interactionTargets[selected];
+        if (selected != lastSelectedIndex && interactionTargets[selected] is Fyp.Development.Recursion.Ruin02PracticeController)
+            Debug.Log($"[Ruin02 Interaction] Challenge landmark selected: index={selected}, hint='{chosen.SharedHint}', range={chosen.SharedInteractionRange:F2}.");
+        lastSelectedIndex = selected;
         Present(interactionTargets[selected], chosen.SharedHint);
         if (!dispatch || !pressGate.TryConsume(Time.frameCount,
             Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)) return;
         // Consume before invoking: teleporting cannot activate a second target on this key edge.
         HideAll();
+        if (interactionTargets[selected] is Fyp.Development.Recursion.Ruin02PracticeController)
+            Debug.Log("[Ruin02 Interaction] E dispatched to selected challenge landmark.");
         chosen.InteractFromShared();
     }
 

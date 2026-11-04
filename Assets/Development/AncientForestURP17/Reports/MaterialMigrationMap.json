@@ -1,0 +1,162 @@
+[
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_plants_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_plants_ancient_URP17.mat",
+    "SourceMaterialGuid": "2af2e7306215bef4f868b92de569b597",
+    "CompatibleMaterialGuid": "04daba633bc74505a538be1bb01583bd",
+    "SourceShaderGuid": "f4dd38852f249bc4b8d3b70d56b38591",
+    "CompatibleShaderGuid": "90c58210d9a84615a966c5348eef0c7c"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_plants_emission_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_plants_emission_ancient_URP17.mat",
+    "SourceMaterialGuid": "4a83bfaa2e60f9144a2bed71480cfbd8",
+    "CompatibleMaterialGuid": "236ddfbd3ae54b4b807bcb59dc7499d4",
+    "SourceShaderGuid": "736e744e3b7817e418215dffa87b7088",
+    "CompatibleShaderGuid": "b3ed5983e10c457aae2b9e73ffdf487f"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_plants_lit_emission_ancient 1.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_plants_lit_emission_ancient 1_URP17.mat",
+    "SourceMaterialGuid": "746919690d07e24438891c888b96f73d",
+    "CompatibleMaterialGuid": "acc22eb6bf7d4f9dabc0f9a0e180cc91",
+    "SourceShaderGuid": "0d75c58351e904d44a4d88e55c88b70e",
+    "CompatibleShaderGuid": "cdd824cc7c5a41aca1a60ac3552b7517"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_plants_lit_emission_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_plants_lit_emission_ancient_URP17.mat",
+    "SourceMaterialGuid": "13c5ffec06712084e9da2f4239ceebdb",
+    "CompatibleMaterialGuid": "5d74aa686c5a40ffb6d976753c053523",
+    "SourceShaderGuid": "0d75c58351e904d44a4d88e55c88b70e",
+    "CompatibleShaderGuid": "cdd824cc7c5a41aca1a60ac3552b7517"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_01.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_01_URP17.mat",
+    "SourceMaterialGuid": "ff1cb7d85dcf03b47ba01f1caab0b9b2",
+    "CompatibleMaterialGuid": "09f240f03ed3401db552b26db9e4fd9e",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_02.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_02_URP17.mat",
+    "SourceMaterialGuid": "175980ff38217df4aab1b0bcfa7d2705",
+    "CompatibleMaterialGuid": "31564ab9db4a4fbfa82bdd50d88ef6af",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_03.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_03_URP17.mat",
+    "SourceMaterialGuid": "e93bfaa965c56704ea9f5d0724f39b12",
+    "CompatibleMaterialGuid": "ce42cda467554f8cbb7de767089ae307",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_04.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_04_URP17.mat",
+    "SourceMaterialGuid": "50a89259c98dfac468420e8461ff60e9",
+    "CompatibleMaterialGuid": "edfc3136d267489f9126dd6288277ca0",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_05.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_05_URP17.mat",
+    "SourceMaterialGuid": "b0c84f264664a6d4b9225d2d3bdfd9d0",
+    "CompatibleMaterialGuid": "8ef66b5af9474014b38bccdc7cfe4f2a",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_stone_ancient_06.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_stone_ancient_06_URP17.mat",
+    "SourceMaterialGuid": "19de229548131184baa1cd962aaae8f4",
+    "CompatibleMaterialGuid": "099d506ecac14b66b6b481c62b834853",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_tree_leaves_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_tree_leaves_ancient_URP17.mat",
+    "SourceMaterialGuid": "a35168ec5f8b41447ba5916c93191534",
+    "CompatibleMaterialGuid": "11aa9898ecf04418983487416c38b29a",
+    "SourceShaderGuid": "736e744e3b7817e418215dffa87b7088",
+    "CompatibleShaderGuid": "b3ed5983e10c457aae2b9e73ffdf487f"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_water_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_water_ancient_URP17.mat",
+    "SourceMaterialGuid": "5b092abc1e10e864eaad6940fe85dfdf",
+    "CompatibleMaterialGuid": "21baf96527ad4429a7f1f20d4bfb85ec",
+    "SourceShaderGuid": "0148ba909721dc8438ece84cf9cc238d",
+    "CompatibleShaderGuid": "a3afc6c3dfa84dfca683bb2e66b5c5b2"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_wood_ancient_01.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_wood_ancient_01_URP17.mat",
+    "SourceMaterialGuid": "d768d77458b842644b856380df9a044f",
+    "CompatibleMaterialGuid": "3e82e7b893ae49d6a4b1649ca4d48d6a",
+    "SourceShaderGuid": "46887de279c9ffa44a92290beaaca2b7",
+    "CompatibleShaderGuid": "3f850969d97b478da9263b2be3fd840a"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_ENV_wood_ancient_02.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_ENV_wood_ancient_02_URP17.mat",
+    "SourceMaterialGuid": "719f937fe7073c9408867e40407f360c",
+    "CompatibleMaterialGuid": "2f94b0d2997e4745bf651f76349447a8",
+    "SourceShaderGuid": "46887de279c9ffa44a92290beaaca2b7",
+    "CompatibleShaderGuid": "3f850969d97b478da9263b2be3fd840a"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_column_ancient_01.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_column_ancient_01_URP17.mat",
+    "SourceMaterialGuid": "48bbdc401f8b20943b1d8cc9a0f344e9",
+    "CompatibleMaterialGuid": "370d4913e120460cb1923fda5ce7d514",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_column_ancient_02.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_column_ancient_02_URP17.mat",
+    "SourceMaterialGuid": "6045b0d731b32e345a193bf7cff0b759",
+    "CompatibleMaterialGuid": "07393736b6054147830e9ecaadad4eed",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_column_ancient_03.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_column_ancient_03_URP17.mat",
+    "SourceMaterialGuid": "f40d93b95c46bf246a0fc01cd24ea55a",
+    "CompatibleMaterialGuid": "4ef3a7159985495985800a8ceeafb61c",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_column_ancient_04.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_column_ancient_04_URP17.mat",
+    "SourceMaterialGuid": "9498e94feae5e3346b99a03186233956",
+    "CompatibleMaterialGuid": "c08d52b7a5024e14b4852181a4c4cd9c",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_column_base_ancient_01.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_column_base_ancient_01_URP17.mat",
+    "SourceMaterialGuid": "4901b52f6155cd64ea3814fef06f4e16",
+    "CompatibleMaterialGuid": "8caa92b99a754782891eccbca76ae95f",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Materials/M_PROP_head_ancient.mat",
+    "Compatible": "Assets/Development/AncientForestURP17/Materials/M_PROP_head_ancient_URP17.mat",
+    "SourceMaterialGuid": "ca49fe667e4137b4abf1917f631de093",
+    "CompatibleMaterialGuid": "81620b21e11b452aa955bd39117ce530",
+    "SourceShaderGuid": "592ca707d361721498c831d1f0c3817b",
+    "CompatibleShaderGuid": "35e841b1136f44cd8997c6370f626ffc"
+  }
+]

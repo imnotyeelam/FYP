@@ -10,6 +10,15 @@ namespace Fyp.Development.Recursion
         private bool initialized;
         public int CheckpointIndex => playback==null?0:playback.Index;
         public RecursionStep Current => playback==null?null:playback.Current;
+        public RecursionPlayback Playback { get { EnsureInitialized(); return playback; } }
+        public bool IsCompleted
+        {
+            get
+            {
+                EnsureInitialized();
+                return playback.Index == playback.Trace.Steps.Count - 1;
+            }
+        }
 
         private void EnsureInitialized()
         {

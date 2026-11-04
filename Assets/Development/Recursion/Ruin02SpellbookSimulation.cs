@@ -10,17 +10,21 @@ namespace Fyp.Development.Recursion
         RecursionPlayback playback;
         bool initialized;
         bool completed;
+        bool reachedFinal;
         public int CheckpointIndex => playback == null ? 0 : playback.Index;
         public RecursionStep Current => playback == null ? null : playback.Current;
         public RecursionPlayback Playback => playback;
         public bool IsCompleted => completed;
+        public bool HasReachedFinalCheckpoint => reachedFinal;
         public event Action Completed;
+        public event Action FinalCheckpointReached;
+        public Action CloseRequested;
 
         void EnsureInitialized()
         {
             if (initialized) return;
             playback = new RecursionPlayback(Ruin02ReturnLesson.Create());
-            details.Initialize(NextStep,PreviousStep,Replay,()=>{},JumpToStep);
+            details.Initialize(NextStep,PreviousStep,Replay,()=>CloseRequested?.Invoke(),JumpToStep);
             initialized = true;
         }
         void OnEnable() { EnsureInitialized(); Render(); }
@@ -33,11 +37,17 @@ namespace Fyp.Development.Recursion
             details.Present(playback);
             details.title.text = "Guided return flow | sealMagic(4)";
             diagram.Present(playback.Current);
-            if(!completed && playback.Index==playback.Trace.Steps.Count-1)
+            if(!reachedFinal && playback.Index==playback.Trace.Steps.Count-1)
             {
-                completed=true;
-                Completed?.Invoke();
+                reachedFinal=true;
+                FinalCheckpointReached?.Invoke();
             }
+        }
+        public bool CompleteLesson()
+        {
+            EnsureInitialized();
+            if(completed || playback.Index!=playback.Trace.Steps.Count-1)return false;
+            completed=true;Completed?.Invoke();return true;
         }
         void OnDestroy() { if (initialized && details != null) details.Disconnect(); }
     }

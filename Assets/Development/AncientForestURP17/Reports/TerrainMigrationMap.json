@@ -1,0 +1,56 @@
+[
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 1.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 1.asset",
+    "SourceGuid": "aab8f15d2ef3ab541a03dcc707edae5d",
+    "CompatibleGuid": "a818f6bb712442c7bc2363083fb4d79a"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 2.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 2.asset",
+    "SourceGuid": "b3799b258fc04ce46a9aee1c029a0f9c",
+    "CompatibleGuid": "0651c5735caf47e99d41c04612e69ab4"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 3.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 3.asset",
+    "SourceGuid": "cb0dd410939880b4bb8e023263be4fd2",
+    "CompatibleGuid": "c45a928005504568856c4e408bd1dc82"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 4.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 4.asset",
+    "SourceGuid": "9855e7500106b894198d3762513977e6",
+    "CompatibleGuid": "ae9fe05c3c304e24ac036c1106c3313c"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 5.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 5.asset",
+    "SourceGuid": "ce1ff8ac9410a914fb5d551da109b682",
+    "CompatibleGuid": "623ef2ee65cb4ab097008d1825267e0c"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 6.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 6.asset",
+    "SourceGuid": "966c9a08095158a43be5f08ac9553b48",
+    "CompatibleGuid": "9ff4900733234806a5abd783a937fb82"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 7.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 7.asset",
+    "SourceGuid": "8767b0a27eaa0d04091091c2a610373e",
+    "CompatibleGuid": "b07022c63e0342ada1aba15715fc1690"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 8.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 8.asset",
+    "SourceGuid": "0218656f1cf7a1b43be6261598eeb3f0",
+    "CompatibleGuid": "380c16815bcd4ba1b1565eae325ad2cc"
+  },
+  {
+    "Original": "Assets/Fantastic Ancient Forest/Terrain_Data/Terrain 9.asset",
+    "Compatible": "Assets/Development/AncientForestURP17/TerrainData/Terrain 9.asset",
+    "SourceGuid": "1849b9997fe25bf4da0f780ad8fb2e7d",
+    "CompatibleGuid": "7f95d710fdc54e39b8ce831bbe6c6a43"
+  }
+]

@@ -9,7 +9,8 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
     public TMP_Text titleText, pageNumberText, knowledgeText, codeText;
     public UnityEngine.UI.Button previousButton, nextButton, closeButton;
     public MonoBehaviour playerMovement, cameraFollow;
-    public Ruin02SpellbookSimulation guidedSimulation;
+    // Retained solely to deserialize the previous scene safely. It is no longer used by the book.
+    [HideInInspector] public Ruin02SpellbookSimulation guidedSimulation;
 
     static readonly string[] Titles = {
         "The Returning Spell", "Calls and Returns", "The Sealing Function"
@@ -23,7 +24,6 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
     int page;
     bool open, movementBefore, cameraBefore;
     public bool IsBookOpen => open;
-    public bool GuidedLessonCompleted => guidedSimulation != null && guidedSimulation.IsCompleted;
 
     void Start()
     {
@@ -38,15 +38,13 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
     }
     public void OpenBook()
     { OpenBookAtPage(0); }
-    public void OpenGuidedSimulationForChallenge()
-    { OpenBookAtPage(3); }
     void OpenBookAtPage(int requestedPage)
     {
         if (open || spellbookPanel == null || !CursorManager.allowCursorLock) return;
         open = true;
         movementBefore = playerMovement != null && playerMovement.enabled;
         cameraBefore = cameraFollow != null && cameraFollow.enabled;
-        page = Mathf.Clamp(requestedPage,0,3);
+        page = Mathf.Clamp(requestedPage,0,2);
         ShowPage();
         spellbookPanel.SetActive(true);
         if (playerMovement != null) playerMovement.enabled = false;
@@ -57,22 +55,17 @@ public sealed class Ruin02SpellbookUI : MonoBehaviour
     }
     void ShowPage()
     {
-        bool sim = page == 3;
-        guidedSimulation.gameObject.SetActive(sim);
-        knowledgeText.gameObject.SetActive(!sim);
-        codeText.gameObject.SetActive(!sim);
-        titleText.text = sim ? "Guided Return-Flow Simulation — Complete the guided simulation to unlock this challenge" : Titles[page];
-        if (!sim)
-        {
-            knowledgeText.text = Knowledge[page];
-            codeText.text = page == 2 ? FunctionCode : page == 1 ?
+        knowledgeText.gameObject.SetActive(true);
+        codeText.gameObject.SetActive(true);
+        titleText.text = Titles[page];
+        knowledgeText.text = Knowledge[page];
+        codeText.text = page == 2 ? FunctionCode : page == 1 ?
                 "CALL: 4 -> 3 -> 2 -> 1 -> 0\nBASE CASE: sealMagic(0) returns\nRETURN: absorbMagic(1) -> (2) -> (3) -> (4)" : "sealMagic(4)";
-        }
-        pageNumberText.text = (page+1) + " / 4";
+        pageNumberText.text = (page+1) + " / 3";
         previousButton.interactable = page > 0;
-        nextButton.interactable = page < 3;
+        nextButton.interactable = page < 2;
     }
-    public void NextPage() { if (page < 3) { page++; ShowPage(); } }
+    public void NextPage() { if (page < 2) { page++; ShowPage(); } }
     public void PreviousPage() { if (page > 0) { page--; ShowPage(); } }
     public void CloseBook()
     {
