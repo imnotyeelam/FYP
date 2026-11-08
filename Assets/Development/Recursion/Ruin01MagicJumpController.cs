@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Fyp.Development.Recursion
 {
-    /// <summary>F2-A only: five scripted magical leaps, with no animation or reward integration.</summary>
+    /// <summary>F2-A only: scripted magical leaps, with no animation or reward integration.</summary>
     public sealed class Ruin01MagicJumpController : MonoBehaviour, ISharedInteractionTarget
     {
         public BridgePracticeController bridgePractice;
@@ -28,8 +28,10 @@ namespace Fyp.Development.Recursion
         [Min(1f)] public float interactionDistance = 3f;
         [Min(0f)] public float leapArcHeight = .8f;
         [Min(0f)] public float failureFeedbackSeconds = .85f;
+        [Min(.1f)] public float platformPauseSeconds = .9f;
 
-        bool open, playing, completed, movementBefore, cameraBefore, controllerBefore, cursorBefore, allowBefore;
+        bool open, playing, completed, developerPrerequisitesUnlocked;
+        bool movementBefore, cameraBefore, controllerBefore, cursorBefore, allowBefore;
         CursorLockMode lockBefore;
         GameObject selectionBefore;
         Coroutine playback;
@@ -42,11 +44,13 @@ namespace Fyp.Development.Recursion
         public int PerformedJumps => performed;
         public int CurrentN => currentN;
         public int AttemptCount => attempts;
+        public bool DeveloperPrerequisitesUnlocked => developerPrerequisitesUnlocked;
         public bool UsesSharedInteraction => true;
         public Transform InteractionOrigin => jumpStartPoint;
         public float SharedInteractionRange => interactionDistance;
         public bool CanSharedInteract => enabled && isActiveAndEnabled && !open && !playing && !completed &&
-            bridgePractice != null && bridgePractice.IsComplete && bridgePractice.GuidedLessonCompleted &&
+            bridgePractice != null && (developerPrerequisitesUnlocked ||
+                (bridgePractice.IsComplete && bridgePractice.GuidedLessonCompleted)) &&
             player != null && jumpStartPoint != null &&
             Vector3.Distance(player.position, jumpStartPoint.position) <= interactionDistance && CursorManager.allowCursorLock;
         public string SharedHint => "Press [E] to Cast Recursive Magic Jump";
@@ -64,6 +68,7 @@ namespace Fyp.Development.Recursion
                 return;
             }
             panel.SetActive(false);
+            HideAllPlatforms();
             castButton.onClick.AddListener(Submit);
             closeButton.onClick.AddListener(Close);
         }
@@ -92,7 +97,7 @@ namespace Fyp.Development.Recursion
             panel.SetActive(true);
             input.gameObject.SetActive(true);
             castButton.gameObject.SetActive(true);
-            input.text = "5";
+            input.text = "";
             SetStatus("Enter n (1–6). magicJump(n) calls itself until n=0, then makes one leap per returning call.");
             input.Select();
             input.ActivateInputField();
@@ -120,6 +125,7 @@ namespace Fyp.Development.Recursion
             currentN = n;
             attempts++;
             playing = true;
+            HideAllPlatforms();
             input.gameObject.SetActive(false);
             castButton.gameObject.SetActive(false);
             if (CursorManager.Instance != null) CursorManager.Instance.SetUIOpen(false);
@@ -136,19 +142,20 @@ namespace Fyp.Development.Recursion
         IEnumerator RunAttempt()
         {
             yield return MagicJump(requested);
+            HideAllPlatforms();
             if (requested == 5 && performed == 5)
             {
                 PlaceSafely(destinations[4], false);
                 completed = true;
-                SetStatus("Five calls returned. Jump challenge complete; safe landing reached.");
+                SetStatus("Jump challenge complete; safe landing reached.");
                 playing = false;
                 playback = null;
                 Close();
                 yield break;
             }
-            SetStatus(requested < 5
-                ? "Insufficient distance: " + performed + " of 5 leaps. Teleporting to the start for retry."
-                : "Overshoot: call 6 would pass the landing. Teleporting to the start for retry.");
+            SetStatus(requested < destinations.Length
+                ? "Not quite there! Your magic stopped before reaching the destination. Try a different n."
+                : "Too much magic! The spell would carry you beyond the safe route. Try a different n.");
             yield return new WaitForSeconds(failureFeedbackSeconds);
             PlaceSafely(jumpStartPoint, true);
             cameraFollow.enabled = false;
@@ -158,9 +165,9 @@ namespace Fyp.Development.Recursion
             castButton.gameObject.SetActive(true);
             playing = false;
             playback = null;
-            SetStatus(requested < 5
-                ? "Insufficient distance: " + performed + " of 5 leaps. Enter n and retry."
-                : "Overshoot avoided: n=6 needs one leap too many. Enter n and retry.");
+            SetStatus(requested < destinations.Length
+                ? "Not quite there! Your magic stopped before reaching the destination. Try a different n."
+                : "Too much magic! The spell would carry you beyond the safe route. Try a different n.");
             input.Select();
             input.ActivateInputField();
         }
@@ -182,17 +189,27 @@ namespace Fyp.Development.Recursion
             currentN = n;
             if (performed >= destinations.Length)
             {
-                SetStatus("magicJump(" + n + "): no sixth destination. Overshoot stopped before movement.");
+                SetStatus("The spell reached the end of the safe route. Extra movement was prevented.");
                 yield return new WaitForSeconds(.55f);
                 yield break;
             }
             int index = performed;
             var from = index == 0 ? jumpStartPoint.position : destinations[index - 1].position;
             var to = destinations[index].position;
-            SetStatus("Returning from magicJump(" + n + "): leap " + (index + 1) + "/5. Calls: " + calls + ".");
+            SetStatus("Returning from magicJump(" + n + "): completing the next leap.");
             yield return Travel(from, to, secondsPerLeap);
             performed++;
-            magicTriggers[index].Pulse();
+            HideAllPlatforms();
+            magicTriggers[index].RevealAtFeet(player.position);
+            SetStatus(performed + " leaps completed. Standing on a temporary Magic Platform.");
+            yield return new WaitForSeconds(platformPauseSeconds);
+            magicTriggers[index].Hide();
+        }
+
+        void HideAllPlatforms()
+        {
+            if (magicTriggers == null) return;
+            foreach (var trigger in magicTriggers) if (trigger != null) trigger.Hide();
         }
 
         void PlaceSafely(Transform destination, bool shiftCamera)
@@ -225,8 +242,27 @@ namespace Fyp.Development.Recursion
 
         void SetStatus(string message)
         {
-            if (statusText != null) statusText.text = "n=" + currentN + "   Calls=" + calls +
-                "   Leaps=" + performed + "/5\n" + message;
+            if (statusText != null) statusText.text = "Current n: " + currentN +
+                "   Calls executed: " + calls + "   Leaps completed: " + performed + "\n" + message;
+        }
+
+        public void SetDeveloperPrerequisiteOverride(bool unlocked)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying || playing) return;
+            developerPrerequisitesUnlocked = unlocked;
+#endif
+        }
+
+        public void ResetForDeveloperTesting()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying || playing) return;
+            if (open) Close();
+            completed = false;
+            requested = calls = performed = currentN = attempts = 0;
+            HideAllPlatforms();
+#endif
         }
 
         public void Close()
@@ -246,6 +282,7 @@ namespace Fyp.Development.Recursion
 
         void OnDisable()
         {
+            HideAllPlatforms();
             if (!open) return;
             if (playback != null) StopCoroutine(playback);
             playing = false;

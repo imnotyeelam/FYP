@@ -21,6 +21,7 @@ namespace Fyp.Development.Recursion.Editor
         static CharacterController player;
         static Keyboard keyboard;
         static StringBuilder log;
+        static double[,] firstSeen, lastSeen;
         static int stage, assertions, decisions, errors;
         static double began, stageAt;
 
@@ -84,14 +85,19 @@ namespace Fyp.Development.Recursion.Editor
                     practice = jump.bridgePractice;
                     guided = UnityEngine.Object.FindObjectsByType<Ruin01GuidedSimulationUI>(FindObjectsSortMode.None).Single();
                     player = jump.characterController;
+                    firstSeen = new double[4, 5];
+                    lastSeen = new double[4, 5];
+                    for (int attempt = 0; attempt < 4; attempt++)
+                    for (int step = 0; step < 5; step++) firstSeen[attempt, step] = -1;
                     Check(jump.enabled && jump.destinations.Length == 5 && jump.magicTriggers.Length == 5 &&
                           !jump.JumpChallengeCompleted && !jump.IsOpen,
                         "fresh jump controller, five F1 destinations and five triggers");
                     Check(!jump.CanSharedInteract && !practice.IsComplete && !practice.GuidedLessonCompleted,
                         "guided lesson and bridge completion gate jump interaction");
-                    Check(jump.magicTriggers.All(x => x != null && x.GetComponent<SphereCollider>().isTrigger &&
-                          x.GetComponent<Rigidbody>() == null && x.PulseCount == 0),
-                        "five passive visual triggers cannot drive recursive calls");
+                    Check(jump.magicTriggers.All(x => x != null && !x.IsVisible &&
+                          !x.GetComponent<SphereCollider>().enabled && x.GetComponent<Rigidbody>() == null &&
+                          x.PulseCount == 0),
+                        "five hidden visual-only platforms cannot drive recursive calls");
                     Check(InteractionHintManager.Instance.interactionTargets.Count(x => x == jump) == 1 &&
                           InteractionHintManager.Instance.modalPanels.Count(x => x == jump.panel) == 1,
                         "one shared E registration and one modal registration");
@@ -160,35 +166,41 @@ namespace Fyp.Development.Recursion.Editor
                         jump.castButton.onClick.Invoke();
                         Check(jump.IsPlaying && !jump.playerMovement.enabled && !player.enabled,
                             "n=1 begins airborne with normal movement and collision disabled");
+                        Check(jump.magicTriggers.All(x => !x.IsVisible), "no platform appears before the first landing");
                         Next(6); return;
                     case 6:
-                        if (jump.IsPlaying) { CheckWaitingAtLastStep(); return; }
-                        CheckRetry(1, 1, "Insufficient distance");
+                        if (jump.IsPlaying) { ObservePlatforms(); CheckWaitingAtLastStep(); return; }
+                        CheckRetry(1, 1, "Not quite there!");
+                        CheckAttemptPlatforms(0, 1);
                         CheckPulses(1, 0, 0, 0, 0);
                         log.AppendLine("n=1: one trigger pulse, insufficient feedback, direct teleport and retry.");
                         StartAttempt(4); Next(7); return;
                     case 7:
-                        if (jump.IsPlaying) { CheckWaitingAtLastStep(); return; }
-                        CheckRetry(4, 4, "Insufficient distance");
+                        if (jump.IsPlaying) { ObservePlatforms(); CheckWaitingAtLastStep(); return; }
+                        CheckRetry(4, 4, "Not quite there!");
+                        CheckAttemptPlatforms(1, 4);
                         CheckPulses(2, 1, 1, 1, 0);
                         log.AppendLine("n=4: four segment pulses, direct teleport and retry.");
                         StartAttempt(6); Next(8); return;
                     case 8:
                         if (jump.IsPlaying)
                         {
+                            ObservePlatforms();
                             CheckWaitingAtLastStep();
                             Check(player.transform.position.z <= jump.destinations[4].position.z + .1f,
                                 "n=6 never moves beyond safe target");
                             return;
                         }
-                        CheckRetry(6, 5, "Overshoot");
+                        CheckRetry(6, 5, "Too much magic!");
+                        CheckAttemptPlatforms(2, 5);
                         CheckPulses(3, 2, 2, 2, 1);
                         log.AppendLine("n=6: sixth call blocked, five pulses, direct teleport and retry.");
                         StartAttempt(5); Next(9); return;
                     case 9:
-                        if (jump.IsPlaying) return;
+                        if (jump.IsPlaying) { ObservePlatforms(); return; }
                         Check(jump.JumpChallengeCompleted && jump.CallCount == 5 && jump.PerformedJumps == 5,
                             "n=5 completes exactly five recursive leaps");
+                        CheckAttemptPlatforms(3, 5);
                         CheckPulses(4, 3, 3, 3, 2);
                         Check(!jump.IsOpen && !jump.panel.activeInHierarchy && !jump.CanSharedInteract,
                             "completed challenge closes panel and persists for Play session");
@@ -219,7 +231,7 @@ namespace Fyp.Development.Recursion.Editor
         {
             jump.input.text = n.ToString();
             jump.castButton.onClick.Invoke();
-            Check(jump.IsPlaying && jump.statusText.text.Contains("Calls="), "playback displays call status");
+            Check(jump.IsPlaying && jump.statusText.text.Contains("Calls executed:"), "playback displays call status");
         }
 
         static void CheckPulses(params int[] expected)
@@ -227,6 +239,41 @@ namespace Fyp.Development.Recursion.Editor
             for (int i = 0; i < 5; i++)
                 Check(jump.magicTriggers[i].PulseCount == expected[i],
                     "trigger " + (i + 1) + " reacts once per completed segment");
+        }
+
+        static void ObservePlatforms()
+        {
+            int visible = -1;
+            for (int i = 0; i < 5; i++)
+            {
+                if (!jump.magicTriggers[i].IsVisible) continue;
+                Check(visible == -1, "at most one Magic Platform is visible");
+                visible = i;
+            }
+            if (visible < 0) return;
+            Check(visible == jump.PerformedJumps - 1, "only the just-completed segment is visible");
+            Check(Vector3.Distance(player.transform.position, jump.destinations[visible].position) < .15f,
+                "Wizard pauses at the completed segment marker");
+            var platform = jump.magicTriggers[visible].transform;
+            Check(Mathf.Abs(platform.position.y + platform.lossyScale.y - player.transform.position.y) < .03f &&
+                  Vector2.Distance(new Vector2(platform.position.x, platform.position.z),
+                      new Vector2(player.transform.position.x, player.transform.position.z)) < .03f,
+                "platform top aligns directly beneath the Wizard's feet");
+            int attempt = jump.AttemptCount - 1;
+            if (firstSeen[attempt, visible] < 0) firstSeen[attempt, visible] = EditorApplication.timeSinceStartup;
+            lastSeen[attempt, visible] = EditorApplication.timeSinceStartup;
+        }
+
+        static void CheckAttemptPlatforms(int attempt, int count)
+        {
+            Check(jump.magicTriggers.All(x => !x.IsVisible), "all Magic Platforms hide after the attempt");
+            for (int i = 0; i < 5; i++)
+            {
+                if (i < count)
+                    Check(firstSeen[attempt, i] >= 0 && lastSeen[attempt, i] - firstSeen[attempt, i] >= .6,
+                        "segment " + (i + 1) + " reveals one platform for a visible standing pause");
+                else Check(firstSeen[attempt, i] < 0, "future platform " + (i + 1) + " stayed hidden");
+            }
         }
 
         static void CheckWaitingAtLastStep()
@@ -249,6 +296,7 @@ namespace Fyp.Development.Recursion.Editor
             Check(!jump.playerMovement.enabled && !jump.cameraFollow.enabled && !CursorManager.allowCursorLock &&
                   jump.input.gameObject.activeInHierarchy && jump.castButton.gameObject.activeInHierarchy,
                 "retry input remains usable with modal controls");
+            Check(jump.magicTriggers.All(x => !x.IsVisible), "failed attempt leaves no floating platform visible");
         }
 
         static void Finish(bool success, string reason = null)

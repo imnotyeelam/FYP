@@ -16,6 +16,65 @@ namespace Fyp.Development.Recursion.Editor
         const string Backup = "LocalBackups/Ruin01JumpF2A_20261108/BeforeLive.unity";
         const string RefineBackup = "LocalBackups/Ruin01JumpRefine_20261108/BeforeLive.unity";
         const string TriggerMaterialPath = "Assets/Development/Recursion/Materials/Ruin01MagicTrigger.mat";
+        const string PlatformBackup = "LocalBackups/Ruin01MagicPlatform_20261108/BeforeLive.unity";
+
+        [MenuItem("Tools/FYP/Ruin 1/Jump F2-A/Convert Triggers to Hidden Platforms")]
+        public static void ConvertTriggersToPlatforms()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != ScenePath)
+                throw new InvalidOperationException("Open the Ruin 1 development scene in Edit Mode.");
+            var root = scene.GetRootGameObjects().Single(g => g.name == "Ruin01_RelocationRoot").transform;
+            var route = root.Find("Ruin01JumpRoute");
+            var challenge = route == null ? null : route.Find("JumpChallenge");
+            var controller = challenge == null ? null : challenge.GetComponent<Ruin01MagicJumpController>();
+            if (controller == null || controller.destinations == null || controller.destinations.Length != 5 ||
+                controller.magicTriggers == null || controller.magicTriggers.Length != 5 || challenge.childCount != 5)
+                throw new InvalidOperationException("Expected exactly five existing route destinations and Magic Triggers.");
+            for (int i = 0; i < 5; i++)
+                if (controller.magicTriggers[i] == null || controller.magicTriggers[i].transform.parent != challenge ||
+                    controller.magicTriggers[i].name != "MagicTrigger0" + (i + 1) || controller.destinations[i] == null)
+                    throw new InvalidOperationException("Existing Magic Trigger references are incomplete or reordered.");
+
+            var primitive = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var cylinderMesh = primitive.GetComponent<MeshFilter>().sharedMesh;
+            UnityEngine.Object.DestroyImmediate(primitive);
+            if (controller.magicTriggers.All(t => t.GetComponent<MeshFilter>().sharedMesh == cylinderMesh &&
+                !t.GetComponent<MeshRenderer>().enabled))
+            {
+                Debug.Log("Ruin 1 Magic Triggers are already hidden platforms.");
+                return;
+            }
+            Directory.CreateDirectory(Path.GetDirectoryName(PlatformBackup));
+            if (File.Exists(PlatformBackup)) throw new IOException("Live platform backup already exists; refusing to overwrite it.");
+            if (!EditorSceneManager.SaveScene(scene, PlatformBackup, true) || !EditorSceneManager.SaveScene(scene, ScenePath))
+                throw new IOException("Could not back up and save current live scene edits.");
+
+            int group = Undo.GetCurrentGroup();
+            Undo.SetCurrentGroupName("Convert Ruin 1 Magic Triggers to hidden platforms");
+            for (int i = 0; i < 5; i++)
+            {
+                var trigger = controller.magicTriggers[i];
+                var meshFilter = trigger.GetComponent<MeshFilter>();
+                var renderer = trigger.GetComponent<MeshRenderer>();
+                var collider = trigger.GetComponent<SphereCollider>();
+                if (meshFilter == null || renderer == null || collider == null)
+                    throw new InvalidOperationException("Magic Trigger " + (i + 1) + " is missing its original components.");
+                Undo.RecordObjects(new UnityEngine.Object[] { trigger.transform, meshFilter, renderer, collider },
+                    "Reshape existing Magic Trigger");
+                meshFilter.sharedMesh = cylinderMesh;
+                trigger.transform.localScale = new Vector3(3.2f, .06f, 3.2f);
+                trigger.transform.position = controller.destinations[i].position - Vector3.up * .06f;
+                collider.enabled = false;
+                renderer.enabled = false;
+            }
+            Undo.RecordObject(controller, "Set Magic Platform pause");
+            controller.platformPauseSeconds = .9f;
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene, ScenePath)) throw new IOException("Could not save Magic Platforms.");
+            Undo.CollapseUndoOperations(group);
+            Debug.Log("Ruin 1 five Magic Triggers converted to hidden, visual-only platforms. Backup: " + PlatformBackup);
+        }
 
         [MenuItem("Tools/FYP/Ruin 1/Jump F2-A/Tune Trigger Material")]
         public static void TuneTriggerMaterial()
