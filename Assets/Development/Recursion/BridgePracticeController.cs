@@ -15,6 +15,7 @@ namespace Fyp.Development.Recursion
         public BridgePracticePanel panel;
         public BridgePracticeCamera presentation;
         public global::AncientSpellbookUI guidedBook;
+        public Ruin01GuidedSimulationUI guidedSimulationUi;
         public GameObject[] otherModalPanels;
         public float interactionDistance=3f;
         [Min(.15f)] public float stepSeconds=.65f;
@@ -52,12 +53,14 @@ namespace Fyp.Development.Recursion
         public string SelectedAnswerId=>selectedAnswer;
         public bool LastAnswerIncorrect=>incorrect;
         global::AncientSpellbookUI GuidedBook=>guidedBook!=null?guidedBook:(guidedBook=FindFirstObjectByType<global::AncientSpellbookUI>());
-        public bool GuidedLessonCompleted=>GuidedBook!=null && GuidedBook.GuidedLessonCompleted;
+        Ruin01GuidedSimulationUI GuidedSimulationUi=>guidedSimulationUi!=null?guidedSimulationUi:(guidedSimulationUi=FindFirstObjectByType<Ruin01GuidedSimulationUI>());
+        public bool GuidedLessonCompleted=>GuidedSimulationUi!=null && GuidedSimulationUi.GuidedLessonCompleted;
         public int DecisionNumber=>complete?6:session==null?1:Mathf.Clamp(session.Lesson.Decisions.IndexOf(session.CurrentDecision)+1,1,6);
         bool Waiting=>modules!=null && Enumerable.Range(0,3).Any(i=>restored[i] && (!modules[i].IsRepaired || modules[i].walkableColliders.Any(c=>c==null || !c.enabled)));
         public bool IsBusy=>!seeded || Waiting || (session!=null && session.IsAdvancing) || pendingClose;
         public bool CanSubmit=>initialized && open && !complete && !IsBusy;
-        bool OtherModalOpen=>!CursorManager.allowCursorLock || (otherModalPanels!=null && otherModalPanels.Any(p=>p!=null && p.activeInHierarchy));
+        bool OtherModalOpen=>!CursorManager.allowCursorLock || (otherModalPanels!=null && otherModalPanels.Any(p=>p!=null && p.activeInHierarchy)) ||
+            (GuidedSimulationUi!=null && GuidedSimulationUi.IsOpen);
         public bool UsesSharedInteraction=>true;
         public Transform InteractionOrigin=>interactionPoint;
         public float SharedInteractionRange=>interactionDistance;
@@ -66,7 +69,7 @@ namespace Fyp.Development.Recursion
         public void InteractFromShared()
         {
             if(!CanSharedInteract)return;
-            if(!GuidedLessonCompleted){GuidedBook?.OpenGuidedSimulationForChallenge();return;}
+            if(!GuidedLessonCompleted){GuidedSimulationUi?.Open();return;}
             Open();
         }
         void Start()
@@ -81,6 +84,12 @@ namespace Fyp.Development.Recursion
         }
         public void Open()
         {
+            // Public callers cannot bypass the lesson gate either.
+            if(!GuidedLessonCompleted)
+            {
+                GuidedSimulationUi?.Open();
+                return;
+            }
             if(!CanSharedInteract)return;
             oldLock=Cursor.lockState;oldVisible=Cursor.visible;oldAllow=CursorManager.allowCursorLock;
             oldSelection=EventSystem.current!=null?EventSystem.current.currentSelectedGameObject:null;

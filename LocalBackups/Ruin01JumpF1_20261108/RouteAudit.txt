@@ -1,0 +1,15 @@
+Ruin 1 F1 live MeshCollider audit, world coordinates, five jumps
+Start: Ruin01_RelocationRoot/flying_stone_003 (-1536.800, 325.307, 166.300) bounds=Center: (-1536.74, 325.49, 165.41), Extents: (28.34, 20.46, 28.13)
+Target: Ruin01_RelocationRoot/Ruin01_JumpTargetStone (-1536.800, 325.000, 333.000) bounds=Center: (-1536.74, 325.18, 332.11), Extents: (28.34, 20.46, 28.13)
+Centre horizontal distance=166.700
+Takeoff/landing horizontal distance=116.942
+Collider envelope Z gap=110.442
+Arc height=6.000 air capsule samples=235 blockers=0; radius=0.350
+JumpStartPoint (-1536.8000, 345.0550, 190.0362)
+MagicStep01 (-1536.8000, 348.5540, 213.4247)
+MagicStep02 (-1536.8000, 350.7059, 236.8131)
+MagicStep03 (-1536.8000, 350.6782, 260.2016)
+MagicStep04 (-1536.8000, 348.4708, 283.5901)
+JumpLandingPoint (-1536.8000, 344.9164, 306.9785)
+
+Installed hierarchy: Ruin01_RelocationRoot/Ruin01JumpRoute

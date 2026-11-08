@@ -22,16 +22,19 @@ public class AncientSpellbookUI : MonoBehaviour
     public MonoBehaviour playerMovement;
     public MonoBehaviour cameraFollow;
 
-    [Header("Optional development-only fourth page (leave empty for the original three pages)")]
+    [Header("Standalone guided simulation (kept outside this three-page book)")]
     public SpellbookRecursionSimulation guidedSimulation;
+    public Ruin01GuidedSimulationUI standaloneGuidedSimulation;
     private bool movementWasEnabled, cameraWasEnabled, sessionOpen;
-    private int PageCount => titles.Length + (guidedSimulation != null ? 1 : 0);
+    private int PageCount => titles.Length;
 
     private int currentPage = 0;
 
     public bool IsBookOpen =>
     spellbookPanel != null && spellbookPanel.activeSelf;
-    public bool GuidedLessonCompleted => guidedSimulation != null && guidedSimulation.IsCompleted;
+    public bool GuidedLessonCompleted => standaloneGuidedSimulation != null
+        ? standaloneGuidedSimulation.GuidedLessonCompleted
+        : guidedSimulation != null && guidedSimulation.IsCompleted;
 
     private readonly string[] titles =
     {
@@ -85,7 +88,7 @@ public class AncientSpellbookUI : MonoBehaviour
 
     public void OpenGuidedSimulationForChallenge()
     {
-        OpenBookAtPage(titles.Length);
+        standaloneGuidedSimulation?.Open();
     }
 
     private void OpenBookAtPage(int requestedPage)
@@ -120,28 +123,19 @@ public class AncientSpellbookUI : MonoBehaviour
 
     void UpdatePage()
     {
-        bool simulationPage = guidedSimulation != null && currentPage == titles.Length;
-        if (guidedSimulation != null)
-        {
-            guidedSimulation.gameObject.SetActive(simulationPage);
-            knowledgeText.gameObject.SetActive(!simulationPage);
-            codeText.gameObject.SetActive(!simulationPage);
-        }
-        titleText.text = simulationPage
-            ? "Guided Bridge Simulation — Complete the guided simulation to unlock this challenge"
-            : titles[currentPage];
-        if (!simulationPage)
-        {
-            knowledgeText.text = explanations[currentPage];
-            codeText.text = codeExamples[currentPage];
-        }
+        // The Magic Book intentionally owns only the three introduction pages.
+        if (guidedSimulation != null) guidedSimulation.gameObject.SetActive(false);
+        knowledgeText.gameObject.SetActive(true);
+        codeText.gameObject.SetActive(true);
+        titleText.text = titles[currentPage];
+        knowledgeText.text = explanations[currentPage];
+        codeText.text = codeExamples[currentPage];
 
         pageNumberText.text =
             (currentPage + 1) + " / " + PageCount;
 
         previousButton.interactable = currentPage > 0;
-        nextButton.interactable =
-            currentPage < PageCount - 1;
+        nextButton.interactable = currentPage < PageCount - 1;
     }
 
     public void NextPage()

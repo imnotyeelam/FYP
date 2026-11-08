@@ -13,27 +13,34 @@ namespace Fyp.Development.Recursion.Editor
             if(!EditorApplication.isPlaying)throw new InvalidOperationException("Enter Play Mode first.");
             var challenge=UnityEngine.Object.FindObjectsByType<BridgePracticeController>(FindObjectsSortMode.None).Single();
             var book=UnityEngine.Object.FindObjectsByType<global::AncientSpellbookUI>(FindObjectsSortMode.None).Single();
-            var simulation=book.guidedSimulation;
-            if(simulation==null)throw new InvalidOperationException("Ruin 1 Page 4 simulation is not assigned.");
+            var guided=UnityEngine.Object.FindObjectsByType<Ruin01GuidedSimulationUI>(FindObjectsSortMode.None).Single();
+            var simulation=guided.simulation;
+            if(simulation==null)throw new InvalidOperationException("Ruin 1 standalone guided simulation is not assigned.");
             if(challenge.GuidedLessonCompleted || simulation.IsCompleted)throw new InvalidOperationException("Use a fresh Play session.");
 
             challenge.InteractFromShared();
-            if(!book.IsBookOpen || challenge.IsOpen || !book.titleText.text.Contains("Complete the guided simulation to unlock this challenge"))
-                throw new InvalidOperationException("Locked bridge challenge did not open Ruin 1 Page 4.");
+            if(!guided.IsOpen || book.IsBookOpen || challenge.IsOpen)
+                throw new InvalidOperationException("Locked bridge challenge did not open only the Ruin 1 standalone simulation.");
+
+            guided.CloseEarly();
+            if(challenge.GuidedLessonCompleted)throw new InvalidOperationException("Closing Ruin 1 guided simulation early unlocked practice.");
+            challenge.InteractFromShared();
 
             simulation.JumpToStep(simulation.Playback.Trace.Steps.Count-1);
-            if(!simulation.IsCompleted || !book.GuidedLessonCompleted || !challenge.GuidedLessonCompleted)
-                throw new InvalidOperationException("Final Ruin 1 guided checkpoint did not unlock the challenge.");
+            if(simulation.IsCompleted || !guided.finishButton.gameObject.activeInHierarchy)
+                throw new InvalidOperationException("Final Ruin 1 guided checkpoint did not require Finish.");
+            guided.Finish();
+            if(!simulation.IsCompleted || !book.GuidedLessonCompleted || !challenge.GuidedLessonCompleted || guided.IsOpen)
+                throw new InvalidOperationException("Finish did not unlock Ruin 1 bridge practice.");
 
-            book.CloseBook();
             challenge.InteractFromShared();
-            if(!challenge.IsOpen || book.IsBookOpen)
+            if(!challenge.IsOpen || book.IsBookOpen || guided.IsOpen)
                 throw new InvalidOperationException("Completed Ruin 1 lesson did not open only the bridge practice panel.");
 
             challenge.Close();
             if(!challenge.GuidedLessonCompleted)
                 throw new InvalidOperationException("Ruin 1 lesson completion did not persist after closing the panel.");
-            Debug.Log("PASS Ruin 1 guided prerequisite: Page 4 gates bridge practice and completion persists for this Play session.");
+            Debug.Log("PASS Ruin 1 guided prerequisite: standalone simulation requires Finish, gates bridge practice, and completion persists for this Play session.");
         }
     }
 }
