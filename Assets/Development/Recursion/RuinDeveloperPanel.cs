@@ -14,7 +14,8 @@ namespace Fyp.Development.Recursion
         public UnityEngine.UI.Button ruin01Button;
         public UnityEngine.UI.Button ruin02Button;
         public UnityEngine.UI.Button unlockJumpButton;
-        public UnityEngine.UI.Button resetJumpButton;
+        [UnityEngine.Serialization.FormerlySerializedAs("resetJumpButton")]
+        public UnityEngine.UI.Button farmButton;
         public UnityEngine.UI.Button closeButton;
         public Transform player;
         public PlayerMovement playerMovement;
@@ -23,6 +24,7 @@ namespace Fyp.Development.Recursion
         public Transform mainHubSpawn;
         public Transform ruin01JumpStart;
         public Transform ruin02EntrySpawn;
+        public Transform farmEntrySpawn;
         public Ruin01MagicJumpController jumpController;
         public InteractionHintManager interactionHints;
 
@@ -45,9 +47,9 @@ namespace Fyp.Development.Recursion
             enabled = false;
 #else
             if (panel == null || statusText == null || hubButton == null || ruin01Button == null ||
-                ruin02Button == null || unlockJumpButton == null || resetJumpButton == null || closeButton == null ||
+                ruin02Button == null || unlockJumpButton == null || farmButton == null || closeButton == null ||
                 player == null || playerMovement == null || cameraFollow == null || characterController == null ||
-                mainHubSpawn == null || ruin01JumpStart == null || ruin02EntrySpawn == null ||
+                mainHubSpawn == null || ruin01JumpStart == null || ruin02EntrySpawn == null || farmEntrySpawn == null ||
                 jumpController == null || interactionHints == null)
             {
                 Debug.LogError("Developer Mode needs explicit panel, player, spawn and jump references.", this);
@@ -59,7 +61,7 @@ namespace Fyp.Development.Recursion
             ruin01Button.onClick.AddListener(TeleportToRuin01JumpStart);
             ruin02Button.onClick.AddListener(TeleportToRuin02Entry);
             unlockJumpButton.onClick.AddListener(UnlockRuin01JumpForTesting);
-            resetJumpButton.onClick.AddListener(ResetRuin01JumpAttempt);
+            farmButton.onClick.AddListener(TeleportToMagicalFarm);
             closeButton.onClick.AddListener(Close);
 #endif
         }
@@ -114,6 +116,7 @@ namespace Fyp.Development.Recursion
         public void TeleportToMainHub() => Teleport(mainHubSpawn, "Main Hub Player Spawn");
         public void TeleportToRuin01JumpStart() => Teleport(ruin01JumpStart, "Ruin 1 JumpStartPoint");
         public void TeleportToRuin02Entry() => Teleport(ruin02EntrySpawn, "Ruin 2 EntrySpawn");
+        public void TeleportToMagicalFarm() => Teleport(farmEntrySpawn, "Magical Farm");
 
         public void UnlockRuin01JumpForTesting()
         {
@@ -137,6 +140,7 @@ namespace Fyp.Development.Recursion
         {
 #if UNITY_EDITOR
             if (destination == null || !CanUseShortcut()) return;
+            jumpController.ClearJumpTrail();
             characterController.enabled = false;
             Vector3 offset = destination.position - player.position;
             player.SetPositionAndRotation(destination.position, destination.rotation);
@@ -205,7 +209,7 @@ namespace Fyp.Development.Recursion
             if (ruin01Button != null) ruin01Button.onClick.RemoveListener(TeleportToRuin01JumpStart);
             if (ruin02Button != null) ruin02Button.onClick.RemoveListener(TeleportToRuin02Entry);
             if (unlockJumpButton != null) unlockJumpButton.onClick.RemoveListener(UnlockRuin01JumpForTesting);
-            if (resetJumpButton != null) resetJumpButton.onClick.RemoveListener(ResetRuin01JumpAttempt);
+            if (farmButton != null) farmButton.onClick.RemoveListener(TeleportToMagicalFarm);
             if (closeButton != null) closeButton.onClick.RemoveListener(Close);
 #endif
         }

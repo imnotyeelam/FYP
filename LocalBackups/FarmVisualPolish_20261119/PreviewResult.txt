@@ -1,0 +1,1 @@
+PASS visual preview: existing Developer teleport and shared E opened farm console; camera/controls/cursor restored on close. Play errors=0.

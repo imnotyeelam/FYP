@@ -1,0 +1,38 @@
+using Fyp.Development.Progress;
+using TMPro;
+using UnityEngine;
+
+namespace Fyp.Development.Recursion
+{
+    /// <summary>Ruin 2-local wrapper for the existing return entrance; it does not alter RuinEntrance globally.</summary>
+    public sealed class Ruin02ReturnGate : MonoBehaviour, ISharedInteractionTarget
+    {
+        public RuinEntrance returnEntrance;
+        public FragmentProgressTracker progress;
+        public TMP_Text lockedMessage;
+        [Min(.5f)] public float messageSeconds = 2.5f;
+
+        public bool UsesSharedInteraction => true;
+        public Transform InteractionOrigin => returnEntrance != null ? returnEntrance.transform : transform;
+        public float SharedInteractionRange => returnEntrance != null ? returnEntrance.interactionDistance : 0f;
+        public string SharedHint => "Press [E] to return to Hub";
+        public bool CanSharedInteract => isActiveAndEnabled && returnEntrance != null && returnEntrance.player != null &&
+                                         returnEntrance.destination != null && returnEntrance.teleportManager != null && progress != null;
+
+        public void InteractFromShared()
+        {
+            if (!CanSharedInteract) return;
+            if (!progress.HasFragment(FragmentProgressTracker.Ruin02))
+            {
+                ShowLockedMessage();
+                return;
+            }
+            returnEntrance.teleportManager.TeleportTo(returnEntrance.destination);
+        }
+
+        void ShowLockedMessage()
+        {
+            FragmentRewardToast.Show(lockedMessage, "Collect the magic fragment first!", messageSeconds);
+        }
+    }
+}

@@ -94,7 +94,7 @@ public class InteractionHintManager : MonoBehaviour
         if (player == null || interactionTargets == null || ModalOpen())
         {
             if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
-                Debug.Log($"[Ruin02 Interaction] Shared interaction blocked before selection: player={(player!=null)}, targets={(interactionTargets!=null)}, modal={ModalOpen()}, cursorAllowed={CursorManager.allowCursorLock}, cursorLock={Cursor.lockState}");
+                Debug.Log($"[Shared Interaction] Interaction blocked before selection: player={(player!=null)}, targets={(interactionTargets!=null)}, modal={ModalOpen()}, cursorAllowed={CursorManager.allowCursorLock}, cursorLock={Cursor.lockState}");
             HideAll(); return;
         }
         candidates.Clear();
@@ -108,10 +108,20 @@ public class InteractionHintManager : MonoBehaviour
                 eligible ? target.SharedInteractionRange : 0));
         }
         int selected = SharedInteractionSelection.Nearest(candidates);
+        int bestPriority = 0;
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            var candidate = candidates[i];
+            if (!candidate.Eligible || candidate.DistanceSquared > candidate.Range * candidate.Range ||
+                !(interactionTargets[i] is ISharedInteractionPriority prioritized) ||
+                prioritized.SharedInteractionPriority <= bestPriority) continue;
+            bestPriority = prioritized.SharedInteractionPriority;
+            selected = i;
+        }
         if (selected < 0)
         {
             if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
-                Debug.Log("[Ruin02 Interaction] E pressed but no eligible shared target was within range.");
+                Debug.Log("[Shared Interaction] E pressed but no eligible shared target was within range.");
             lastSelectedIndex = -1; HideAll(); return;
         }
         var chosen = (ISharedInteractionTarget)interactionTargets[selected];

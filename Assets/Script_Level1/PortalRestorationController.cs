@@ -1,4 +1,5 @@
 using System.Collections;
+using Fyp.Development.Progress;
 using UnityEngine;
 
 public class PortalRestorationController : MonoBehaviour
@@ -7,6 +8,8 @@ public class PortalRestorationController : MonoBehaviour
     public GameObject brokenPortal;
     public GameObject completePortal;
     public GameObject challengePanel;
+    public bool requireFinalPortalFragments;
+    public FragmentProgressTracker fragmentProgress;
 
     [Header("Ruins / Pillars")]
     public GameObject[] ruinsToActivate;
@@ -20,6 +23,7 @@ public class PortalRestorationController : MonoBehaviour
     public float portalRestoreDelay = 1f;
 
     private bool hasRestored = false;
+    public bool HasStartedRestoration => hasRestored;
 
     void Start()
     {
@@ -41,7 +45,8 @@ public class PortalRestorationController : MonoBehaviour
 
     public void RestoreMagic()
     {
-        if (!hasRestored)
+        if (!hasRestored && (!requireFinalPortalFragments ||
+            (fragmentProgress != null && fragmentProgress.HasFinalPortalFragments)))
         {
             StartCoroutine(RestoreSequence());
         }

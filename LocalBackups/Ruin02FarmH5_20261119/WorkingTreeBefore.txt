@@ -1,0 +1,66 @@
+ M Assets/Animation/PlayerAnimator.controller
+ M "Assets/Animation/PolyArtWizardMesh@Running Jump.fbx.meta"
+ M Assets/Development/FW01_URP/Materials/M_fwOF_RocksClean_01_3099a060_URP.mat
+ M Assets/Development/Progress/FragmentProgressTracker.cs
+ M Assets/Development/Recursion/Editor/Ruin01FragmentPlayChecks.cs
+ M Assets/Development/Recursion/Editor/Ruin01MagicJumpF2APlayChecks.cs
+ M Assets/Development/Recursion/Editor/RuinJumpUIAndDeveloperPlayChecks.cs
+ M Assets/Development/Recursion/Ruin01FragmentReward.cs
+ M Assets/Development/Recursion/Ruin01MagicJumpController.cs
+ M Assets/Development/Recursion/Ruin02FragmentReveal.cs
+ M Assets/Development/Recursion/Ruin02ReturnGate.cs
+ M Assets/Development/Recursion/RuinDeveloperPanel.cs
+ M Assets/Scenes/MagicWorld_Development.unity
+ M Assets/Script_Level1/InteractionHintManager.cs
+ M Assets/Script_Level1/PortalRestorationController.cs
+?? Assets/Development/Interactions/ISharedInteractionPriority.cs
+?? Assets/Development/Interactions/ISharedInteractionPriority.cs.meta
+?? Assets/Development/Progress/FinalPortalInteraction.cs
+?? Assets/Development/Progress/FinalPortalInteraction.cs.meta
+?? Assets/Development/Progress/FragmentRewardToast.cs
+?? Assets/Development/Progress/FragmentRewardToast.cs.meta
+?? Assets/Development/Recursion/Editor/FinalPortalP1PlayChecks.cs
+?? Assets/Development/Recursion/Editor/FinalPortalP1PlayChecks.cs.meta
+?? Assets/Development/Recursion/Editor/FinalPortalP1Tools.cs
+?? Assets/Development/Recursion/Editor/FinalPortalP1Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin01FragmentF3Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin01FragmentF3Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin01JumpInteractionFixTools.cs
+?? Assets/Development/Recursion/Editor/Ruin01JumpInteractionFixTools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin01RunningJumpF2B1Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin01RunningJumpF2B1Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02FarmH2Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin02FarmH2Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02FarmH3Checks.cs
+?? Assets/Development/Recursion/Editor/Ruin02FarmH3Checks.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02FarmH3Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin02FarmH3Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02FarmH4Checks.cs
+?? Assets/Development/Recursion/Editor/Ruin02FarmH4Checks.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02FarmH4Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin02FarmH4Tools.cs.meta
+?? Assets/Development/Recursion/Editor/Ruin02MagicalFarmH1Tools.cs
+?? Assets/Development/Recursion/Editor/Ruin02MagicalFarmH1Tools.cs.meta
+?? Assets/Development/Recursion/Materials/Ruin02MagicalFarmSoil.mat
+?? Assets/Development/Recursion/Materials/Ruin02MagicalFarmSoil.mat.meta
+?? Assets/Development/Recursion/RecursiveHarvestLesson.cs
+?? Assets/Development/Recursion/RecursiveHarvestLesson.cs.meta
+?? Assets/Development/Recursion/Resources.meta
+?? Assets/Development/Recursion/Resources/
+?? Assets/Development/Recursion/Ruin01JumpTrail.cs
+?? Assets/Development/Recursion/Ruin01JumpTrail.cs.meta
+?? Assets/Development/Recursion/Ruin02FarmAccess.cs
+?? Assets/Development/Recursion/Ruin02FarmAccess.cs.meta
+?? Assets/Development/Recursion/Ruin02FarmSimulation.cs
+?? Assets/Development/Recursion/Ruin02FarmSimulation.cs.meta
+?? Assets/Development/Recursion/Ruin02HarvestConsole.cs
+?? Assets/Development/Recursion/Ruin02HarvestConsole.cs.meta
+?? LocalBackups/FinalPortalP1_20261119/
+?? LocalBackups/Ruin01FragmentF3_20261117/
+?? LocalBackups/Ruin01JumpInteractionFix_20261112/
+?? LocalBackups/Ruin01RunningJumpF2B1_20261111/
+?? LocalBackups/Ruin02FarmH2_20261119/
+?? LocalBackups/Ruin02FarmH3_20261119/
+?? LocalBackups/Ruin02FarmH4_20261119/
+?? LocalBackups/Ruin02FarmH5_20261119/
+?? LocalBackups/Ruin02MagicalFarmH1_20261119/

@@ -1,0 +1,8 @@
+DEVELOPER EditorDeveloperMode panel=Canvas/DeveloperPanel active=False
+BUTTON Canvas/DeveloperPanel/MainHubButton active=True text=Teleport: Main Hub Player Spawn persistentCallbacks=0
+BUTTON Canvas/DeveloperPanel/Ruin01Button active=True text=Teleport: Ruin 1 JumpStartPoint persistentCallbacks=0
+BUTTON Canvas/DeveloperPanel/Ruin02Button active=True text=Teleport: Ruin 2 EntrySpawn persistentCallbacks=0
+BUTTON Canvas/DeveloperPanel/UnlockJumpButton active=True text=Unlock Ruin 1 Jump (Session) persistentCallbacks=0
+BUTTON Canvas/DeveloperPanel/ResetJumpButton active=True text=Reset Ruin 1 Jump Attempt persistentCallbacks=0
+BUTTON Canvas/DeveloperPanel/CloseButton active=True text=Close persistentCallbacks=0
+FarmEntrySpawn Ruin02_MagicalFarm/FarmEntrySpawn (800.000, 50.120, 334.200); console distance=1.455

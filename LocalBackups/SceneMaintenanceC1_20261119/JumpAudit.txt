@@ -1,0 +1,18 @@
+JUMP Ruin01_RelocationRoot/Ruin01JumpRoute/JumpChallenge active=True enabled=True range=2.5 priority=100
+ANCHOR Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint/ReturnMagicRock active=True world=(-1539.817, 345.180, 182.395)
+START Ruin01_RelocationRoot/Ruin01JumpRoute/JumpStartPoint (-1536.800, 345.055, 190.036)
+SURFACE Ruin01_RelocationRoot/flying_stone_003 active=True enabled=True trigger=False bounds=Center: (-1536.74, 325.49, 165.41), Extents: (28.34, 20.46, 28.13)
+PLAYER (90.680, 1.020, 176.200) distanceToRock=1666.435
+DEV APPROACH Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint/JumpRockApproach (-1539.817, 345.295, 180.795) distance=1.604
+PREREQUISITES Ruin01_RelocationRoot/Ruin01_Area/Gameplay/BridgePractice enabled=True active=True
+GUIDE Ruin01_RelocationRoot/Ruin01JumpRoute/JumpGuidedSimulation enabled=True active=True modalRegistration=1
+HINT MANAGER enabled=True active=True coordinated=True registration=1 hintActive=False
+PROBE (-1539.817, 345.295, 180.795) explicitSurfaceHit=True (-1539.817, 345.070, 180.795)
+  PHYSICS Ruin01_RelocationRoot/flying_stone_003 y=345.070 normal=(-0.03, 1.00, -0.03)
+PROBE (-1539.817, 345.180, 180.795) explicitSurfaceHit=True (-1539.817, 345.070, 180.795)
+  PHYSICS Ruin01_RelocationRoot/flying_stone_003 y=345.070 normal=(-0.03, 1.00, -0.03)
+PROBE (-1536.800, 345.055, 190.036) explicitSurfaceHit=True (-1536.800, 344.975, 190.036)
+  PHYSICS Ruin01_RelocationRoot/flying_stone_003 y=344.975 normal=(-0.06, 1.00, 0.02)
+TARGET Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint RuinEntrance enabled=False range=5 priority=0
+TARGET Ruin01_RelocationRoot/Ruin01JumpRoute/JumpChallenge Ruin01MagicJumpController enabled=True range=2.5 priority=100
+ROCK COLLIDER Ruin01_RelocationRoot/Ruin01_Area/Interactables/ReturnInteractionPoint/ReturnMagicRock/MagicRock_01_LOD0 enabled=False active=True Center: (-1539.82, 345.18, 182.40), Extents: (0.00, 0.00, 0.00)

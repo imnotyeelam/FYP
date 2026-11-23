@@ -1,0 +1,1 @@
+PASS Developer Farm: real Tab; six buttons with Farm label and no Reset control; real UI mouse-click safe FarmEntrySpawn teleport; real shared E console; modal blocking; other teleports/Close/Jump test unlock; wrong answer and all three original rows (30/15/empty stack); no staff/fragment/portal progression changes, even after legitimate farm completion. Play errors=0

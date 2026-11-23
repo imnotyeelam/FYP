@@ -17,6 +17,9 @@ namespace Fyp.Development.Progress
 
         public int CollectedCount => collected.Count;
         public bool AllThreeCollected => collected.Count == 3;
+        public bool HasFinalPortalFragments => HasFragment(Ruin01) && HasFragment(Ruin02);
+        public string FinalPortalProgress =>
+            ((HasFragment(Ruin01) ? 1 : 0) + (HasFragment(Ruin02) ? 1 : 0)) + "/2";
         public bool HasFragment(string id) => id != null && collected.Contains(id);
         public static bool IsKnownFragment(string id) => id == Ruin01 || id == Ruin02 || id == Ruin03;
 

@@ -63,7 +63,7 @@ namespace Fyp.Development.Recursion.Editor
                 developer.ruin01Button = ruin01;
                 developer.ruin02Button = ruin02;
                 developer.unlockJumpButton = unlock;
-                developer.resetJumpButton = reset;
+                developer.farmButton = reset;
                 developer.closeButton = close;
                 developer.player = player;
                 developer.playerMovement = movement;
@@ -72,6 +72,7 @@ namespace Fyp.Development.Recursion.Editor
                 developer.mainHubSpawn = hubSpawn;
                 developer.ruin01JumpStart = ruin01Start;
                 developer.ruin02EntrySpawn = ruin02Spawn;
+                developer.farmEntrySpawn = Exact("Ruin02_MagicalFarm/FarmEntrySpawn");
                 developer.jumpController = jump;
                 developer.interactionHints = hints;
 
@@ -105,7 +106,8 @@ namespace Fyp.Development.Recursion.Editor
             if (developer == null || developer.panel == null || developer.panel.activeSelf ||
                 developer.statusText == null || developer.hubButton == null || developer.ruin01Button == null ||
                 developer.ruin02Button == null || developer.unlockJumpButton == null ||
-                developer.resetJumpButton == null || developer.closeButton == null ||
+                developer.farmButton == null || developer.closeButton == null ||
+                developer.farmEntrySpawn != Exact("Ruin02_MagicalFarm/FarmEntrySpawn") ||
                 developer.mainHubSpawn != Exact("MainHub/Ruin1/Destination") ||
                 developer.ruin01JumpStart != Exact("Ruin01_RelocationRoot/Ruin01JumpRoute/JumpStartPoint") ||
                 developer.ruin02EntrySpawn != Exact("Ruin02_Area/SpawnPoints/EntrySpawn") ||
@@ -135,7 +137,7 @@ namespace Fyp.Development.Recursion.Editor
             ruin01 = Button(panel.transform, "Ruin01Button", "Teleport: Ruin 1 JumpStartPoint", font, .10f, .56f, .90f, .65f);
             ruin02 = Button(panel.transform, "Ruin02Button", "Teleport: Ruin 2 EntrySpawn", font, .10f, .45f, .90f, .54f);
             unlock = Button(panel.transform, "UnlockJumpButton", "Unlock Ruin 1 Jump (Session)", font, .10f, .34f, .90f, .43f);
-            reset = Button(panel.transform, "ResetJumpButton", "Reset Ruin 1 Jump Attempt", font, .10f, .23f, .90f, .32f);
+            reset = Button(panel.transform, "TeleportFarmButton", "Teleport to Magical Farm", font, .10f, .23f, .90f, .32f);
             close = Button(panel.transform, "CloseButton", "Close", font, .62f, .08f, .90f, .17f);
             status = Text(panel.transform, "Status", "Editor Play Mode shortcuts. No progression or rewards are changed.",
                 font, 16, .08f, .07f, .58f, .19f, TextAlignmentOptions.MidlineLeft);

@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace Fyp.Development.Recursion
 {
-    // D3-B extends D3-A with the shared E interaction; the practice trace remains the only reveal authority.
+    // The original ritual prerequisites and the completed farm jointly authorize the existing reward.
     public sealed class Ruin02FragmentReveal : MonoBehaviour, ISharedInteractionTarget
     {
         public Ruin02PracticeController practice;
         public Ruin02AirRestoration restoration;
+        public Ruin02FarmSimulation farm;
         public GameObject fragmentVisual;
         [Header("D3-B collection")]
         public FragmentProgressTracker progress;
@@ -21,20 +22,19 @@ namespace Fyp.Development.Recursion
 
         bool revealed;
         Coroutine waitForCompletion;
-        float confirmationUntil;
         public bool IsRevealed => revealed;
         public bool FragmentCollected => progress!=null && progress.HasFragment(FragmentProgressTracker.Ruin02);
         public bool UsesSharedInteraction=>true;
         public Transform InteractionOrigin=>interactionPoint;
         public float SharedInteractionRange=>interactionDistance;
         public string SharedHint=>"Press [E] to Collect Fragment";
-        public bool CanSharedInteract=>isActiveAndEnabled && revealed && !FragmentCollected && fragmentVisual!=null &&
+        public bool CanSharedInteract=>isActiveAndEnabled && revealed && CanReveal() && !FragmentCollected && fragmentVisual!=null &&
             fragmentVisual.activeInHierarchy && player!=null && interactionPoint!=null && practice!=null && !practice.IsOpen &&
             Vector3.Distance(player.position,interactionPoint.position)<=interactionDistance;
 
         void Start()
         {
-            if (practice == null || restoration == null || fragmentVisual == null || progress==null || player==null ||
+            if (practice == null || restoration == null || farm == null || fragmentVisual == null || progress==null || player==null ||
                 interactionPoint==null || confirmationText==null)
             {
                 Debug.LogError("Ruin 2 fragment reveal references are incomplete.", this);
@@ -46,6 +46,7 @@ namespace Fyp.Development.Recursion
             fragmentVisual.SetActive(false);
             confirmationText.transform.parent.gameObject.SetActive(false);
             practice.ChallengeCompleted += OnChallengeCompleted;
+            farm.Completed += CheckCompletion;
             CheckCompletion();
         }
 
@@ -56,21 +57,25 @@ namespace Fyp.Development.Recursion
 
         IEnumerator WaitForCompletion()
         {
-            while (!CanReveal()) yield return null;
-            Reveal();
+            while (!revealed && !FragmentCollected && !CanReveal()) yield return null;
+            CheckCompletion();
             waitForCompletion = null;
         }
 
         void CheckCompletion()
         {
-            if (!revealed && CanReveal()) Reveal();
+            if (!revealed && !FragmentCollected && CanReveal()) Reveal();
         }
 
         bool CanReveal()
         {
             return practice != null && practice.IsSolved && practice.Session != null &&
                    practice.Session.Current.Frames.Count == 0 && restoration != null &&
-                   restoration.RestoredCount == 4 && !restoration.IsPlaying;
+                   restoration.RestoredCount == 4 && !restoration.IsPlaying &&
+                   restoration.IsStaffRestored(1) && restoration.IsStaffRestored(2) &&
+                   restoration.IsStaffRestored(3) && restoration.IsStaffRestored(4) &&
+                   farm != null && farm.IsComplete && !farm.IsRunning && farm.CompletedRows == 3 &&
+                   farm.PlotsChecked == 30 && farm.CropsHarvested == 15 && farm.StackDepth == 0;
         }
 
         void Reveal()
@@ -78,7 +83,7 @@ namespace Fyp.Development.Recursion
             if (revealed) return;
             revealed = true;
             fragmentVisual.SetActive(true);
-            Debug.Log("Ruin 2 Fragment of Returning Magic revealed after the completed restoration sequence.", this);
+            Debug.Log("Ruin 2 Fragment of Returning Magic revealed after Staff Restoration and Magical Farm completion.", this);
         }
 
         public void InteractFromShared()
@@ -86,21 +91,14 @@ namespace Fyp.Development.Recursion
             if(!CanSharedInteract || !progress.TryCollect(FragmentProgressTracker.Ruin02))return;
             fragmentVisual.SetActive(false);
             InteractionHintManager.Instance?.HideAll();
-            confirmationText.text="Fragment of Returning Magic collected  •  "+progress.CollectedCount+"/3";
-            confirmationText.gameObject.SetActive(true);
-            confirmationText.transform.parent.gameObject.SetActive(true);
-            confirmationUntil=Time.unscaledTime+confirmationSeconds;
-        }
-
-        void Update()
-        {
-            if(confirmationText!=null && confirmationText.transform.parent.gameObject.activeSelf &&
-                Time.unscaledTime>=confirmationUntil)confirmationText.transform.parent.gameObject.SetActive(false);
+            FragmentRewardToast.Show(confirmationText,
+                "Fragment of Returning Magic collected  •  " + progress.FinalPortalProgress, confirmationSeconds);
         }
 
         void OnDestroy()
         {
             if (practice != null) practice.ChallengeCompleted -= OnChallengeCompleted;
+            if (farm != null) farm.Completed -= CheckCompletion;
         }
     }
 }

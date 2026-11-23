@@ -8,15 +8,20 @@ using UnityEngine.UI;
 
 namespace Fyp.Development.Recursion
 {
-    /// <summary>F2-A only: scripted magical leaps, with no animation or reward integration.</summary>
-    public sealed class Ruin01MagicJumpController : MonoBehaviour, ISharedInteractionTarget
+    /// <summary>Recursive magical leaps with controller-driven movement and one animation cycle per segment.</summary>
+    public sealed class Ruin01MagicJumpController : MonoBehaviour, ISharedInteractionTarget, ISharedInteractionPriority
     {
         public BridgePracticeController bridgePractice;
         public Transform player;
         public PlayerMovement playerMovement;
         public CameraFollow cameraFollow;
         public CharacterController characterController;
+        public Animator animator;
+        public AnimationClip runningJumpClip;
         public Transform jumpStartPoint;
+        public MeshCollider jumpStartSurface;
+        public Transform interactionAnchor;
+        public Ruin01JumpGuidedSimulation jumpGuide;
         public Transform[] destinations;
         public Ruin01MagicJumpTrigger[] magicTriggers;
         public GameObject panel;
@@ -29,15 +34,23 @@ namespace Fyp.Development.Recursion
         [Min(0f)] public float leapArcHeight = .8f;
         [Min(0f)] public float failureFeedbackSeconds = .85f;
         [Min(.1f)] public float platformPauseSeconds = .9f;
+        [Min(0f)] public float animationBlendSeconds = .06f;
 
         bool open, playing, completed, developerPrerequisitesUnlocked;
-        bool movementBefore, cameraBefore, controllerBefore, cursorBefore, allowBefore;
+        bool movementBefore, cameraBefore, controllerBefore, cursorBefore, allowBefore, rootMotionBefore;
         CursorLockMode lockBefore;
         GameObject selectionBefore;
         Coroutine playback;
-        int requested, calls, performed, currentN, attempts;
+        TrailRenderer jumpTrail;
+        Material jumpTrailMaterial;
+        int requested, calls, performed, currentN, attempts, animationPlayCount, animationActivationCount;
+        static readonly int LocomotionState = Animator.StringToHash("Base Layer.Locomotion");
+        static readonly int RunningJumpState = Animator.StringToHash("Base Layer.Running Jump");
+        static readonly int RunningJumpShortState = Animator.StringToHash("Running Jump");
+        static readonly int MagicJumpSpeed = Animator.StringToHash("MagicJumpSpeed");
 
         public bool JumpChallengeCompleted => completed;
+        public event Action LandedSuccessfully;
         public bool IsOpen => open;
         public bool IsPlaying => playing;
         public int CallCount => calls;
@@ -45,20 +58,32 @@ namespace Fyp.Development.Recursion
         public int CurrentN => currentN;
         public int AttemptCount => attempts;
         public bool DeveloperPrerequisitesUnlocked => developerPrerequisitesUnlocked;
+        public int AnimationPlayCount => animationPlayCount;
+        public int AnimationActivationCount => animationActivationCount;
+        public int RunningJumpStateHash => RunningJumpState;
+        public bool IsJumpAnimationActive => animator != null &&
+            (IsRunningJump(animator.GetCurrentAnimatorStateInfo(0)) ||
+             (animator.IsInTransition(0) && IsRunningJump(animator.GetNextAnimatorStateInfo(0))));
         public bool UsesSharedInteraction => true;
-        public Transform InteractionOrigin => jumpStartPoint;
+        // Prefer the rock's local action only within its range; the existing Hub return stays registered.
+        public int SharedInteractionPriority => 100;
+        public Transform InteractionOrigin => interactionAnchor;
         public float SharedInteractionRange => interactionDistance;
         public bool CanSharedInteract => enabled && isActiveAndEnabled && !open && !playing && !completed &&
+            (jumpGuide == null || !jumpGuide.IsOpen) &&
             bridgePractice != null && (developerPrerequisitesUnlocked ||
                 (bridgePractice.IsComplete && bridgePractice.GuidedLessonCompleted)) &&
-            player != null && jumpStartPoint != null &&
-            Vector3.Distance(player.position, jumpStartPoint.position) <= interactionDistance && CursorManager.allowCursorLock;
+            player != null && jumpStartPoint != null && interactionAnchor != null &&
+            Vector3.Distance(player.position, interactionAnchor.position) <= interactionDistance &&
+            IsPlayerOnJumpStartSurface() && CursorManager.allowCursorLock;
         public string SharedHint => "Press [E] to Cast Recursive Magic Jump";
 
         void Awake()
         {
             if (bridgePractice == null || player == null || playerMovement == null || cameraFollow == null ||
-                characterController == null || jumpStartPoint == null || destinations == null || destinations.Length != 5 ||
+                characterController == null || animator == null || runningJumpClip == null ||
+                !runningJumpClip.isHumanMotion || jumpStartPoint == null || jumpStartSurface == null || interactionAnchor == null ||
+                !jumpStartSurface.enabled || jumpStartSurface.isTrigger || destinations == null || destinations.Length != 5 ||
                 Array.Exists(destinations, t => t == null) || magicTriggers == null || magicTriggers.Length != 5 ||
                 Array.Exists(magicTriggers, t => t == null) || panel == null || input == null || castButton == null ||
                 closeButton == null || statusText == null)
@@ -69,6 +94,7 @@ namespace Fyp.Development.Recursion
             }
             panel.SetActive(false);
             HideAllPlatforms();
+            animator.applyRootMotion = false;
             castButton.onClick.AddListener(Submit);
             closeButton.onClick.AddListener(Close);
         }
@@ -78,9 +104,24 @@ namespace Fyp.Development.Recursion
             if (CanSharedInteract) Open();
         }
 
+        bool IsPlayerOnJumpStartSurface()
+        {
+            if (player == null || characterController == null || jumpStartSurface == null ||
+                !jumpStartSurface.enabled || jumpStartSurface.isTrigger) return false;
+            float probeHeight = Mathf.Max(1.5f, characterController.stepOffset + 1f);
+            var ray = new Ray(player.position + Vector3.up * probeHeight, Vector3.down);
+            return jumpStartSurface.Raycast(ray, out var hit, probeHeight + characterController.stepOffset + .75f) &&
+                Vector3.Angle(hit.normal, Vector3.up) <= characterController.slopeLimit;
+        }
+
         public void Open()
         {
             if (!CanSharedInteract) return;
+            if (jumpGuide != null && !jumpGuide.IsCompleted && !developerPrerequisitesUnlocked)
+            {
+                jumpGuide.Open();
+                return;
+            }
             open = true;
             movementBefore = playerMovement.enabled;
             cameraBefore = cameraFollow.enabled;
@@ -125,6 +166,8 @@ namespace Fyp.Development.Recursion
             currentN = n;
             attempts++;
             playing = true;
+            rootMotionBefore = animator.applyRootMotion;
+            animator.applyRootMotion = false;
             HideAllPlatforms();
             input.gameObject.SetActive(false);
             castButton.gameObject.SetActive(false);
@@ -132,6 +175,7 @@ namespace Fyp.Development.Recursion
             else { CursorManager.allowCursorLock = true; Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
             cameraFollow.enabled = cameraBefore;
             characterController.enabled = false;
+            ClearJumpTrail();
             player.position = jumpStartPoint.position;
             var forward = destinations[0].position - jumpStartPoint.position;
             forward.y = 0;
@@ -143,6 +187,7 @@ namespace Fyp.Development.Recursion
         {
             yield return MagicJump(requested);
             HideAllPlatforms();
+            RestoreLocomotionAnimation();
             if (requested == 5 && performed == 5)
             {
                 PlaceSafely(destinations[4], false);
@@ -151,13 +196,16 @@ namespace Fyp.Development.Recursion
                 playing = false;
                 playback = null;
                 Close();
+                LandedSuccessfully?.Invoke();
                 yield break;
             }
             SetStatus(requested < destinations.Length
                 ? "Not quite there! Your magic stopped before reaching the destination. Try a different n."
                 : "Too much magic! The spell would carry you beyond the safe route. Try a different n.");
             yield return new WaitForSeconds(failureFeedbackSeconds);
+            ClearJumpTrail();
             PlaceSafely(jumpStartPoint, true);
+            FinishAttemptAnimation();
             cameraFollow.enabled = false;
             if (CursorManager.Instance != null) CursorManager.Instance.SetUIOpen(true);
             else { CursorManager.allowCursorLock = false; Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
@@ -197,7 +245,11 @@ namespace Fyp.Development.Recursion
             var from = index == 0 ? jumpStartPoint.position : destinations[index - 1].position;
             var to = destinations[index].position;
             SetStatus("Returning from magicJump(" + n + "): completing the next leap.");
+            PlayRunningJumpAnimation();
+            BeginJumpTrail();
             yield return Travel(from, to, secondsPerLeap);
+            if (jumpTrail != null) jumpTrail.emitting = false;
+            RestoreLocomotionAnimation();
             performed++;
             HideAllPlatforms();
             magicTriggers[index].RevealAtFeet(player.position);
@@ -206,10 +258,58 @@ namespace Fyp.Development.Recursion
             magicTriggers[index].Hide();
         }
 
+        void BeginJumpTrail()
+        {
+            if (jumpTrail == null)
+            {
+                var shader = Resources.Load<Shader>("Ruin01JumpTrail");
+                if (shader == null || !shader.isSupported) return;
+                jumpTrailMaterial = new Material(shader) { name = "Ruin 1 Magic Jump Trail" };
+                jumpTrail = Ruin01JumpTrail.Create(animator, jumpTrailMaterial);
+            }
+            jumpTrail.Clear();
+            jumpTrail.enabled = true;
+            jumpTrail.emitting = true;
+        }
+
+        internal void ClearJumpTrail()
+        {
+            if (jumpTrail == null) return;
+            jumpTrail.emitting = false;
+            jumpTrail.Clear();
+            jumpTrail.enabled = false;
+        }
+
         void HideAllPlatforms()
         {
             if (magicTriggers == null) return;
             foreach (var trigger in magicTriggers) if (trigger != null) trigger.Hide();
+        }
+
+        void PlayRunningJumpAnimation()
+        {
+            animator.applyRootMotion = false;
+            float cycleSeconds = Mathf.Max(.01f, secondsPerLeap);
+            animator.SetFloat(MagicJumpSpeed, Mathf.Max(.01f, runningJumpClip.length / cycleSeconds));
+            animator.CrossFadeInFixedTime(RunningJumpState, animationBlendSeconds, 0, 0f);
+            animationPlayCount++;
+        }
+
+        static bool IsRunningJump(AnimatorStateInfo state)
+        {
+            return state.fullPathHash == RunningJumpState || state.shortNameHash == RunningJumpShortState;
+        }
+
+        void RestoreLocomotionAnimation()
+        {
+            if (animator == null || animator.runtimeAnimatorController == null) return;
+            animator.CrossFadeInFixedTime(LocomotionState, animationBlendSeconds, 0, 0f);
+        }
+
+        void FinishAttemptAnimation()
+        {
+            RestoreLocomotionAnimation();
+            if (animator != null) animator.applyRootMotion = rootMotionBefore;
         }
 
         void PlaceSafely(Transform destination, bool shiftCamera)
@@ -225,11 +325,13 @@ namespace Fyp.Development.Recursion
         IEnumerator Travel(Vector3 from, Vector3 to, float seconds)
         {
             float elapsed = 0;
+            bool animationObserved = false;
             var direction = to - from;
             direction.y = 0;
             if (direction.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(direction);
             while (elapsed < seconds)
             {
+                if (IsJumpAnimationActive) animationObserved = true;
                 elapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsed / seconds);
                 float ease = t * t * (3f - 2f * t);
@@ -238,6 +340,8 @@ namespace Fyp.Development.Recursion
                 yield return null;
             }
             player.position = to;
+            if (IsJumpAnimationActive) animationObserved = true;
+            if (animationObserved) animationActivationCount++;
         }
 
         void SetStatus(string message)
@@ -259,9 +363,13 @@ namespace Fyp.Development.Recursion
 #if UNITY_EDITOR
             if (!Application.isPlaying || playing) return;
             if (open) Close();
+            ClearJumpTrail();
             completed = false;
             requested = calls = performed = currentN = attempts = 0;
+            animationPlayCount = 0;
+            animationActivationCount = 0;
             HideAllPlatforms();
+            FinishAttemptAnimation();
 #endif
         }
 
@@ -269,20 +377,23 @@ namespace Fyp.Development.Recursion
         {
             if (!open || playing) return;
             open = false;
-            panel.SetActive(false);
+            if (panel != null) panel.SetActive(false);
             if (CursorManager.Instance != null) CursorManager.Instance.SetUIOpen(false);
             CursorManager.allowCursorLock = allowBefore;
             Cursor.lockState = lockBefore;
             Cursor.visible = cursorBefore;
-            playerMovement.enabled = movementBefore;
-            cameraFollow.enabled = cameraBefore;
-            characterController.enabled = controllerBefore;
+            if (playerMovement != null) playerMovement.enabled = movementBefore;
+            if (cameraFollow != null) cameraFollow.enabled = cameraBefore;
+            if (characterController != null) characterController.enabled = controllerBefore;
+            FinishAttemptAnimation();
             EventSystem.current?.SetSelectedGameObject(selectionBefore);
         }
 
         void OnDisable()
         {
+            ClearJumpTrail();
             HideAllPlatforms();
+            FinishAttemptAnimation();
             if (!open) return;
             if (playback != null) StopCoroutine(playback);
             playing = false;
@@ -292,6 +403,8 @@ namespace Fyp.Development.Recursion
 
         void OnDestroy()
         {
+            if (jumpTrail != null) Destroy(jumpTrail.gameObject);
+            if (jumpTrailMaterial != null) Destroy(jumpTrailMaterial);
             if (castButton != null) castButton.onClick.RemoveListener(Submit);
             if (closeButton != null) closeButton.onClick.RemoveListener(Close);
         }

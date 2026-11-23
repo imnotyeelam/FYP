@@ -61,7 +61,14 @@ namespace Fyp.Development.Recursion.Editor
             var gem = root.Find("Diamondo_FragmentOfCalling");
             Check(gem != null && PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gem.gameObject) == Ruin01FragmentTools.GemPath,
                 "reward is a scene instance of Diamondo");
-            Check(root.GetComponent<Ruin01FragmentReward>() != null, "reward controller installed");
+            var installedReward = root.GetComponent<Ruin01FragmentReward>();
+            Check(installedReward != null, "reward controller installed");
+            if (installedReward.jump != null)
+            {
+                // F3 moves collection beyond the jump. Use the checks for that route.
+                Ruin01MagicJumpF2APlayChecks.Run();
+                return;
+            }
             Directory.CreateDirectory(Output);
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), Output + "/BeforePlay.unity", true);
             reward = null; practice = null; progress = null; entry = null; exit = null; keyboard = null;

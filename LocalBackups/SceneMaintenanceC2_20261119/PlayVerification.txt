@@ -1,0 +1,4 @@
+Stage 1: PASS C1: first E tutorial; early/final ESC cannot unlock; Previous/Next/code and stack 1/2/3/4 then 0; three UI-only return leaps; explicit Finish input gate; later E direct input; Developer bypass leaves tutorial/reward uncompleted; normal five animated leaps and Fragment E collection. Play errors=0
+Stage 2: PASS Ruin 2 single rock: Staff lock/Chomage toast; real restoration unlocks Farm E; console and partial-return/re-entry retain rows; complete farm blocks travel until fragment E; collected Ruin02 enables original Hub return. Five expected teleports, no duplicate targets/actions. Play errors=0
+Stage 3: PASS: all six fragment combinations, shared E, missing-fragment toast, direct entry guard, one arch swap and both reward toast timeouts. Play errors=0
+PASS C2: all three suites passed; archive remains exactly five inactive roots.

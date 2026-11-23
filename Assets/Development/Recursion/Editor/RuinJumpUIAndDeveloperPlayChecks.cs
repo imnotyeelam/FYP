@@ -78,6 +78,8 @@ namespace Fyp.Development.Recursion.Editor
                     initialFragments = progress.CollectedCount;
                     Check(developer.enabled && developer.IsEditorOnlyAvailable && !developer.IsOpen && !developer.panel.activeInHierarchy,
                         "editor-only Developer Panel starts hidden");
+                    Check(jump.jumpStartSurface != null && jump.jumpStartSurface.enabled && !jump.jumpStartSurface.isTrigger,
+                        "jump uses the real second Flying Stone surface for interaction eligibility");
                     Check(!jump.DeveloperPrerequisitesUnlocked && !jump.CanSharedInteract,
                         "real jump prerequisites begin locked");
                     CheckNoSpoilers("initial hidden jump UI");
@@ -138,12 +140,33 @@ namespace Fyp.Development.Recursion.Editor
                         Check(jump.statusText.text.Contains("Current n:") && jump.statusText.text.Contains("Calls executed:"),
                             "current n and executed call count remain visible");
                         CheckNoSpoilers("failed jump feedback");
-                        jump.Close();
+                        jump.input.text = "5";
+                        jump.castButton.onClick.Invoke();
+                        Next(10); return;
+                    case 10:
+                        if (jump.IsPlaying) return;
+                        fragment.InteractFromShared();
+                        Check(jump.JumpChallengeCompleted && !jump.bridgePractice.IsComplete &&
+                              !fragment.ChallengeSolved && !fragment.gemVisual.activeSelf &&
+                              !fragment.CanSharedInteract && !fragment.targetReturn.enabled &&
+                              !fragment.FragmentCollected && progress.CollectedCount == initialFragments,
+                            "successful developer-only landing still cannot reveal or award the fragment");
                         developer.Open();
+                        var trail = jump.animator.GetComponentsInChildren<TrailRenderer>(true)
+                            .Single(t => t.name == "Ruin 1 Magic Jump Trail");
+                        trail.AddPosition(player.transform.position);
+                        trail.AddPosition(player.transform.position + Vector3.right);
+                        Check(trail.positionCount > 1, "test seeded a trail segment for reset");
                         developer.ResetRuin01JumpAttempt();
+                        Check(!trail.enabled && !trail.emitting && trail.positionCount < 2, "reset clears residual trail points");
                         Check(jump.AttemptCount == 0 && !jump.JumpChallengeCompleted,
                             "Developer reset clears only the repeatable jump attempt");
+                        trail.enabled = true;
+                        trail.AddPosition(player.transform.position);
+                        trail.AddPosition(player.transform.position + Vector3.right);
+                        Check(trail.positionCount > 1, "test seeded a trail segment before Developer teleport");
                         developer.TeleportToMainHub();
+                        Check(!trail.enabled && !trail.emitting && trail.positionCount < 2, "Developer teleport clears residual trail points");
                         Next(8); return;
                     case 8:
                         CheckSafeTeleport(developer.mainHubSpawn, "Main Hub Player Spawn");

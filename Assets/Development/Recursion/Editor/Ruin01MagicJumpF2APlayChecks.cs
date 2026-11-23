@@ -16,12 +16,15 @@ namespace Fyp.Development.Recursion.Editor
         const string Key = "FYP.Ruin01.JumpF2A.PlayChecks";
         const string Output = "Temp/Ruin01JumpF2A/PlayChecks.txt";
         static Ruin01MagicJumpController jump;
+        static Ruin01FragmentReward reward;
         static BridgePracticeController practice;
         static Ruin01GuidedSimulationUI guided;
         static CharacterController player;
         static Keyboard keyboard;
         static StringBuilder log;
         static double[,] firstSeen, lastSeen;
+        static bool[,] trailSeen;
+        static TrailRenderer trail;
         static int stage, assertions, decisions, errors;
         static double began, stageAt;
 
@@ -52,8 +55,12 @@ namespace Fyp.Development.Recursion.Editor
         public static void Run()
         {
             var scene = EditorSceneManager.GetActiveScene();
-            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != "Assets/Scenes/MagicWorld_Development.unity" || scene.isDirty)
-                throw new InvalidOperationException("Run F2-A checks from a saved development scene in Edit Mode.");
+            if (EditorApplication.isPlayingOrWillChangePlaymode || scene.path != "Assets/Scenes/MagicWorld_Development.unity")
+                throw new InvalidOperationException("Run F2-A checks from MagicWorld_Development in Edit Mode.");
+            // Play Mode tests do not write scene data, so they can safely exercise the current
+            // scene snapshot without discarding an artist's unsaved scene edits.
+            if (scene.isDirty)
+                Debug.Log("[Ruin01 Jump QA] Running against the current unsaved scene snapshot.");
             if (FloatingIslandPrototypeTools.Exact("Ruin01_RelocationRoot/Ruin01JumpRoute/JumpChallenge")
                 .GetComponent<Ruin01MagicJumpController>() == null)
                 throw new InvalidOperationException("F2-A jump controller is not installed.");
@@ -83,15 +90,28 @@ namespace Fyp.Development.Recursion.Editor
                     if (EditorApplication.timeSinceStartup - began < 1) return;
                     jump = UnityEngine.Object.FindObjectsByType<Ruin01MagicJumpController>(FindObjectsSortMode.None).Single();
                     practice = jump.bridgePractice;
+                    reward = UnityEngine.Object.FindObjectsByType<Ruin01FragmentReward>(FindObjectsSortMode.None).Single();
+                    Check(reward.jump == jump && reward.practice == practice && reward.targetReturn != null &&
+                          InteractionHintManager.Instance.interactionTargets.Count(x => x == reward) == 1 &&
+                          InteractionHintManager.Instance.interactionTargets.Count(x => x == reward.targetReturn) == 1,
+                        "one F3 fragment and one target return are registered");
+                    CheckRewardLocked();
                     guided = UnityEngine.Object.FindObjectsByType<Ruin01GuidedSimulationUI>(FindObjectsSortMode.None).Single();
                     player = jump.characterController;
                     firstSeen = new double[4, 5];
                     lastSeen = new double[4, 5];
+                    trailSeen = new bool[4, 5];
+                    trail = null;
                     for (int attempt = 0; attempt < 4; attempt++)
                     for (int step = 0; step < 5; step++) firstSeen[attempt, step] = -1;
-                    Check(jump.enabled && jump.destinations.Length == 5 && jump.magicTriggers.Length == 5 &&
+                    Check(jump.enabled && jump.jumpStartSurface != null && jump.destinations.Length == 5 &&
+                          jump.magicTriggers.Length == 5 &&
                           !jump.JumpChallengeCompleted && !jump.IsOpen,
                         "fresh jump controller, five F1 destinations and five triggers");
+                    Check(jump.animator != null && jump.runningJumpClip != null &&
+                          jump.runningJumpClip.isHumanMotion && !jump.runningJumpClip.isLooping &&
+                          !jump.animator.applyRootMotion,
+                        "Humanoid Running Jump is wired as non-looping with Root Motion disabled");
                     Check(!jump.CanSharedInteract && !practice.IsComplete && !practice.GuidedLessonCompleted,
                         "guided lesson and bridge completion gate jump interaction");
                     Check(jump.magicTriggers.All(x => x != null && !x.IsVisible &&
@@ -137,7 +157,9 @@ namespace Fyp.Development.Recursion.Editor
                     case 3:
                         Check(decisions == 6 && practice.CheckpointIndex == 21 && practice.RestorationCount == 3,
                             "six questions and 22 checkpoints completed before jumping");
+                        CheckRewardLocked();
                         practice.Close();
+                        PlaceOnStartSurfaceAwayFromMarker();
                         Check(!practice.IsOpen && jump.CanSharedInteract, "jump unlocks only after bridge closes");
                         Check(jump.playerMovement.enabled && jump.cameraFollow.enabled && player.enabled,
                             "baseline movement, camera and controller active");
@@ -169,15 +191,17 @@ namespace Fyp.Development.Recursion.Editor
                         Check(jump.magicTriggers.All(x => !x.IsVisible), "no platform appears before the first landing");
                         Next(6); return;
                     case 6:
-                        if (jump.IsPlaying) { ObservePlatforms(); CheckWaitingAtLastStep(); return; }
+                        if (jump.IsPlaying) { ObserveAnimation(); ObservePlatforms(); CheckWaitingAtLastStep(); return; }
                         CheckRetry(1, 1, "Not quite there!");
+                        CheckAnimations(0, 1, 1);
                         CheckAttemptPlatforms(0, 1);
                         CheckPulses(1, 0, 0, 0, 0);
                         log.AppendLine("n=1: one trigger pulse, insufficient feedback, direct teleport and retry.");
                         StartAttempt(4); Next(7); return;
                     case 7:
-                        if (jump.IsPlaying) { ObservePlatforms(); CheckWaitingAtLastStep(); return; }
+                        if (jump.IsPlaying) { ObserveAnimation(); ObservePlatforms(); CheckWaitingAtLastStep(); return; }
                         CheckRetry(4, 4, "Not quite there!");
+                        CheckAnimations(1, 4, 5);
                         CheckAttemptPlatforms(1, 4);
                         CheckPulses(2, 1, 1, 1, 0);
                         log.AppendLine("n=4: four segment pulses, direct teleport and retry.");
@@ -185,6 +209,7 @@ namespace Fyp.Development.Recursion.Editor
                     case 8:
                         if (jump.IsPlaying)
                         {
+                            ObserveAnimation();
                             ObservePlatforms();
                             CheckWaitingAtLastStep();
                             Check(player.transform.position.z <= jump.destinations[4].position.z + .1f,
@@ -192,15 +217,17 @@ namespace Fyp.Development.Recursion.Editor
                             return;
                         }
                         CheckRetry(6, 5, "Too much magic!");
+                        CheckAnimations(2, 5, 10);
                         CheckAttemptPlatforms(2, 5);
                         CheckPulses(3, 2, 2, 2, 1);
                         log.AppendLine("n=6: sixth call blocked, five pulses, direct teleport and retry.");
                         StartAttempt(5); Next(9); return;
                     case 9:
-                        if (jump.IsPlaying) { ObservePlatforms(); return; }
+                        if (jump.IsPlaying) { ObserveAnimation(); ObservePlatforms(); return; }
                         Check(jump.JumpChallengeCompleted && jump.CallCount == 5 && jump.PerformedJumps == 5,
                             "n=5 completes exactly five recursive leaps");
                         CheckAttemptPlatforms(3, 5);
+                        CheckAnimations(3, 5, 15);
                         CheckPulses(4, 3, 3, 3, 2);
                         Check(!jump.IsOpen && !jump.panel.activeInHierarchy && !jump.CanSharedInteract,
                             "completed challenge closes panel and persists for Play session");
@@ -209,6 +236,8 @@ namespace Fyp.Development.Recursion.Editor
                         Check(jump.playerMovement.enabled && jump.cameraFollow.enabled && CursorManager.allowCursorLock &&
                               Cursor.lockState == CursorLockMode.Locked,
                             "movement, camera and cursor restored after landing");
+                        Check(!jump.animator.applyRootMotion && !jump.IsJumpAnimationActive,
+                            "success returns to locomotion with Root Motion still disabled");
                         Check(jump.AttemptCount == 4, "retries and success persisted in one Play session");
                         log.AppendLine("n=5: exact target landing, five pulses, completion retained, movement/camera/cursor restored.");
                         Next(10); return;
@@ -218,6 +247,42 @@ namespace Fyp.Development.Recursion.Editor
                             "all five trigger emissions fade to the original colour");
                         Check(Vector3.Distance(player.transform.position, jump.destinations[4].position) < .25f,
                             "gravity remains stable on the landing surface");
+                        Check(trail != null && !trail.emitting && trail.positionCount < 2,
+                            "last leap trail has faded after the successful landing");
+                        Check(reward.ChallengeSolved && reward.gemVisual.activeInHierarchy && reward.RevealCount == 1 &&
+                              !reward.FragmentCollected && !reward.targetReturn.enabled, "landing reveals the fragment once");
+                        Next(11); return;
+                    case 11:
+                        var towardAltar = Vector3.ProjectOnPlane(reward.transform.position - player.transform.position, Vector3.up);
+                        if (towardAltar.magnitude > 1.7f)
+                        {
+                            player.Move((towardAltar.normalized * 3f + Vector3.down * 2f) * Time.deltaTime);
+                            return;
+                        }
+                        Check(reward.CanSharedInteract, "CharacterController walks from landing into fragment range");
+                        InputSystem.QueueStateEvent(keyboard, new KeyboardState(KeyCodeToInputKey.E));
+                        Next(12); return;
+                    case 12:
+                        Check(reward.FragmentCollected && reward.CollectionCount == 1 && reward.RevealCount == 1 &&
+                              reward.progress.CollectedCount == 1 && !reward.gemVisual.activeSelf && reward.targetReturn.enabled,
+                            "shared E collects Ruin01 once and enables the target-stone return");
+                        reward.InteractFromShared();
+                        Check(reward.CollectionCount == 1 && reward.progress.CollectedCount == 1, "repeat collection is rejected");
+                        InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                        Next(13); return;
+                    case 13:
+                        Check(InteractionHintManager.Instance.hintText.text == reward.targetReturn.SharedHint,
+                            "shared E shows the target-stone return prompt");
+                        InputSystem.QueueStateEvent(keyboard, new KeyboardState(KeyCodeToInputKey.E));
+                        Next(14); return;
+                    case 14:
+                        var hub = reward.targetReturn.destination.position;
+                        Check(Vector3.ProjectOnPlane(player.transform.position - hub, Vector3.up).magnitude < .25f &&
+                              player.enabled && jump.playerMovement.enabled && CursorManager.allowCursorLock,
+                            "shared E returns the Wizard safely to the existing Hub destination");
+                        Check(reward.FragmentCollected && reward.CollectionCount == 1 && errors == 0,
+                            "Ruin01 persists after return with no Play errors");
+                        log.AppendLine("F3: bridge and failed attempts kept the fragment locked; landing, shared E collection and shared E Hub return passed.");
                         Finish(true); return;
                 }
             }
@@ -234,6 +299,22 @@ namespace Fyp.Development.Recursion.Editor
             Check(jump.IsPlaying && jump.statusText.text.Contains("Calls executed:"), "playback displays call status");
         }
 
+        static void PlaceOnStartSurfaceAwayFromMarker()
+        {
+            var surface = jump.jumpStartSurface;
+            var ray = new Ray(new Vector3(surface.bounds.center.x, surface.bounds.max.y + 3f,
+                surface.bounds.center.z), Vector3.down);
+            Check(surface.Raycast(ray, out var hit, surface.bounds.size.y + 6f),
+                "start island centre has a usable collider surface");
+            player.enabled = false;
+            player.transform.position = hit.point + Vector3.up * .08f;
+            player.enabled = true;
+            Physics.SyncTransforms();
+            Check(Vector3.Distance(player.transform.position, jump.jumpStartPoint.position) > jump.interactionDistance * 2f,
+                "normal bridge arrival test is well outside the old invisible-marker sphere");
+        }
+
+
         static void CheckPulses(params int[] expected)
         {
             for (int i = 0; i < 5; i++)
@@ -243,6 +324,11 @@ namespace Fyp.Development.Recursion.Editor
 
         static void ObservePlatforms()
         {
+            if (trail == null)
+                trail = jump.animator.GetComponentsInChildren<TrailRenderer>(true)
+                    .SingleOrDefault(t => t.name == "Ruin 1 Magic Jump Trail");
+            if (trail != null && trail.emitting && trail.positionCount > 1)
+                trailSeen[jump.AttemptCount - 1, jump.PerformedJumps] = true;
             int visible = -1;
             for (int i = 0; i < 5; i++)
             {
@@ -251,6 +337,7 @@ namespace Fyp.Development.Recursion.Editor
                 visible = i;
             }
             if (visible < 0) return;
+            Check(trail != null && !trail.emitting, "trail emission stops during the Magic Platform pause");
             Check(visible == jump.PerformedJumps - 1, "only the just-completed segment is visible");
             Check(Vector3.Distance(player.transform.position, jump.destinations[visible].position) < .15f,
                 "Wizard pauses at the completed segment marker");
@@ -262,6 +349,27 @@ namespace Fyp.Development.Recursion.Editor
             int attempt = jump.AttemptCount - 1;
             if (firstSeen[attempt, visible] < 0) firstSeen[attempt, visible] = EditorApplication.timeSinceStartup;
             lastSeen[attempt, visible] = EditorApplication.timeSinceStartup;
+            if (EditorApplication.timeSinceStartup - firstSeen[attempt, visible] > .15)
+                Check(!jump.IsJumpAnimationActive,
+                    "landing pause returns to locomotion after the short animation blend");
+            if (EditorApplication.timeSinceStartup - firstSeen[attempt, visible] > .55)
+                Check(trail.positionCount < 2, "trail expires before the next leap");
+        }
+
+        static void ObserveAnimation()
+        {
+            Check(!jump.animator.applyRootMotion, "Ruin01MagicJumpController keeps Root Motion disabled in flight");
+        }
+
+        static void CheckAnimations(int attempt, int count, int cumulativeCycles)
+        {
+            Check(jump.AnimationPlayCount == cumulativeCycles,
+                "one Running Jump cycle is requested per completed recursive leap");
+            Check(jump.AnimationActivationCount == cumulativeCycles,
+                "Running Jump becomes the active Animator state once per completed recursive leap; requested=" +
+                jump.AnimationPlayCount + " activated=" + jump.AnimationActivationCount);
+            Check(!jump.IsJumpAnimationActive && !jump.animator.applyRootMotion,
+                "failed/successful attempt settles back to locomotion without Root Motion");
         }
 
         static void CheckAttemptPlatforms(int attempt, int count)
@@ -270,8 +378,11 @@ namespace Fyp.Development.Recursion.Editor
             for (int i = 0; i < 5; i++)
             {
                 if (i < count)
+                {
+                    Check(trailSeen[attempt, i], "each completed leap emitted visible trail geometry");
                     Check(firstSeen[attempt, i] >= 0 && lastSeen[attempt, i] - firstSeen[attempt, i] >= .6,
                         "segment " + (i + 1) + " reveals one platform for a visible standing pause");
+                }
                 else Check(firstSeen[attempt, i] < 0, "future platform " + (i + 1) + " stayed hidden");
             }
         }
@@ -286,6 +397,9 @@ namespace Fyp.Development.Recursion.Editor
 
         static void CheckRetry(int calls, int leaps, string feedback)
         {
+            Check(trail != null && !trail.enabled && !trail.emitting && trail.positionCount < 2,
+                "failed jump returns with an empty trail");
+            CheckRewardLocked();
             Check(jump.IsOpen && !jump.JumpChallengeCompleted && jump.CallCount == calls &&
                   jump.PerformedJumps == leaps && jump.statusText.text.Contains(feedback),
                 "failed attempt has expected recursion count and feedback");
@@ -297,6 +411,14 @@ namespace Fyp.Development.Recursion.Editor
                   jump.input.gameObject.activeInHierarchy && jump.castButton.gameObject.activeInHierarchy,
                 "retry input remains usable with modal controls");
             Check(jump.magicTriggers.All(x => !x.IsVisible), "failed attempt leaves no floating platform visible");
+        }
+
+        static void CheckRewardLocked()
+        {
+            reward.InteractFromShared();
+            Check(!reward.ChallengeSolved && !reward.gemVisual.activeSelf && !reward.altarVisual.activeSelf &&
+                  !reward.CanSharedInteract && !reward.FragmentCollected && !reward.targetReturn.enabled &&
+                  reward.RevealCount == 0 && reward.CollectionCount == 0, "reward and target return remain locked");
         }
 
         static void Finish(bool success, string reason = null)

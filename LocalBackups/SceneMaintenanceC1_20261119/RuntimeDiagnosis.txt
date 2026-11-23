@@ -1,0 +1,15 @@
+Fresh session, initial player position
+player=(90.680, 0.005, 176.200) anchor=(-1539.817, 345.180, 182.395) distance=1666.6450 eligible=False active=True surface=True bridge=False guided=False testOverride=False cursor=Locked/True
+hintActive=False text=Press [E] to Restore Magic color=RGBA(1.000, 1.000, 1.000, 1.000) alpha=1 rendererAlpha=1 cull=False rect=(x:-400.00, y:-50.00, width:800.00, height:100.00) position=(960.00, 50.00, 0.00) CanvasActive=True
+ACTIVE MODALS 
+DEV canOpen=True open=False
+Developer teleport, normal prerequisites
+player=(-1539.817, 345.075, 180.795) anchor=(-1539.817, 345.180, 182.395) distance=1.6035 eligible=False active=True surface=True bridge=False guided=False testOverride=False cursor=Locked/True
+hintActive=False text=Press [E] to Restore Magic color=RGBA(1.000, 1.000, 1.000, 1.000) alpha=1 rendererAlpha=1 cull=False rect=(x:-400.00, y:-50.00, width:800.00, height:100.00) position=(960.00, 50.00, 0.00) CanvasActive=True
+ACTIVE MODALS 
+DEV canOpen=True open=False
+Developer test override
+player=(-1539.817, 345.075, 180.795) anchor=(-1539.817, 345.180, 182.395) distance=1.6035 eligible=True active=True surface=True bridge=False guided=False testOverride=True cursor=Locked/True
+hintActive=True text=Press [E] to Cast Recursive Magic Jump color=RGBA(1.000, 1.000, 1.000, 1.000) alpha=1 rendererAlpha=1 cull=False rect=(x:-400.00, y:-50.00, width:800.00, height:100.00) position=(960.00, 50.00, 0.00) CanvasActive=True
+ACTIVE MODALS 
+DEV canOpen=True open=False

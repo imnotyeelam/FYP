@@ -1,0 +1,7 @@
+C2 archive verification
+Exactly five direct children; all inactive. Existing objects checked: 1071. Max world matrix error: 0.00000000. UI world corners preserved. Serialized reference properties checked: 16085; all unchanged. Shared E/modal arrays unchanged.
+Ruin01_RelocationRoot/Ruin01_Area/SpawnPoints/L1_Spawnpoint/Cube (2) -> _Archived_Objects/Cube (2) world=(-1540.200, 341.714, 4.670)
+Ruin01_RelocationRoot/Ruin01_Area/Interactables/RecursionObservationPoint/Cube -> _Archived_Objects/Cube world=(-1486.000, 303.000, -71.000)
+Canvas/RuinInteractionHint -> _Archived_Objects/RuinInteractionHint world=(960.000, 25.000, 0.000)
+Ruin02_Area/Gameplay/RitualChamber/MagicalFarmGateway/GatewayLabel -> _Archived_Objects/GatewayLabel world=(790.000, 11.820, 196.000)
+Ruin02_Area/Gameplay/RitualChamber/MagicalFarmGateway/FarmGatewayLandmark -> _Archived_Objects/FarmGatewayLandmark world=(790.000, 10.000, 197.000)

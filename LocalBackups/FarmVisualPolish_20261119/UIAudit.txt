@@ -1,0 +1,29 @@
+UI Canvas/MagicHarvestConsolePanel anchors=(0.66, 0.08)/(0.99, 0.94) rect=(x:-316.80, y:-464.40, width:633.60, height:928.80) offsets=(0.00, 0.00)/(0.00, 0.00)
+  IMAGE color=RGBA(0.035, 0.065, 0.110, 0.950) sprite=none
+UI Canvas/MagicHarvestConsolePanel/Title anchors=(0.06, 0.90)/(0.94, 0.98) rect=(x:-278.78, y:-37.15, width:557.57, height:74.30) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=28 color=RGBA(1.000, 1.000, 1.000, 1.000)
+UI Canvas/MagicHarvestConsolePanel/Code anchors=(0.06, 0.55)/(0.94, 0.89) rect=(x:-278.78, y:-157.90, width:557.57, height:315.79) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT ELEGANT TYPEWRITER Regular SDF size=23 color=RGBA(1.000, 1.000, 1.000, 1.000)
+UI Canvas/MagicHarvestConsolePanel/State anchors=(0.06, 0.35)/(0.94, 0.54) rect=(x:-278.78, y:-88.24, width:557.57, height:176.47) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=22 color=RGBA(1.000, 1.000, 1.000, 1.000)
+UI Canvas/MagicHarvestConsolePanel/Feedback anchors=(0.06, 0.20)/(0.94, 0.34) rect=(x:-278.78, y:-65.02, width:557.57, height:130.03) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=21 color=RGBA(1.000, 1.000, 1.000, 1.000)
+UI Canvas/MagicHarvestConsolePanel/AnswerInput anchors=(0.06, 0.13)/(0.94, 0.19) rect=(x:-278.78, y:-27.86, width:557.57, height:55.73) offsets=(0.00, 0.00)/(0.00, 0.00)
+  IMAGE color=RGBA(1.000, 1.000, 1.000, 1.000) sprite=InputFieldBackground
+UI Canvas/MagicHarvestConsolePanel/AnswerInput/Text Area anchors=(0.00, 0.00)/(1.00, 1.00) rect=(x:-268.78, y:-21.36, width:537.57, height:42.73) offsets=(10.00, 6.00)/(-10.00, -7.00)
+UI Canvas/MagicHarvestConsolePanel/AnswerInput/Text Area/Placeholder anchors=(0.00, 0.00)/(1.00, 1.00) rect=(x:-268.78, y:-21.36, width:537.57, height:42.73) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=28 color=RGBA(0.196, 0.196, 0.196, 0.500)
+UI Canvas/MagicHarvestConsolePanel/AnswerInput/Text Area/Text anchors=(0.00, 0.00)/(1.00, 1.00) rect=(x:-268.78, y:-21.36, width:537.57, height:42.73) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT ELEGANT TYPEWRITER Regular SDF size=28 color=RGBA(0.196, 0.196, 0.196, 1.000)
+UI Canvas/MagicHarvestConsolePanel/Submit anchors=(0.06, 0.07)/(0.94, 0.13) rect=(x:-278.78, y:-25.54, width:557.57, height:51.08) offsets=(0.00, 0.00)/(0.00, 0.00)
+  IMAGE color=RGBA(0.160, 0.280, 0.400, 1.000) sprite=none
+UI Canvas/MagicHarvestConsolePanel/Submit/Label anchors=(0.06, 0.00)/(0.94, 1.00) rect=(x:-245.33, y:-25.54, width:490.66, height:51.08) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=22 color=RGBA(1.000, 1.000, 1.000, 1.000)
+UI Canvas/MagicHarvestConsolePanel/Close anchors=(0.06, 0.01)/(0.94, 0.07) rect=(x:-278.78, y:-27.86, width:557.57, height:55.73) offsets=(0.00, 0.00)/(0.00, 0.00)
+  IMAGE color=RGBA(0.160, 0.280, 0.400, 1.000) sprite=none
+UI Canvas/MagicHarvestConsolePanel/Close/Label anchors=(0.06, 0.00)/(0.94, 1.00) rect=(x:-245.33, y:-27.86, width:490.66, height:55.73) offsets=(0.00, 0.00)/(0.00, 0.00)
+  FONT Chomage SDF size=22 color=RGBA(1.000, 1.000, 1.000, 1.000)
+LEFT STATUS Ruin02_MagicalFarm/HarvestDebugDisplay position=(800.000, 53.500, 346.000) rotation=(26.57, 0.00, 0.00) scale=(1.00, 1.00, 1.00) characterSize=0.055 fontSize=64 anchor=MiddleCenter alignment=Center text=HARVEST SIMULATION
+Ready — manual Play Mode trigger
+Plots Checked 0/30   Crops Harvested 0/15
+Status mesh bounds=Center: (800.00, 53.50, 346.00), Extents: (3.41, 0.54, 0.27); camera marker (800.000, 63.000, 327.000) rotation (45.44, 0.00, 0.00)
