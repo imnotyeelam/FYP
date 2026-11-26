@@ -472,3 +472,53 @@ Saved scene diff: 6 lines changed. Five `cameraFollow: {fileID: 961739750}` beca
 ### Remaining issues (unchanged scope)
 
 No persistence. The Final Portal ends at the arch swap. Ruin III is a scaffold only. The backend is not packaged or pinned. The farm H2 message is stale. The MCP package is unpinned and uncommitted. No fresh full-playthrough or player-build results exist.
+
+## 19. UI migration status (26 November 2026)
+
+The full specification and decisions are in `UI_STYLE_GUIDE.md` (sections 10–11). This section is a summary for handover.
+
+### Implemented and committed earlier: UI-0 / UI-B
+
+- **Vanilla Caramel SDF** is the unified font.
+  - `–` and `—` were added to its static atlas. The GUID is unchanged and it now has 98 characters.
+  - `· … •` are unsupported, so they were replaced with `|` and `...` in player-facing strings.
+  - AI hint text passes through `FypUiTheme.ForFont()` after trimming.
+- **`Fyp.Development.UI.FypUiTheme`** is the shared presentation palette.
+- **Scoped 9-slice sprite copies** are in `Assets/Development/UI/Sprites/`. The Bamao vendor sprites are unchanged.
+- **The Magical Farm Harvest Console was rebuilt as the reference prototype:**
+  - New view component `Ruin02HarvestConsoleView`.
+  - The Wizard's renderers are hidden while the console is open.
+  - A pedestal-and-spellbook console visual was added, with no colliders.
+  - The mirrored return label was fixed, and the sky surround is opaque.
+
+### Implemented this session, UI-C Part 1 (uncommitted at time of writing)
+
+- **Farm refinements:**
+  - The status board hides while the console is open and is restored on every close path (`Ruin02HarvestConsole.statusBoard`).
+  - The completion card has a medal icon and a "Next" instruction box.
+  - Call-stack text is 21 pt, and the active-step tag is shown in the stack heading.
+  - The farm camera marker was moved back 8 m, and the FOV adapts to the aspect: 66° at 4:3, 52° at 16:9. The whole farm and its row labels are visible at both.
+- **C1 Shared HUD:** the interaction hint is Ink on a parchment pill (`InteractionHintBackdrop` + new `FypTextBackdrop`); the reward toast and locked message are wood banners.
+- **C2 Spellbooks:** both books use the unified type scale, a warm dimmer and auto-fitted InkSlate code wells. The Ruin 2 code box was enlarged so the full function fits. Navigation and content are unchanged.
+- **C5 World text:** all 35 farm `TextMesh` labels were converted to `TextMeshPro` on the same objects. `Ruin02FarmSimulation.statusDisplay` (TMP) is the runtime status reference; the legacy `debugDisplay` (TextMesh) is kept but null.
+  - **Older farm Editor tools that use `debugDisplay` (H1/H2/H4 installers, `FarmVisualPolishTools`) are now stale. Don't run them.**
+- **C6 Developer panel:** parchment panel, wood header and paper buttons. Functionality is unchanged.
+
+### Validation and remaining work
+
+- Play Mode checks through Unity MCP at 1920×1080 and 1024×768 found no text overflow and 0 Console errors.
+- This was not a human playtest and not a player build.
+- **Remaining:**
+  - UI-C3/C4 (Guided Simulation and Challenge panels).
+  - The `·` in `FinalPortalInteraction.cs`.
+  - The pre-existing `Ruin02PracticeController.Close()` teardown `MissingReferenceException` when Play Mode stops while practice is open.
+  - Ruin 2 Phase C (Teleport Stone visuals, fragment-reveal notification) and Phase D (farm Simulation Guide) are still pending.
+
+### UI-C3 Guided Simulations (26 November 2026, uncommitted)
+
+- **What changed:** the bridge, magic jump and Elemental Staff guided simulation panels were restyled to the Cozy Fantasy system (`UI_STYLE_GUIDE.md` section 12): parchment panel, accent ribbon header, InkSlate code well with a GoldGlow active line, GoldGlow active stack frame, info box, themed slider and paper/moss buttons.
+- **Simulation logic is unchanged:** checkpoints, the Finish gating and challenge unlocking were re-verified for bridge and staff.
+- **Opt-in themed views:** shared `RecursionPanelView` and `Ruin02StaffDiagramView` gained an opt-in `useFypTheme`, enabled only on the guided instances. The challenge panels stay legacy until UI-C4.
+- **Jump guide:** `Ruin01JumpGuidedSimulation` now takes its presentation colours from `FypUiTheme`, and its TOP frame highlight follows the stack.
+- **Untested:** the jump guide's return-leap animation and its Finish (the Editor couldn't be focused for frame advance during testing).
+- **Remaining:** UI-C4 Challenge panels.

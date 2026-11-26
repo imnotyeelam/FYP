@@ -9,6 +9,9 @@ namespace Fyp.Development.Recursion
     /// <summary>Standalone UI-only example. No route markers, Wizard motion or rewards are used.</summary>
     public sealed class Ruin01JumpGuidedSimulation : MonoBehaviour
     {
+        // UI-C3 presentation: preview landings use the shared theme (reached = GoldGlow, pending = muted).
+        static Color LandingReached => Fyp.Development.UI.FypUiTheme.GoldGlow;
+        static Color LandingPending => new Color(0.66f, 0.62f, 0.56f, 0.8f);
         public Ruin01MagicJumpController jump;
         public GameObject panel;
         public TMP_Text heading, code, instruction, state;
@@ -85,7 +88,7 @@ namespace Fyp.Development.Recursion
             previous.interactable = Checkpoint > 0; next.gameObject.SetActive(Checkpoint < 7);
             next.interactable = true; finish.gameObject.SetActive(Checkpoint == 7);
             ExampleLeaps = Checkpoint == 7 ? 3 : 0;
-            for (int i=0;i<3;i++) previewLandings[i].color = Checkpoint == 7 ? new Color(.68f,.46f,.95f,1) : new Color(.28f,.18f,.48f,.8f);
+            for (int i=0;i<3;i++) previewLandings[i].color = Checkpoint == 7 ? LandingReached : LandingPending;
             MoveOrb(ExampleLeaps,0);
             int depth = Checkpoint <= 0 || Checkpoint == 7 ? 0 : Mathf.Clamp(Checkpoint - 1,1,4);
             if (Checkpoint == 1) depth = 1;
@@ -99,7 +102,7 @@ namespace Fyp.Development.Recursion
         void ShowCode(int highlighted)
         {
             string[] lines={"void magicJump(int n) {", "    if (n == 0) return;", "    magicJump(n - 1);", "    magicalLeap();", "}", "", "// tutorial example only", "magicJump(3);"};
-            for(int i=0;i<lines.Length;i++)if(i==highlighted)lines[i]="<color=#E5B8FF>"+lines[i]+"  // executing</color>";
+            for(int i=0;i<lines.Length;i++)if(i==highlighted)lines[i]=Fyp.Development.UI.FypUiTheme.ActiveLineTag+lines[i]+"  // executing</color>";
             code.text=string.Join("\n",lines);
         }
         void ShowStack(int depth)
@@ -109,6 +112,11 @@ namespace Fyp.Development.Recursion
             {
                 stackFrames[i].transform.parent.gameObject.SetActive(i<depth);
                 stackFrames[i].text=$"magicJump({3-i})"+(i==depth-1 ? "  < TOP" : "  waiting");
+                // UI-C3 presentation: the active (top) frame is GoldGlow with Ink text.
+                bool top=i==depth-1;
+                var frame=stackFrames[i].transform.parent.GetComponent<UnityEngine.UI.Image>();
+                if(frame!=null) frame.color=top?Fyp.Development.UI.FypUiTheme.GoldGlow:Color.white;
+                stackFrames[i].color=top?Fyp.Development.UI.FypUiTheme.Ink:Fyp.Development.UI.FypUiTheme.Parchment;
             }
         }
         IEnumerator Unwind()
@@ -120,7 +128,7 @@ namespace Fyp.Development.Recursion
                 state.text=$"n = {n}   |   Phase: Return   |   Stack depth: {StackDepth}   |   Example leap {i+1}";
                 float elapsed=0;
                 while(elapsed<.65f){elapsed+=Time.unscaledDeltaTime;MoveOrb(i,Mathf.Clamp01(elapsed/.65f));yield return null;}
-                ExampleLeaps=i+1; previewLandings[i].color=new Color(.68f,.46f,.95f,1);
+                ExampleLeaps=i+1; previewLandings[i].color=LandingReached;
                 ShowStack(2-i); yield return new WaitForSecondsRealtime(.2f);
             }
             ShowCode(4); state.text="Phase: Return complete   |   Stack depth: 0   |   Example leaps: 3";

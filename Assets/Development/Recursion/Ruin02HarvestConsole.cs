@@ -17,6 +17,11 @@ namespace Fyp.Development.Recursion
         public UnityEngine.UI.Button submit, close;
         [Tooltip("Optional presentation view (UI-B). Reads state only.")]
         public Ruin02HarvestConsoleView view;
+        [Tooltip("Floating farm status board; hidden while the console is open, restored on close.")]
+        public GameObject statusBoard;
+        bool statusBoardBefore;
+        [Tooltip("Console view FOV for a narrow (4:3) split viewport and a wide (16:9) one; interpolated by aspect.")]
+        public float narrowAspectFov = 66f, wideAspectFov = 66f;
         public bool IsOpen { get; private set; }
         bool moveBefore, cameraBefore, allowBefore, visibleBefore, closePending;
         CursorLockMode lockBefore;
@@ -86,9 +91,12 @@ namespace Fyp.Development.Recursion
             cameraFollow.enabled = false;
             cameraFollow.transform.SetPositionAndRotation(cameraView.position, cameraView.rotation);
             camera.rect = new Rect(0f, 0f, .65f, 1f);
-            camera.fieldOfView = 66f;
+            // Presentation: keep the whole farm framed at 4:3 while filling the view at 16:9.
+            float viewAspect = .65f * Screen.width / Mathf.Max(1f, Screen.height);
+            camera.fieldOfView = Mathf.Lerp(narrowAspectFov, wideAspectFov, Mathf.InverseLerp(.65f * 4f / 3f, .65f * 16f / 9f, viewAspect));
             CursorManager.Instance.SetUIOpen(true);
             HidePlayerVisuals();
+            if (statusBoard != null) { statusBoardBefore = statusBoard.activeSelf; statusBoard.SetActive(false); }
             panel.SetActive(true);
             message = simulation.IsComplete ? "" :
                 $"Row {simulation.CompletedRows + 1} of 3: type the missing expression, then press Run Row.";
@@ -188,6 +196,7 @@ namespace Fyp.Development.Recursion
             IsOpen = false;
             panel.SetActive(false);
             RestorePlayerVisuals();
+            if (statusBoard != null) statusBoard.SetActive(statusBoardBefore);
             movement.enabled = moveBefore;
             cameraFollow.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
             var camera = cameraFollow.GetComponent<Camera>();

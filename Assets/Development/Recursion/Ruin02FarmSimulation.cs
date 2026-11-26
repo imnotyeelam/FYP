@@ -7,7 +7,10 @@ namespace Fyp.Development.Recursion
 {
     public sealed class Ruin02FarmSimulation : MonoBehaviour
     {
+        [Tooltip("Legacy TextMesh status board (retained for older Editor tools; null after UI-C5).")]
         public TextMesh debugDisplay;
+        [Tooltip("World-space TMP status board (UI-C5). Used in preference to debugDisplay.")]
+        public TMPro.TMP_Text statusDisplay;
         [Min(.01f)] public float callSeconds = .12f;
         [Min(.01f)] public float baseSeconds = .55f;
         [Min(.01f)] public float returnSeconds = .4f;
@@ -52,7 +55,7 @@ namespace Fyp.Development.Recursion
         void Initialize()
         {
             if (initialized) return;
-            if (debugDisplay == null) throw new InvalidOperationException("Farm debug display is missing.");
+            if (debugDisplay == null && statusDisplay == null) throw new InvalidOperationException("Farm status display is missing.");
             highlight = new MaterialPropertyBlock();
             for (int row = 0; row < 3; row++)
             for (int plot = 0; plot < 10; plot++)
@@ -152,9 +155,11 @@ namespace Fyp.Development.Recursion
 
         void Present(string explanation)
         {
-            debugDisplay.text = $"MAGICAL HARVEST\nRow {CurrentStep?.Row ?? 0}/3   n = {CurrentStep?.N ?? 0}" +
+            string text = $"MAGICAL HARVEST\nRow {CurrentStep?.Row ?? 0}/3   n = {CurrentStep?.N ?? 0}" +
                 $"   {CurrentStep?.Phase.ToString() ?? "Ready"}   Stack {StackDepth}\n" +
                 $"Plots checked {PlotsChecked}/30   Carrots {CropsHarvested}/15\n{explanation}";
+            if (statusDisplay != null) statusDisplay.text = text;
+            else debugDisplay.text = text;
         }
 
         void OnDisable()

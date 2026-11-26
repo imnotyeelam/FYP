@@ -27,6 +27,7 @@ namespace Fyp.Development.Recursion
         public Image[] stackRows;
         public TMP_Text[] stackLabels;
         public TMP_Text stackMore;
+        public TMP_Text stackHeading;
         public Sprite stackIdleSprite;
 
         [Header("Progress")]
@@ -87,6 +88,7 @@ namespace Fyp.Development.Recursion
         {
             if (stackRows == null || stackLabels == null) return;
             int depth = simulation.IsRunning ? simulation.StackDepth : 0;
+            string activeTag = "";
             var step = simulation.CurrentStep;
             int row = step != null ? step.Row : Mathf.Min(3, simulation.CompletedRows + 1);
             for (int i = 0; i < stackRows.Length && i < stackLabels.Length; i++)
@@ -98,33 +100,37 @@ namespace Fyp.Development.Recursion
                 if (!visible) continue;
                 int n = 11 - frameDepth;
                 bool top = i == 0;
-                string tag = !top ? "waiting" :
-                    step == null ? "" :
-                    step.Phase == HarvestPhase.Base ? "base case" :
-                    step.Phase == HarvestPhase.Call ? "calling" :
-                    step.HasCrop ? "harvest plot " + n : "skip plot " + n;
-                stackLabels[i].text = $"harvest(row {row}, {n})  <size=80%>{tag}</size>";
+                // Only the top (active) frame carries a status tag; waiting frames show just the call.
+                string tag = !top || step == null ? "" :
+                    step.Phase == HarvestPhase.Base ? "BASE" :
+                    step.Phase == HarvestPhase.Call ? "CALL" :
+                    step.HasCrop ? "HARVEST" : "SKIP";
+                if (top) activeTag = tag;
+                stackLabels[i].text = top ? $"<b>harvest(row {row}, {n})</b>" : $"harvest(row {row}, {n})";
                 stackRows[i].color = top ? FypUiTheme.GoldGlow : Color.white;
                 stackLabels[i].color = top ? FypUiTheme.Ink : FypUiTheme.Parchment;
             }
             if (stackMore != null)
             {
                 int hidden = depth - stackRows.Length;
-                stackMore.text = depth == 0 ? "Stack empty" : hidden > 0 ? $"+ {hidden} more waiting below" : "";
+                stackMore.text = depth == 0 ? "Stack empty" : hidden > 0 ? $"+ {hidden} more below" : "";
             }
+            if (stackHeading != null)
+                stackHeading.text = depth == 0 ? "Call Stack" :
+                    $"Call Stack  <size=80%>depth {depth}  |  top: {activeTag}</size>";
         }
 
         void PresentProgress()
         {
-            SetBar(rowsFill, rowsLabel, simulation.CompletedRows, 3, "Rows harvested");
-            SetBar(plotsFill, plotsLabel, simulation.PlotsChecked, 30, "Plots checked");
-            SetBar(cropsFill, cropsLabel, simulation.CropsHarvested, 15, "Carrots collected");
+            SetBar(rowsFill, rowsLabel, simulation.CompletedRows, 3, "Rows");
+            SetBar(plotsFill, plotsLabel, simulation.PlotsChecked, 30, "Plots");
+            SetBar(cropsFill, cropsLabel, simulation.CropsHarvested, 15, "Carrots");
         }
 
         static void SetBar(Image fill, TMP_Text label, int value, int max, string name)
         {
             if (fill != null) fill.fillAmount = Mathf.Clamp01(value / (float)max);
-            if (label != null) label.text = $"{name}  <b>{value} / {max}</b>";
+            if (label != null) label.text = $"{name}<pos=62%><b>{value} / {max}</b>";
         }
 
         void PresentFeedback(bool complete, string message, HarvestConsoleMessageKind kind, bool closePending)
@@ -166,10 +172,10 @@ namespace Fyp.Development.Recursion
             bool collected = progress != null && progress.HasFragment(FragmentProgressTracker.Ruin02);
             bool staffDone = staffStatus != null && staffStatus.StaffCompleted;
             completionNext.text = collected
-                ? "The Fragment of Returning Magic is already yours. Use the Return Stone to travel back."
+                ? "<b>Next:</b> The Fragment of Returning Magic is already yours. Use the Return Stone to travel back."
                 : staffDone
-                    ? "The Fragment of Returning Magic has awakened in the Ritual Chamber!\nUse the Return Stone to go back and collect it."
-                    : "The fragment is still asleep. Return to the Ritual Chamber and restore all four Elemental Staffs to awaken it.";
+                    ? "<b>Next:</b> The Fragment of Returning Magic has awakened in the Ritual Chamber. Use the Return Stone to go back and collect it."
+                    : "<b>Next:</b> The fragment is still asleep. Return to the Ritual Chamber and restore all four Elemental Staffs to awaken it.";
         }
     }
 }

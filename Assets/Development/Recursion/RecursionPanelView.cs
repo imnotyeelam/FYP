@@ -10,6 +10,8 @@ namespace Fyp.Development.Recursion
     public sealed class RecursionPanelView : MonoBehaviour
     {
         public string lessonLabel = "Ruin I";
+        [Tooltip("Opt-in Cozy Fantasy presentation (UI-C3, guided simulations). Off keeps the legacy colours used by challenge panels.")]
+        public bool useFypTheme;
         public TMP_Text title, code, state, explanation, progress, emptyStack;
         public TMP_Text[] frameLabels;
         public Image[] frameBackgrounds;
@@ -52,11 +54,13 @@ namespace Fyp.Development.Recursion
         {
             var step = playback.Current;
             title.text = lessonLabel + " | " + playback.Trace.FunctionName;
-            var text = new StringBuilder("<mspace=11>");
+            // Theme: font-relative monospace (Vanilla Caramel is proportional) and the shared active-line colour.
+            var text = new StringBuilder(useFypTheme ? "<mspace=0.56em>" : "<mspace=11>");
+            string activeTag = useFypTheme ? Fyp.Development.UI.FypUiTheme.ActiveLineTag : "<color=#FFD166>";
             for (int i = 0; i < playback.Trace.Code.Count; i++)
             {
                 string line = $"{i + 1} {playback.Trace.Code[i]}";
-                text.AppendLine(i == step.ActiveLine ? "<color=#FFD166><b>>" + line + "</b></color>" : " " + line);
+                text.AppendLine(i == step.ActiveLine ? activeTag + "<b>>" + line + "</b></color>" : " " + line);
             }
             code.text = text + "</mspace>";
             state.text = $"{step.Phase} | n = {(step.Parameter.HasValue ? step.Parameter.ToString() : "--")}\n" +
@@ -82,7 +86,13 @@ namespace Fyp.Development.Recursion
                 if (block != null) block.Initialize(playback.Trace.FunctionName, step.Frames[index]);
                 else frameLabels[row].text = $"{playback.Trace.FunctionName}({step.Frames[index]})";
                 frameLabels[row].text += row == 0 ? " [" + step.Phase + "]" : " [waiting]";
-                frameBackgrounds[row].color = row == 0 ? new Color(.15f, .34f, .40f) : new Color(.12f, .16f, .21f);
+                if (useFypTheme)
+                {
+                    // Active (top) frame = GoldGlow with Ink text; waiting frames keep the sprite colour.
+                    frameBackgrounds[row].color = row == 0 ? Fyp.Development.UI.FypUiTheme.GoldGlow : Color.white;
+                    frameLabels[row].color = row == 0 ? Fyp.Development.UI.FypUiTheme.Ink : Fyp.Development.UI.FypUiTheme.Parchment;
+                }
+                else frameBackgrounds[row].color = row == 0 ? new Color(.15f, .34f, .40f) : new Color(.12f, .16f, .21f);
             }
         }
 

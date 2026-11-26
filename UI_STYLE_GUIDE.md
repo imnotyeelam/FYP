@@ -250,12 +250,12 @@ Each batch: take a scoped scene backup, edit through Unity MCP / SerializedObjec
 | --- | --- | --- |
 | **UI-0 Font prerequisites** ✅ done (see 2.1, 10.3) | Add `· – —` to the Vanilla atlas; `…` → `...`, `•` → `·` in strings; mark 9-slice borders on the chosen Bamao sprites; add `FypUiTheme` | Changes a font asset and sprite import settings, and touches script string literals. No logic changes. |
 | **UI-B Prototype** ✅ done (see 10) | `MagicHarvestConsolePanel`: parchment main panel, ribbon header, InkSlate code well, Moss "Run row", wood close, typed input, feedback states, Vanilla font, sky accent. Also includes the approved Ruin 2 Phase B console items (opaque sky surround). | Console logic, Enter submit, queued close and camera split stay as they are. Before/after at 1920×1080, 1366×768, 1024×768. |
-| **UI-C1 Shared HUD** | `InteractionHint`, `FragmentRewardToast`, `Ruin02ReturnLockedMessage` | Toast timer and shared label references unchanged |
-| **UI-C2 Books** | `AncientSpellbookPanel`, `Ruin02AncientSpellbookPanel` (already parchment; mostly font and type scale) | Three pages, arrows and Close unchanged |
-| **UI-C3 Guided simulations** | `Ruin01GuidedSimulationPanel`, `Ruin02GuidedSimulationPanel`, `JumpGuidedSimulationPanel` | Uses `FypUiTheme`; Finish gating unchanged; check the slider and diagrams |
+| **UI-C1 Shared HUD** ✅ done (see 11) | `InteractionHint`, `FragmentRewardToast`, `Ruin02ReturnLockedMessage` | Toast timer and shared label references unchanged |
+| **UI-C2 Books** ✅ done (see 11) | `AncientSpellbookPanel`, `Ruin02AncientSpellbookPanel` (already parchment; mostly font and type scale) | Three pages, arrows and Close unchanged |
+| **UI-C3 Guided simulations** ✅ done (see 12) | `Ruin01GuidedSimulationPanel`, `Ruin02GuidedSimulationPanel`, `JumpGuidedSimulationPanel` | Uses `FypUiTheme`; Finish gating unchanged; check the slider and diagrams |
 | **UI-C4 Challenges** | `RecursionPracticePanel` (bridge), `Ruin02PracticePanel`, `Ruin01JumpPanel` | Answer selection colours and AI hint area; regression: wrong / double / stale input, ESC, cinematic queued close |
-| **UI-C5 World text** | Farm `TextMesh` → `TextMeshPro`, Vanilla font, Parchment + outline | Small typed-field script change for `HarvestDebugDisplay` |
-| **UI-C6 Developer panel** (optional) | Wood panel variant, so it reads as clearly "not gameplay" | Editor only |
+| **UI-C5 World text** ✅ done (see 11; outline replaced by colour/backdrop contrast) | Farm `TextMesh` → `TextMeshPro`, Vanilla font | Small typed-field script change for `HarvestDebugDisplay` |
+| **UI-C6 Developer panel** ✅ done (see 11) | Wood panel variant, so it reads as clearly "not gameplay" | Editor only |
 | **Future UI** | Farm Simulation Guide, Final Portal messages | Must be built from this guide and `FypUiTheme` |
 
 **Out of scope:** the legacy quiz `ChallengePanel` and `RecursionVisualizationPanel` (legacy visualizer, disabled) unless they become player-facing; unowned legacy hint objects; vendor demo scenes; the AI backend; Ruin III; the Final Portal logic.
@@ -336,6 +336,77 @@ These were direct method or listener calls plus Input System events, not a human
 - At 1024×768, the 14–18 pt stack and progress captions render at about 11 px. They're legible but small. Consider dropping the frame tag text, or showing 4 frames instead of 5, at 4:3.
 - The world status board and plot labels are still legacy `TextMesh` with the default font (UI-C5).
 - `FinalPortalInteraction.cs` still uses `·` (Final Portal is out of scope).
+
+## 11. UI-C Part 1 (implemented 26 Nov 2026): farm refinements, C1, C2, C5, C6
+
+### 11.1 Decisions
+
+| Topic | Decision |
+| --- | --- |
+| **Text outlines** | **Don't use SDF outlines with Vanilla Caramel.** Its atlas has 6 px padding at 173 pt (gradient scale 7), so a 30 pt outline is under 1 px even with `OUTLINE_ON`. Get contrast from colour (Ink on light, Parchment on dark) or from a backdrop. The trial outline material was removed. |
+| Text backdrops | `Fyp.Development.UI.FypTextBackdrop`, a sibling Image placed before the text. It sizes itself to the text's rendered bounds plus padding, and hides when the text is empty or inactive. It's used for the interaction-hint pill and the spellbook code wells; reuse it for future code areas. |
+| Interaction hint | Ink, bold, 30 pt on a `UI_ButtonPaper` pill (`Canvas/InteractionHintBackdrop`). `InteractionHintManager` still owns visibility; the pill follows it. |
+| Toast / locked message | A `UI_RibbonWood` banner (PPU ×2.2) with Parchment bold text, 28 pt (auto-size from 20). `FragmentRewardToast` timing and the shared label are unchanged. |
+| Spellbooks | Background art, buttons and page flow are unchanged. The dimmer is warm Ink at 45%. Title Ink 48 bold, body Ink 32 (auto-size from 22), page number InkSoft 24. Code is Parchment 30 in an auto-fitted InkSlate `CodeWell`. Buttons use theme ColorTint. Duplicate button labels are transparent (the sprites already show the arrows and X). The Ruin 2 `CodeText` box was enlarged to 640×330 so the whole function fits. |
+| World text (farm) | 35 `TextMesh` components were replaced in place by `TextMeshPro` on the same GameObjects; transform, orientation, children and active state are preserved. Sizes match the original rendered height. Plot numbers are Parchment bold on soil. Row labels and "RETURN TO RITUAL" are Ink bold on the pale platform. The status board is Ink text on a parchment card. `Ruin02FarmSimulation.statusDisplay` (TMP) is the runtime reference; the legacy `debugDisplay` (TextMesh) field is kept, now null, so old Editor tools still compile. Don't re-run them. |
+| Status board | Hidden while the console is open: `Ruin02HarvestConsole.statusBoard` stores its active state on Open and restores it on every close path. |
+| Farm framing | `FarmCameraView` was moved 8 m back along its own view direction, computed to fit every plot, carrot and row label at 4:3. FOV is chosen by aspect: `narrowAspectFov` 66 at 4:3 to `wideAspectFov` 52 at 16:9, so 16:9 fills the view. |
+| Call stack | Text 21 pt. Only the top frame is gold and bold, with no tags on the frames. The heading carries "depth N &#124; top: CALL/BASE/HARVEST/SKIP". Progress labels are "Rows / Plots / Carrots" with the value at `<pos=62%>`. |
+| Completion card | Wood ribbon title, `icon_medal`, stats at 28 pt, and a "Next" instruction box (info fill, gold accent, info icon). The wording is unchanged and read-only. |
+| Developer panel | Parchment panel, `UI_RibbonWood` header, paper buttons and a Moss Close button. The subtitle's `•` was replaced with `|`. All buttons and listeners are unchanged. |
+
+### 11.2 Validation (Play Mode through Unity MCP, direct listener/method calls, not a human playtest)
+
+- **1920×1080:** Ruin 1 book (pages 1→3 via the forward button, Close), Ruin 2 book page 3, Developer panel with a toast, farm world labels with the hint pill, console running, completion card.
+- **1024×768:** console ready, Ruin 2 book page 3.
+- No TMP overflow after the fixes. The farm and all row labels are in view at both aspects.
+- The status board hides on Open and is restored on Close.
+- Wizard renderers, camera, FOV, cursor and controls were restored.
+- The Developer Farm teleport button works.
+- The status board's TMP text updates from the simulation.
+- The Console showed 0 errors.
+
+**Not re-tested this session:** ESC and queued close (that code didn't change; validated in UI-B), the locked message (no live owner), real mouse and keyboard play by a person, and a player build.
+
+### 11.3 Remaining for UI-C Part 2
+
+- Guided Simulation and Challenge panels (C3/C4), with code colours routed through `FypUiTheme`.
+- The `·` in `FinalPortalInteraction.cs` (Final Portal is out of scope).
+- Legacy unowned hint objects (`ReturnHint`, `Ruin02/03_*Hint`) are still old-style but are never shown.
+- World labels are small at 4:3 by design (whole-farm framing).
+
+## 12. UI-C3 Guided Simulations (implemented 26 Nov 2026)
+
+Panels: `Ruin01GuidedSimulationPanel` (bridge), `JumpGuidedSimulationPanel`, `Ruin02GuidedSimulationPanel` (Elemental Staff). All existing anchors are kept. New background elements are siblings placed behind their text: `Ribbon_*`, `Well_*`, `InfoBox_*`.
+
+| Element | Standard |
+| --- | --- |
+| Panel | `Popup_paper_bg` (PPU ×2.2). The `ExecutionDetails` sub-panel is a rounded ParchmentEdge card at 35%. |
+| Header | Title in Ink bold, centred over a `UI_RibbonPaper` ribbon tinted 30% with the area accent (Ruin 1 ForestGreen, Ruin 2 Arcane). |
+| Code panel | Static InkSlate rounded well behind the code, Parchment text. Active/executing line in `FypUiTheme.ActiveLineTag` (GoldGlow). The RecursionPanelView themed code uses `<mspace=0.56em>` (font-relative), because Vanilla is proportional. |
+| Call stack | `UI_StackFrame` rows. The top/active frame is GoldGlow with Ink text; waiting frames use the sprite colour with Parchment text; labels are vertically centred. This is set at runtime by `RecursionPanelView` (themed) and by `Ruin01JumpGuidedSimulation.ShowStack`. |
+| Explanation / instruction | InfoFill rounded box, Ink text. |
+| Progress slider | Track and fill `UI_BarTrack` (fill tinted with the area accent) and a GoldGlow knob. Theme ColorTint. |
+| Playback buttons | Previous / Next / Replay / Close use `UI_ButtonPaper` with Ink labels. Finish uses `UI_ButtonMoss` with a Parchment label. Theme ColorTint, including the disabled tint. |
+| Diagrams | Bridge (`BridgeDiagramView` instance colours): grey `#8E8578`, teal `#4FA3A5`, gold `GoldGlow`, green `#6E9E6A`, matching the scene legend; banks `#7C9A6B`. Staff: the content colours (Air/Earth/Fire/Ice) are unchanged and idle is `InkSlateMuted`. The jump preview landings are GoldGlow when reached and muted when pending. |
+| Type | Vanilla Caramel. Maximum = original rendered size × 0.92, minimum = 70% (≥ 12). The Ruin 2 guide has an 18 pt floor. `State` minimum is 11 so its two lines fit. |
+
+**Opt-in theming for shared views.**
+- `RecursionPanelView.useFypTheme` and `Ruin02StaffDiagramView.useFypTheme` are **true only on the guided instances**.
+- The challenge panels (`RecursionPracticePanel`, `Ruin02PracticePanel`) and the legacy `RecursionVisualizationPanel` serialize `false`, so they render exactly as before until UI-C4.
+- Lesson for UI-C4: when restyling, set the auto-size maximum from the rendered size. Don't derive the minimum from a large inherited maximum; this made text huge during UI-C3 before it was corrected.
+
+**Validation (Play Mode through MCP; direct listener/method calls).**
+- **Bridge:** Next ×5 and the slider drag moved the checkpoint (9/22). Finish was hidden until 22/22 with an empty stack. Finish completed the lesson and restored the cursor.
+- **Staff:** Next ×17 reached 18/28, with Air restored and the idle colours muted. Early close (`CloseEarly`, the ESC path) left the lesson **not** completed. Reopen + Finish completed it, and the practice hint became "Seal the Magic".
+- **Jump** (via the Developer Ruin 1 teleport + session unlock): opened, Next to checkpoint 3 with the correct TOP frame, Close works.
+- 1920×1080 and 1024×768 (bridge) had no TMP overflow. The Console showed 0 errors.
+- The scene diff touches only the three guided panels in this batch. The other `RecursionPanelView` instances only gained `useFypTheme: 0`.
+- Screenshots were taken through a camera render with the Canvas temporarily set to Screen Space – Camera in Play Mode only, because the Editor couldn't be focused for Game-view capture.
+
+**Not tested:** the jump guide's return-leap animation (checkpoints 6→7) and its Finish, because Play Mode could not advance frames while unfocused. Also real input and a player build.
+
+**Follow-ups:** the jump guide's illustration labels ("Leap 1–3", "ILLUSTRATION ONLY") are still small (16–17 pt originals). The purple `SpellOrb` is a 16 px square (content, left unchanged).
 
 ---
 
