@@ -45,10 +45,10 @@ namespace Fyp.Development.Recursion
                 details.frameBackgrounds[row].color=row==0?new Color(.15f,.34f,.4f):new Color(.12f,.16f,.21f);
             }
             var q=controller.CurrentDecision;
-            question.text=controller.IsComplete?"Bridge Restored — all calls have returned.":controller.ClosePending?"Closing after the current island safely settles…":q!=null?q.Prompt:"Watch the call stack unwind.";
+            question.text=controller.IsComplete?"Bridge Restored — all calls have returned.":controller.ClosePending?"Closing after the current island safely settles...":q!=null?q.Prompt:"Watch the call stack unwind.";
             feedback.text=controller.Feedback;
             feedback.color=controller.LastAnswerIncorrect?new Color(1,.65f,.55f):new Color(.66f,.94f,.79f);
-            details.progress.text="Decision "+controller.DecisionNumber+" / 6 | Checkpoint "+(controller.CheckpointIndex+1)+" / 22"+(controller.IsBusy?" | Resolving…":"");
+            details.progress.text="Decision "+controller.DecisionNumber+" / 6 | Checkpoint "+(controller.CheckpointIndex+1)+" / 22"+(controller.IsBusy?" | Resolving...":"");
             string id=q==null?"":q.Id;
             if(boundQuestion!=id)
             {

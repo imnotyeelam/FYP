@@ -92,7 +92,7 @@ namespace Fyp.Development.Recursion
             fragmentVisual.SetActive(false);
             InteractionHintManager.Instance?.HideAll();
             FragmentRewardToast.Show(confirmationText,
-                "Fragment of Returning Magic collected  •  " + progress.FinalPortalProgress, confirmationSeconds);
+                "Fragment of Returning Magic collected  |  " + progress.FinalPortalProgress, confirmationSeconds);
         }
 
         void OnDestroy()

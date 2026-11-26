@@ -80,7 +80,7 @@ namespace Fyp.Development.Recursion
         void Refresh()
         {
             StopPreview();
-            heading.text = $"Magic Jump Guided Simulation  ·  {Checkpoint + 1}/8\n{titles[Checkpoint]}";
+            heading.text = $"Magic Jump Guided Simulation  |  {Checkpoint + 1}/8\n{titles[Checkpoint]}";
             instruction.text = explanations[Checkpoint];
             previous.interactable = Checkpoint > 0; next.gameObject.SetActive(Checkpoint < 7);
             next.interactable = true; finish.gameObject.SetActive(Checkpoint == 7);
@@ -92,8 +92,8 @@ namespace Fyp.Development.Recursion
             int n = Checkpoint <= 2 ? 3 : Checkpoint <= 5 ? 5-Checkpoint : 0;
             ShowStack(depth);
             ShowCode(Checkpoint == 0 ? 0 : Checkpoint == 1 ? 7 : Checkpoint == 5 ? 1 : Checkpoint == 7 ? -1 : 2);
-            state.text = Checkpoint == 0 || Checkpoint == 7 ? $"Phase: {(Checkpoint==0 ? "Ready" : "Complete")}   ·   Stack depth: {StackDepth}" :
-                $"n = {n}   ·   Phase: {(Checkpoint==5 ? "Base" : Checkpoint==6 ? "Return" : "Call")}   ·   Stack depth: {StackDepth}";
+            state.text = Checkpoint == 0 || Checkpoint == 7 ? $"Phase: {(Checkpoint==0 ? "Ready" : "Complete")}   |   Stack depth: {StackDepth}" :
+                $"n = {n}   |   Phase: {(Checkpoint==5 ? "Base" : Checkpoint==6 ? "Return" : "Call")}   |   Stack depth: {StackDepth}";
             if(Checkpoint==6){next.interactable=false;unwind=StartCoroutine(Unwind());}
         }
         void ShowCode(int highlighted)
@@ -117,13 +117,13 @@ namespace Fyp.Development.Recursion
             for(int i=0;i<3;i++)
             {
                 int n=i+1; ShowCode(3);
-                state.text=$"n = {n}   ·   Phase: Return   ·   Stack depth: {StackDepth}   ·   Example leap {i+1}";
+                state.text=$"n = {n}   |   Phase: Return   |   Stack depth: {StackDepth}   |   Example leap {i+1}";
                 float elapsed=0;
                 while(elapsed<.65f){elapsed+=Time.unscaledDeltaTime;MoveOrb(i,Mathf.Clamp01(elapsed/.65f));yield return null;}
                 ExampleLeaps=i+1; previewLandings[i].color=new Color(.68f,.46f,.95f,1);
                 ShowStack(2-i); yield return new WaitForSecondsRealtime(.2f);
             }
-            ShowCode(4); state.text="Phase: Return complete   ·   Stack depth: 0   ·   Example leaps: 3";
+            ShowCode(4); state.text="Phase: Return complete   |   Stack depth: 0   |   Example leaps: 3";
             unwound=true; unwind=null; next.interactable=true;
         }
         void MoveOrb(int start,float t)

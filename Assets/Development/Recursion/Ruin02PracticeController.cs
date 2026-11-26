@@ -224,7 +224,7 @@ namespace Fyp.Development.Recursion
             if(!session.Advancing || session.RequiresCallDownContinue || Time.unscaledTime<nextAt)return;
             session.TryAdvanceApprovedStep();nextAt=Time.unscaledTime+checkpointSeconds;
             if(session.Advancing)
-                message="Tracing each call and return in order…";
+                message="Tracing each call and return in order...";
             else if(session.Complete)
                 message="Ritual solved. Four return actions completed; the stack is empty.";
             else message="Execution paused. Enter the next operation.";

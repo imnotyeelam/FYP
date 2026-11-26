@@ -79,7 +79,7 @@ namespace Fyp.Development.Recursion
             RefreshReward();
             InteractionHintManager.Instance?.HideAll();
             FragmentRewardToast.Show(confirmationText,
-                "Fragment of Calling collected  •  " + progress.FinalPortalProgress, confirmationSeconds);
+                "Fragment of Calling collected  |  " + progress.FinalPortalProgress, confirmationSeconds);
         }
     }
 }

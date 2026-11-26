@@ -87,8 +87,9 @@ namespace Fyp.Development.Recursion
             for(int i=0;i<text.Length;i++)
                 if((text[i]=='.'||text[i]=='!'||text[i]=='?') && ++sentenceEnds==3)
                 {text=text.Substring(0,i+1);break;}
-            if(text.Length>350)text=text.Substring(0,350).TrimEnd()+"…";
-            return text;
+            if(text.Length>350)text=text.Substring(0,350).TrimEnd()+"...";
+            // Presentation only: after trimming, so sentence counting is unchanged.
+            return Fyp.Development.UI.FypUiTheme.ForFont(text);
         }
     }
 }

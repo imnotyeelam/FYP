@@ -15,6 +15,8 @@ namespace Fyp.Development.Recursion
         public TMP_Text code, state, feedback;
         public TMP_InputField input;
         public UnityEngine.UI.Button submit, close;
+        [Tooltip("Optional presentation view (UI-B). Reads state only.")]
+        public Ruin02HarvestConsoleView view;
         public bool IsOpen { get; private set; }
         bool moveBefore, cameraBefore, allowBefore, visibleBefore, closePending;
         CursorLockMode lockBefore;
@@ -23,6 +25,11 @@ namespace Fyp.Development.Recursion
         float cameraFov;
         Quaternion cameraRotation;
         string message = "";
+        HarvestConsoleMessageKind messageKind = HarvestConsoleMessageKind.Info;
+        int rowsAtMessage;
+        // Wizard visuals are hidden while the console camera is active; controller/colliders are untouched.
+        Renderer[] hiddenRenderers;
+        bool[] hiddenRendererStates;
         public bool UsesSharedInteraction => true;
         public Transform InteractionOrigin => transform;
         public float SharedInteractionRange => 3f;
@@ -81,8 +88,11 @@ namespace Fyp.Development.Recursion
             camera.rect = new Rect(0f, 0f, .65f, 1f);
             camera.fieldOfView = 66f;
             CursorManager.Instance.SetUIOpen(true);
+            HidePlayerVisuals();
             panel.SetActive(true);
-            message = "";
+            message = simulation.IsComplete ? "" :
+                $"Row {simulation.CompletedRows + 1} of 3: type the missing expression, then press Run Row.";
+            messageKind = HarvestConsoleMessageKind.Info;
             closePending = false;
             input.text = "";
             Refresh();
@@ -98,10 +108,13 @@ namespace Fyp.Development.Recursion
                 message = row == 1 ? "Which value means there are no positions left?" :
                     row == 2 ? "Pass one fewer position so the next call approaches the base case." :
                     "Test whether the current row and position contain a crop.";
+                messageKind = HarvestConsoleMessageKind.Incorrect;
                 Refresh();
                 return;
             }
-            message = "Correct — follow the calls down, then watch plot checks on return.";
+            message = "Correct! Watch the calls go down first, then each plot is checked on the way back.";
+            messageKind = HarvestConsoleMessageKind.Correct;
+            rowsAtMessage = simulation.CompletedRows;
             input.text = "";
             simulation.StartNextRow();
             Refresh();
@@ -122,6 +135,7 @@ namespace Fyp.Development.Recursion
             {
                 closePending = true;
                 message = "Closing when this row finishes. Row progress will be kept.";
+                messageKind = HarvestConsoleMessageKind.Queued;
             }
             else ClosePanel();
         }
@@ -129,25 +143,51 @@ namespace Fyp.Development.Recursion
         void Refresh()
         {
             int row = Mathf.Min(3, simulation.CompletedRows + 1);
-            code.text = "void harvest(int row, int n) {\n" +
-                $"  if ({(row == 1 ? "____" : "n == 0")}) return;\n" +
-                $"  harvest(row, {(row == 2 ? "____" : "n - 1")});\n" +
-                $"  if ({(row == 3 ? "____" : "hasCrop(row, n)")})\n" +
-                "    collectCrop(row, n);\n}";
-            state.text = simulation.IsComplete ? "Magical Farm Completed!\nPlots Checked 30/30 · Crops Harvested 15/15\nStack depth 0" :
-                $"Row {row}/3 · {(simulation.IsRunning ? simulation.CurrentStep.Phase.ToString() : "Ready")} " +
-                $"· n = {simulation.CurrentStep?.N ?? 10}\nStack depth {simulation.StackDepth}\n" +
-                $"Plots Checked {simulation.PlotsChecked}/30 · Crops Harvested {simulation.CropsHarvested}/15";
-            feedback.text = simulation.IsComplete ? "Magical Farm Completed!" : message;
+            if (!simulation.IsRunning && !simulation.IsComplete && !closePending &&
+                messageKind == HarvestConsoleMessageKind.Correct && simulation.CompletedRows > rowsAtMessage)
+            {
+                message = $"Row {simulation.CompletedRows} harvested! Now fill in the missing expression for Row {row}.";
+                messageKind = HarvestConsoleMessageKind.Info;
+            }
+            var step = simulation.IsRunning ? simulation.CurrentStep : null;
+            code.text = Ruin02HarvestConsoleView.BuildCode(row, simulation.IsRunning, step?.Phase);
+            string phase = step == null ? "Ready" : step.Phase == HarvestPhase.Call ? "Calling down" :
+                step.Phase == HarvestPhase.Base ? "Base case reached" : "Returning";
+            // "Magical Farm Completed!" is asserted by the H3 Play check; keep the phrase.
+            state.text = simulation.IsComplete ? "Magical Farm Completed!" :
+                $"Row {row} of 3  |  {phase}  |  n = {step?.N ?? 10}";
+            feedback.text = simulation.IsComplete ? "" : Fyp.Development.UI.FypUiTheme.ForFont(message);
+            if (view != null) view.Present(feedback.text, messageKind, closePending);
             input.gameObject.SetActive(!simulation.IsRunning && !simulation.IsComplete);
             submit.gameObject.SetActive(!simulation.IsRunning && !simulation.IsComplete);
-            close.GetComponentInChildren<TMP_Text>().text = closePending ? "Close queued" : "Close [ESC]";
+            close.GetComponentInChildren<TMP_Text>().text = closePending ? "Closing after row..." : "Close [ESC]";
+        }
+
+        void HidePlayerVisuals()
+        {
+            hiddenRenderers = player != null ? player.GetComponentsInChildren<Renderer>(true) : new Renderer[0];
+            hiddenRendererStates = new bool[hiddenRenderers.Length];
+            for (int i = 0; i < hiddenRenderers.Length; i++)
+            {
+                hiddenRendererStates[i] = hiddenRenderers[i].enabled;
+                hiddenRenderers[i].enabled = false;
+            }
+        }
+
+        void RestorePlayerVisuals()
+        {
+            if (hiddenRenderers == null) return;
+            for (int i = 0; i < hiddenRenderers.Length; i++)
+                if (hiddenRenderers[i] != null) hiddenRenderers[i].enabled = hiddenRendererStates[i];
+            hiddenRenderers = null;
+            hiddenRendererStates = null;
         }
 
         void ClosePanel()
         {
             IsOpen = false;
             panel.SetActive(false);
+            RestorePlayerVisuals();
             movement.enabled = moveBefore;
             cameraFollow.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
             var camera = cameraFollow.GetComponent<Camera>();

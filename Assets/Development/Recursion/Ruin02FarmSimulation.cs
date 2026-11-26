@@ -40,7 +40,7 @@ namespace Fyp.Development.Recursion
             try
             {
                 Initialize();
-                Present("Ready — use Tools/FYP/Ruin 2/Magical Farm H2/Start Simulation in Play Mode.");
+                Present("Use the Magic Harvest Console to begin the harvest.");
             }
             catch (Exception e)
             {
@@ -152,9 +152,9 @@ namespace Fyp.Development.Recursion
 
         void Present(string explanation)
         {
-            debugDisplay.text = $"HARVEST SIMULATION\nRow {CurrentStep?.Row ?? 0}/3   n = {CurrentStep?.N ?? 0}" +
-                $"   Phase {CurrentStep?.Phase.ToString() ?? "Ready"}   Stack {StackDepth}\n" +
-                $"Plots Checked {PlotsChecked}/30   Crops Harvested {CropsHarvested}/15\n{explanation}";
+            debugDisplay.text = $"MAGICAL HARVEST\nRow {CurrentStep?.Row ?? 0}/3   n = {CurrentStep?.N ?? 0}" +
+                $"   {CurrentStep?.Phase.ToString() ?? "Ready"}   Stack {StackDepth}\n" +
+                $"Plots checked {PlotsChecked}/30   Carrots {CropsHarvested}/15\n{explanation}";
         }
 
         void OnDisable()
