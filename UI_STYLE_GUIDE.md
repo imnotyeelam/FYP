@@ -253,7 +253,7 @@ Each batch: take a scoped scene backup, edit through Unity MCP / SerializedObjec
 | **UI-C1 Shared HUD** ✅ done (see 11) | `InteractionHint`, `FragmentRewardToast`, `Ruin02ReturnLockedMessage` | Toast timer and shared label references unchanged |
 | **UI-C2 Books** ✅ done (see 11) | `AncientSpellbookPanel`, `Ruin02AncientSpellbookPanel` (already parchment; mostly font and type scale) | Three pages, arrows and Close unchanged |
 | **UI-C3 Guided simulations** ✅ done (see 12) | `Ruin01GuidedSimulationPanel`, `Ruin02GuidedSimulationPanel`, `JumpGuidedSimulationPanel` | Uses `FypUiTheme`; Finish gating unchanged; check the slider and diagrams |
-| **UI-C4 Challenges** | `RecursionPracticePanel` (bridge), `Ruin02PracticePanel`, `Ruin01JumpPanel` | Answer selection colours and AI hint area; regression: wrong / double / stale input, ESC, cinematic queued close |
+| **UI-C4 Challenges** ✅ done (see 13) | `RecursionPracticePanel` (bridge), `Ruin02PracticePanel`, `Ruin01JumpPanel` | Answer selection colours and AI hint area; regression: wrong / double / stale input, ESC, cinematic queued close |
 | **UI-C5 World text** ✅ done (see 11; outline replaced by colour/backdrop contrast) | Farm `TextMesh` → `TextMeshPro`, Vanilla font | Small typed-field script change for `HarvestDebugDisplay` |
 | **UI-C6 Developer panel** ✅ done (see 11) | Wood panel variant, so it reads as clearly "not gameplay" | Editor only |
 | **Future UI** | Farm Simulation Guide, Final Portal messages | Must be built from this guide and `FypUiTheme` |
@@ -407,6 +407,32 @@ Panels: `Ruin01GuidedSimulationPanel` (bridge), `JumpGuidedSimulationPanel`, `Ru
 **Not tested:** the jump guide's return-leap animation (checkpoints 6→7) and its Finish, because Play Mode could not advance frames while unfocused. Also real input and a player build.
 
 **Follow-ups:** the jump guide's illustration labels ("Leap 1–3", "ILLUSTRATION ONLY") are still small (16–17 pt originals). The purple `SpellOrb` is a 16 px square (content, left unchanged).
+
+## 13. UI-C4 Challenge Panels (implemented 26 Nov 2026)
+
+Panels: `RecursionPracticePanel` (bridge challenge, `BridgePracticePanel`), `Ruin02PracticePanel` (Elemental Staff challenge), `Ruin01JumpPanel` (magic jump input). These follow the same standards as section 12: parchment panel, accent ribbon title, InkSlate code well, GoldGlow active line and active frame, `UI_StackFrame` rows, InfoFill explanation box, themed slider, paper/moss buttons.
+
+| Element | Standard |
+| --- | --- |
+| Theme switch | `useFypTheme = true` on both challenge `RecursionPanelView`s. `BridgePracticePanel` and `Ruin02PracticePanel` build their own code and stack text, so they call the shared helpers `CodeOpen/CodeClose` (themed `<mspace=0.56em>`), `ActiveLineOpen`, `StyleFrame(row)` and `StyleFeedback(text, box, kind)`. The legacy colours remain the fallback when the switch is off. |
+| Answer buttons (bridge) | `UI_ButtonPaper`, Ink label. **Selected = GoldGlow tint**, idle = white (set at runtime). |
+| Primary action | Cast Spell / Submit / Cast use `UI_ButtonMoss`. Staff **Continue** (`nextButton`) moved into the Submit slot, because the two are never visible together, and is primary too. It previously overlapped the feedback area. |
+| Input fields | Staff answer and jump `n`: `typing button` sprite, Ink text, InkSoft italic placeholder, Ink caret, GoldGlow selection. |
+| Feedback | `FeedbackBox_PracticeFeedback` (rounded) behind the feedback text, assigned to the new optional `feedbackBox` fields. Correct/neutral = CorrectFill + Ink, incorrect = IncorrectFill + Ember. **Staff AI hint or pending = HintFill**: LiveAI and Pending show as a hint, local fallbacks show as incorrect. |
+| Completion | The existing completion strings ("Bridge Restored...", "Ritual Complete", empty stack) render in the same panel styles. No separate card was added, to avoid layout changes in the challenge logic. |
+| Type | Max = rendered size × 0.92 (≥ 14), min = 70% (≥ 12). Code 24 pt (min 16) and an 18 pt floor for other text in both list-style challenges. Frame labels 20 pt. `State` min 11. |
+
+**Validation (Play Mode through MCP; no AI requests made).**
+- **Bridge:** opened after a legitimate guide Finish. The wrong answer (`buildBridge(2)`) was rejected with Ember on IncorrectFill, and the selected answer turned gold. The correct `placeStone(3)` was accepted (CorrectFill) and the bridge advanced to decision 2 / checkpoint 3.
+- **Staff:** the correct `sealMagic(3)` was accepted and entered the Continue-paced descent. Continue is visible as primary; no wrong answer was sent, because that could trigger a paid AI request.
+- **Jump:** `n = 9` was rejected with "Enter one whole number from 1 to 6", no jump started, and Close restored cursor lock.
+- 1920×1080 checked for all three, 1024×768 for the staff challenge: no TMP overflow. The Console showed 0 errors.
+- The scene diff since the UI-C4 backup touches only these three panels.
+
+**Limitations.**
+- The Editor lost focus during part of the session, freezing Play Mode. Bridge practice needs frames to finish opening, which one focus attempt resolved. Some captures used the camera-render method (section 12).
+- **Not tested:** the jump animation for a valid `n`, the staff AI-hint colour (only checked in code), full six-decision runs, real input, and a player build.
+- In the narrow 4:3 side panel, body text renders at about 11 px: legible but small.
 
 ---
 

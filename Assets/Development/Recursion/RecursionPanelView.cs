@@ -12,6 +12,33 @@ namespace Fyp.Development.Recursion
         public string lessonLabel = "Ruin I";
         [Tooltip("Opt-in Cozy Fantasy presentation (UI-C3, guided simulations). Off keeps the legacy colours used by challenge panels.")]
         public bool useFypTheme;
+
+        // Presentation helpers shared with challenge panels that build their own code/stack text (UI-C4).
+        public string CodeOpen => useFypTheme ? "<mspace=0.56em>" : "";
+        public string CodeClose => useFypTheme ? "</mspace>" : "";
+        public string ActiveLineOpen => useFypTheme ? Fyp.Development.UI.FypUiTheme.ActiveLineTag : "<color=#FFD166>";
+        public void StyleFrame(int row)
+        {
+            if (useFypTheme)
+            {
+                frameBackgrounds[row].color = row == 0 ? Fyp.Development.UI.FypUiTheme.GoldGlow : Color.white;
+                frameLabels[row].color = row == 0 ? Fyp.Development.UI.FypUiTheme.Ink : Fyp.Development.UI.FypUiTheme.Parchment;
+            }
+            else frameBackgrounds[row].color = row == 0 ? new Color(.15f, .34f, .40f) : new Color(.12f, .16f, .21f);
+        }
+        /// <summary>Feedback text/box colours. kind: 0 = correct/neutral, 1 = incorrect, 2 = hint/pending.</summary>
+        public void StyleFeedback(TMP_Text text, Image box, int kind)
+        {
+            if (!useFypTheme)
+            {
+                text.color = kind == 1 ? new Color(1, .65f, .55f) : new Color(.66f, .94f, .79f);
+                return;
+            }
+            text.color = kind == 1 ? Fyp.Development.UI.FypUiTheme.IncorrectText : Fyp.Development.UI.FypUiTheme.Ink;
+            if (box != null)
+                box.color = kind == 1 ? Fyp.Development.UI.FypUiTheme.IncorrectFill :
+                    kind == 2 ? Fyp.Development.UI.FypUiTheme.HintFill : Fyp.Development.UI.FypUiTheme.CorrectFill;
+        }
         public TMP_Text title, code, state, explanation, progress, emptyStack;
         public TMP_Text[] frameLabels;
         public Image[] frameBackgrounds;

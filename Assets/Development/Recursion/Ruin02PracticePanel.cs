@@ -9,6 +9,8 @@ namespace Fyp.Development.Recursion
     {
         public RecursionPanelView details;
         public TMP_Text question,feedback;
+        [UnityEngine.Tooltip("Optional UI-C4 feedback backdrop; tinted by the shared theme.")]
+        public UnityEngine.UI.Image feedbackBox;
         public TMP_InputField input;
         public Button submit;
         Ruin02PracticeController controller;
@@ -33,13 +35,13 @@ namespace Fyp.Development.Recursion
             var step=session.Current;
             var trace=session.Lesson.Trace;
             details.title.text=session.Complete?"Ruin II | Ritual Complete":"Ruin II | Seal the Magic";
-            var code=new StringBuilder();
+            var code=new StringBuilder(details.CodeOpen);
             for(int i=0;i<trace.Code.Count;i++)
             {
                 string line=(i+1)+" "+trace.Code[i];
-                code.AppendLine(i==step.ActiveLine?"<color=#FFD166><b>>"+line+"</b></color>":" "+line);
+                code.AppendLine(i==step.ActiveLine?details.ActiveLineOpen+"<b>>"+line+"</b></color>":" "+line);
             }
-            details.code.text=code.ToString();
+            details.code.text=code+details.CodeClose;
             details.state.text=step.Phase+" | n = "+(step.Parameter.HasValue?step.Parameter.ToString():"--")+
                 " | absorbMagic: "+step.ActionCount+" / 4";
             details.explanation.text=step.Explanation;
@@ -51,14 +53,14 @@ namespace Fyp.Development.Recursion
                 if(!visible)continue;
                 int n=step.Frames[step.Frames.Count-1-row];
                 details.frameLabels[row].text="sealMagic("+n+")"+(row==0?" [active]":" [waiting]");
-                details.frameBackgrounds[row].color=row==0?new Color(.15f,.34f,.4f):new Color(.12f,.16f,.21f);
+                details.StyleFrame(row);
             }
             bool continueCallDown=controller.CanContinueCallDown;
             question.text=session.Complete?"The call stack is empty. The ritual is solved.":
                 continueCallDown?"Observe the call stack, then continue to the next call.":
                 session.Advancing?"Watch the current execution range.":session.Question.Prompt;
             feedback.text=controller.Feedback;
-            feedback.color=controller.Incorrect?new Color(1,.65f,.55f):new Color(.66f,.94f,.79f);
+            details.StyleFeedback(feedback,feedbackBox,controller.Incorrect?(controller.LastFeedbackSource==Ruin02FeedbackSource.LiveAI||controller.LastFeedbackSource==Ruin02FeedbackSource.Pending?2:1):0);
             details.progress.text="Decision "+session.QuestionNumber+" / 6 | Checkpoint "+(session.Index+1)+" / "+trace.Steps.Count;
             input.interactable=controller.CanSubmit;
             submit.interactable=controller.CanSubmit && !string.IsNullOrWhiteSpace(input.text);

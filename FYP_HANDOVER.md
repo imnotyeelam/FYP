@@ -522,3 +522,55 @@ The full specification and decisions are in `UI_STYLE_GUIDE.md` (sections 10–1
 - **Jump guide:** `Ruin01JumpGuidedSimulation` now takes its presentation colours from `FypUiTheme`, and its TOP frame highlight follows the stack.
 - **Untested:** the jump guide's return-leap animation and its Finish (the Editor couldn't be focused for frame advance during testing).
 - **Remaining:** UI-C4 Challenge panels.
+
+### UI-C4 Challenge Panels (26 November 2026, uncommitted)
+
+- **What changed:** the bridge, magic jump and Elemental Staff challenge panels were restyled to the Cozy Fantasy system (`UI_STYLE_GUIDE.md` section 13).
+- **Theme switch:** `useFypTheme` is now on for both challenge `RecursionPanelView`s.
+  - `BridgePracticePanel` and `Ruin02PracticePanel` route their code highlight, stack frames, feedback and selected-answer colours through the new `RecursionPanelView` theme helpers.
+  - A new optional `feedbackBox` reference tints the feedback backdrop: correct, incorrect, or AI hint/pending.
+- **Layout fix:** the staff **Continue** button now sits in the Submit slot, because it was hidden behind the feedback area.
+- **Logic unchanged:** answer validation, execution, animations, progression and rewards are unchanged.
+- **Verified:** bridge wrong/correct answers, staff correct answer plus Continue state, jump out-of-range input. No AI requests were made.
+- **Untested:** the valid-n jump animation, the staff AI-hint colour, full runs, and a player build.
+- **Status:** the UI migration for all player-facing panels in scope is now complete. Remaining known items: `FinalPortalInteraction.cs` `·` (Final Portal out of scope), legacy unowned hint objects, and Ruin 2 Phase C/D.
+
+## 20. Ruin 2 Phase C: Teleport Stones and fragment feedback (26 November 2026, uncommitted)
+
+### Teleport stones (visual only)
+
+Interaction scripts, destinations, ranges and progression conditions are unchanged.
+
+- **Shared look:** a MagicRock with a **bright cyan** emission (`FypEmissionTint`, a per-instance MaterialPropertyBlock, so the shared FantasyForest materials are unchanged) and a cyan point light (`TeleportGlow`). The Ruin 1 Jump Rock keeps the original dark-blue emission, so it stays distinguishable.
+- **Farm Return Point:** new `FarmReturnPoint/TeleportStone` (MagicRock_02, colliders disabled), 1 m behind the interaction origin. The existing label now reads "Return to Ritual Chamber".
+- **Ruin 2 return stone:** the existing `ReturnMagicRock` was tinted cyan, with a glow light and a Vanilla Caramel `DestinationLabel` "Magic Return Stone". Its routing still comes from `Ruin02ReturnGate`.
+- **Ruin 1 reward return:** `FragmentOfCalling/Ruin01ReturnStoneVisual` (MagicRock_02 plus a "Return to Hub" label). `FypVisibilityFollow` shows it only while the collection-point `RuinEntrance` is enabled, i.e. after the Ruin 1 fragment is collected.
+- Ruin III and the Final Portal are unchanged.
+
+### Fragment feedback
+
+The reward requirements are unchanged: staff restoration **and** a complete farm, then a separate E collection.
+
+- `Ruin02FragmentReveal.Reveal()` now also shows the existing `FragmentRewardToast` with "The Fragment of Returning Magic has appeared in the Ritual Chamber!" (configurable `revealMessage`). `Reveal()` was already guarded to run once.
+- `FragmentOfReturningMagic/FragmentGlow`: a warm point light (range 9). It's a child of the fragment, so it only shows once the fragment is revealed.
+- `FarmRitualReturnSpawn` was turned to face the fragment (yaw 0° → 51°); only its rotation changed.
+  - **Limitation:** `CameraFollow` keeps its own mouse-driven yaw, so the camera doesn't turn with the spawn. The glow is what makes the gem easy to find.
+- **Staff prerequisite messages** (existing, verified): the farm completion card explains that the staffs must be restored, and the Ruin 2 stone says "Restore all four staffs and finish the restoration first!".
+
+### Validation (Play Mode through Unity MCP; Developer Farm teleport for access)
+
+Player positioning next to interaction points was done by direct transform moves; every interaction used its normal `InteractFromShared`.
+
+- **Farm and return:** 3 rows → 3/30/15, stack 0. The Farm Return stone teleported the player to `FarmRitualReturnSpawn` (yaw 51).
+- **Farm only:** the fragment **stayed hidden** while the staffs were incomplete, and the stone showed the prerequisite message.
+- **Staffs** (guide Finish + 6 correct answers + 4 cinematics, no AI requests): the fragment and its glow were revealed, and the notification showed once. Re-running the reveal check didn't show it again.
+- **Collection:** blocked while the staff challenge panel was open (existing rule). After closing it, one E collected (Final Portal 1/2); a second E was ignored.
+- **Before collection:** the Ruin 2 stone kept the player in the chamber ("Check Return Requirements").
+- **After collection:** "Return to Hub" teleported the player to the hub destination.
+- **Ruin 1 stone:** follows its `RuinEntrance` (checked by toggling it in Play Mode only, then restored).
+- **Console:** 0 errors. The cyan tint is applied at runtime.
+
+**Not tested:**
+- Ruin 1 full collection → return route.
+- Real input or a player build.
+- The camera framing on arrival (the camera keeps its previous yaw).

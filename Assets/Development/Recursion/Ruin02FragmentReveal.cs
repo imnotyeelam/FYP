@@ -19,6 +19,9 @@ namespace Fyp.Development.Recursion
         public TMP_Text confirmationText;
         [Min(1f)] public float interactionDistance=2.8f;
         [Min(.5f)] public float confirmationSeconds=3.5f;
+        [Header("Phase C reveal notification (presentation only)")]
+        public string revealMessage="The Fragment of Returning Magic has appeared in the Ritual Chamber!";
+        [Min(.5f)] public float revealMessageSeconds=4.5f;
 
         bool revealed;
         Coroutine waitForCompletion;
@@ -83,6 +86,8 @@ namespace Fyp.Development.Recursion
             if (revealed) return;
             revealed = true;
             fragmentVisual.SetActive(true);
+            // Shown once: Reveal() is guarded by 'revealed'. Collection is still a separate E action.
+            FragmentRewardToast.Show(confirmationText, revealMessage, revealMessageSeconds);
             Debug.Log("Ruin 2 Fragment of Returning Magic revealed after Staff Restoration and Magical Farm completion.", this);
         }
 
