@@ -14,8 +14,11 @@ namespace Fyp.Development.Recursion
         public bool useFypTheme;
 
         // Presentation helpers shared with challenge panels that build their own code/stack text (UI-C4).
-        public string CodeOpen => useFypTheme ? "<mspace=0.56em>" : "";
-        public string CodeClose => useFypTheme ? "</mspace>" : "";
+        // Artificial monospacing is only needed for a proportional code font. Cascadia Mono (the code
+        // font since the typography upgrade) is already monospaced, so no <mspace> is emitted for it.
+        public bool CodeIsMonospace => code != null && Fyp.Development.UI.FypUiTheme.IsMonospace(code.font);
+        public string CodeOpen => useFypTheme && !CodeIsMonospace ? "<mspace=0.56em>" : "";
+        public string CodeClose => useFypTheme && !CodeIsMonospace ? "</mspace>" : "";
         public string ActiveLineOpen => useFypTheme ? Fyp.Development.UI.FypUiTheme.ActiveLineTag : "<color=#FFD166>";
         public void StyleFrame(int row)
         {
@@ -82,14 +85,15 @@ namespace Fyp.Development.Recursion
             var step = playback.Current;
             title.text = lessonLabel + " | " + playback.Trace.FunctionName;
             // Theme: font-relative monospace (Vanilla Caramel is proportional) and the shared active-line colour.
-            var text = new StringBuilder(useFypTheme ? "<mspace=0.56em>" : "<mspace=11>");
+            bool mono = CodeIsMonospace;
+            var text = new StringBuilder(mono ? "" : useFypTheme ? "<mspace=0.56em>" : "<mspace=11>");
             string activeTag = useFypTheme ? Fyp.Development.UI.FypUiTheme.ActiveLineTag : "<color=#FFD166>";
             for (int i = 0; i < playback.Trace.Code.Count; i++)
             {
                 string line = $"{i + 1} {playback.Trace.Code[i]}";
                 text.AppendLine(i == step.ActiveLine ? activeTag + "<b>>" + line + "</b></color>" : " " + line);
             }
-            code.text = text + "</mspace>";
+            code.text = mono ? text.ToString() : text + "</mspace>";
             state.text = $"{step.Phase} | n = {(step.Parameter.HasValue ? step.Parameter.ToString() : "--")}\n" +
                 $"Line {(step.ActiveLine >= 0 ? (step.ActiveLine + 1).ToString() : "--")} | {playback.Trace.ActionName}: {step.ActionCount}";
             explanation.text = step.Explanation;

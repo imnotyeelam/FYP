@@ -68,6 +68,15 @@ namespace Fyp.Development.UI
         }
 
         /// <summary>
+        /// Dual-font system: Vanilla Caramel SDF for fantasy UI, Cascadia Mono SDF
+        /// (Assets/Font/Cascadia) for code. True for a monospaced code font, which needs no
+        /// artificial &lt;mspace&gt; formatting.
+        /// </summary>
+        public static bool IsMonospace(TMPro.TMP_FontAsset font) =>
+            font != null && (font.name.IndexOf("Cascadia", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             font.name.IndexOf("Mono", System.StringComparison.OrdinalIgnoreCase) >= 0);
+
+        /// <summary>
         /// Replaces characters that Vanilla Caramel SDF cannot render (U+2026, U+2022, U+00B7) so
         /// dynamic text such as AI hints never silently falls back to another font.
         /// </summary>

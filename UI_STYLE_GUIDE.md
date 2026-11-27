@@ -471,7 +471,7 @@ The content-sized approach (section 15) misaligned in the real Game View. `FypTe
 |---|---|---|
 | `CodeWell` (InkSlate Image) | 480×380, centre anchor, y −135 | 680×470, centre anchor, y −135 |
 | `CodeText` rect | 370×324, same centre | 560×414, same centre |
-| Font | Vanilla Caramel SDF 42, Parchment | Vanilla Caramel SDF 34, Parchment |
+| Font | ~~Vanilla Caramel SDF 42~~ → Cascadia Mono SDF 38, Parchment (section 17) | ~~Vanilla Caramel SDF 34~~ → Cascadia Mono SDF 32, Parchment (section 17) |
 | Largest page block | 356×278 | 547×370 |
 
 Rules:
@@ -479,3 +479,63 @@ Rules:
 - Alignment is **Left (vertically middle)**, no wrapping, no auto-size. Indentation is kept, and the text rect is only as wide as the book's widest code, so the block sits centred in the well with about 55 px padding.
 - Size each book from its largest page: the font is the largest size whose biggest page fits the inner rect. Re-measure if any page's code changes.
 - Validate in the Game View on every page, forward and backward, at 1920×1080 and 1024×768, not only with TMP overflow flags.
+
+## 17. Dual-font typography and readability standard (28 Nov 2026)
+Supervisor feedback: most text was too small (the Magic Harvest Console is the preferred reference), and code must use a conventional programming font.
+
+### 17.1 Fonts
+| Use | Font asset | Location |
+|---|---|---|
+| Fantasy UI (titles, explanations, questions, buttons, hints, toasts, labels) | Vanilla Caramel SDF | `Assets/Font/Vanilla Caramel SDF.asset` (unchanged, still the default) |
+| Code: Spellbook code, guided-simulation and challenge code, active-line highlight, call-stack entries, code-like answer labels, code inputs and placeholders, the jump `n` input | **CascadiaMono SDF** | `Assets/Font/Cascadia/CascadiaMono SDF.asset` |
+
+- Source font: `Assets/Font/Cascadia/CascadiaMono.ttf`, Cascadia **Mono** (no programming ligatures), variable font whose default instance is Regular 400, version 2407.024. The licence is kept beside it: `LICENSE.txt` (copyright and the font's embedded licence, verbatim), `OFL-FAQ.txt`, `Cascadia-README.md`. Nothing references the Downloads folder.
+- The SDF asset is **static**: 72 pt sampling, padding 8, 1024² atlas, 107 glyphs (ASCII 32–126 plus `— · – … • → ← ≤ ≥ ≠ × ÷`). Every programming symbol is present (`{}()[]<>=!+-*/%_;:,.&|^~?#"'\`). To add glyphs, switch it to Dynamic, add the characters, then set it back to Static.
+- **No artificial monospacing on Cascadia.** `RecursionPanelView.CodeIsMonospace` (via `FypUiTheme.IsMonospace`) suppresses the old `<mspace=0.56em>` / `<mspace=11>` wrapper, and `CodeOpen`/`CodeClose` return empty strings for monospaced code fonts. Indentation, line numbers, `FypUiTheme.ActiveLineTag` gold and `<b>` on the active line are unchanged.
+- Dynamic text (code, stack labels, answers) inherits the font of the serialized TMP component it is written into. A new code area must assign `CascadiaMono SDF` to its TMP component (and to `TMP_InputField.fontAsset` for inputs).
+- Not done: inline code inside Vanilla prose (explanations and AI feedback) stays in Vanilla. Mixing fonts inline would need `<font="...">`, with the asset under a TMP `Resources` path.
+- Vanilla Caramel has a small x-height: at the same point size it reads about 15% smaller than Cascadia. Size Vanilla prose by the rendered result, not by matching numbers.
+
+### 17.2 Size standard (reference canvas 1920×1080, `CanvasScaler` match 0.5)
+| Element | Target (pt) | Applied examples |
+|---|---|---|
+| Panel title | 34–44 | Staff Challenge 44; guided simulations 38; Bridge sidebar 34; Jump card 32 |
+| Code (Cascadia) | 22–38, the largest that fits the page | Spellbook 38 (R1) / 32 (R2); Jump guide 34; Staff Challenge 34; Bridge guide 28; staff guide 24; Bridge sidebar 23; farm guide 22 (11 lines); Harvest Console 24 (unchanged) |
+| Call stack (Cascadia) | 22–30 | Staff Challenge 30; Jump guide 28; Bridge guide 26; staff guide 24; Bridge sidebar 23; farm guide 22 |
+| Explanation / instruction | 24–32 | Jump guide 32; Staff Challenge 30; Bridge guide 28; staff guide and Bridge sidebar 26; farm guide 24 |
+| Question / answers | 26–34 | Staff question 34; Bridge question 28, answers 26 (Cascadia) |
+| Code input / placeholder | 24–30 | Staff 30 / 24 (one line); Jump `n` 30 |
+| AI feedback | 24–28 | Staff 28; Bridge 24 (wraps); Jump status 24 |
+| State / parameter line | 22–30 | Jump guide 30; Staff 28; Bridge 26 |
+| Buttons | 26–30 | 28–30 (guided-simulation labels may shrink to 20 at 4:3) |
+| Progress / footer | 22–26 | Staff footer 26; others 22–24 |
+| Fragment toast | 36 | 36 in a 0.18–0.82 ribbon |
+| Interaction hint | 34 | 34 |
+
+Rules:
+- Auto-size may only trim: `fontSizeMin` is at least about 85% of max (button labels may go to 20 at 4:3). Fix overflow by giving the text more room, not a lower minimum.
+- **Prose must wrap** (`textWrappingMode = Normal`): explanations, questions, feedback, state lines, legends, answers. **Code must not wrap** (`NoWrap`), so indentation is preserved.
+- Headings in short bands use `Overflow`; Ellipsis blanks a heading whose band is too short.
+- Leave room for AI hints of up to about 400 characters: at least 5 lines at the feedback size.
+- At 4:3 the reference canvas is about 1,660 px wide (match 0.5), so every panel is about 13% narrower. Validate at 1024×768 as well as 1920×1080.
+
+### 17.3 Centred wide challenge layout (Seal the Magic)
+`Ruin02PracticePanel` is centred at 0.06–0.94 × 0.04–0.96 (1690×994 at 1080p), the same footprint as the guided simulations, and keeps its two columns:
+- **Left:** Cascadia code with the active line, state line, call stack (5 frames at 30 pt), and the decision/checkpoint footer.
+- **Right:** explanation, question, Cascadia input, a tall AI feedback box (0.135–0.495), and Submit/Continue plus Close at the bottom (0.03–0.115).
+
+The staff restoration cinematics are unaffected because `Ruin02PracticeController.BeginCinematic()` hides the whole panel and `EndCinematic()` restores it (verified: visible on 0 of 1,894 cinematic frames).
+
+The Bridge Challenge (`RecursionPracticePanel`) intentionally stays a right sidebar (0.56–1.0) so the real bridge remains visible. The Jump Challenge stays a top-right card (760×480) so the jump route remains visible.
+
+### 17.4 Spellbook fixed layout (still binding)
+Section 16 still applies with the new Cascadia sizes:
+
+| | Ruin 1 | Ruin 2 |
+|---|---|---|
+| `CodeWell` | 640×340 | 920×450 |
+| `CodeText` | 530×240 | 820×380 |
+| Font | Cascadia 38 | Cascadia 32 |
+| Largest page block | 512×226 | widest 806 (page 2), tallest 372 (page 3) |
+
+Both are centred at y −135, Left-aligned, NoWrap, and fixed size. There is no `ContentSizeFitter` and no `FypTextBackdrop` on spellbook code, and `FypTextBackdrop.cs` is not changed. Knowledge text may auto-size only down to 28.

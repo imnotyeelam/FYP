@@ -796,3 +796,50 @@ Unity expects the service at `http://127.0.0.1:8000/feedback`. Live mode (no `FY
 - Authentication uses Git Credential Manager (HTTPS). The first push from a new machine opens a sign-in window, so automated agents can't complete it unattended. Run it interactively, for example `! git -C E:/AIBackend push`.
 - If dependencies change, update `requirements.txt` with exact versions from `.venv` (`pip show <package>`). If a new setting is added, add a placeholder to `.env.template`, never the real value.
 - `LocalBackups/AIFeedbackUpgrade_20261127/server.py.before` remains the pre-upgrade reference; git history is now the authoritative record.
+
+## 27. Typography and UI readability upgrade (28 November 2026, uncommitted)
+
+Driven by supervisor feedback: text too small, with the Harvest Console as the reference, and code must use a programming font. The full standard is in `UI_STYLE_GUIDE.md` section 17. Backups: `LocalBackups/Typography_20261128/` (scene and the four panel scripts before this pass; `LocalBackups/` is git-ignored). Captures: `Temp/ClaudeCaptures/Typography/before/` and `.../after/`.
+
+**Fonts.** New `Assets/Font/Cascadia/` holds `CascadiaMono.ttf` (Cascadia Mono, no ligatures, Regular default instance, version 2407.024), `LICENSE.txt` (embedded copyright and licence, verbatim), `OFL-FAQ.txt` and `Cascadia-README.md`. From it, a static TMP asset `CascadiaMono SDF.asset` (107 glyphs, all programming symbols). Vanilla Caramel SDF remains the fantasy and default font; nothing was replaced globally.
+
+**Code changes (presentation only):**
+- `FypUiTheme.IsMonospace(TMP_FontAsset)`.
+- `RecursionPanelView.CodeIsMonospace`: `Present()` and `CodeOpen`/`CodeClose` emit `<mspace>` only for a proportional code font, so Cascadia code has no artificial spacing. Active-line colour, bold and line numbers are unchanged. `BridgePracticePanel` and `Ruin02PracticePanel` inherit this through `CodeOpen`/`CodeClose`.
+
+No learning content, validation, progression, rewards, AI backend, teleport, environment, Final Portal or Ruin III code was touched.
+
+**Scene changes:**
+- **Cascadia applied to:** both Spellbook `CodeText`; the code and call-stack labels of the bridge, staff and farm guided simulations, the Jump guide, the Bridge Challenge, the Staff Challenge and the Harvest Console; the Bridge answer labels; the Staff and Harvest code inputs and placeholders; the jump `n` input; the bridge-diagram stone labels.
+- **Sizes and wrapping:** raised per section 17.2; prose set to wrap; auto-size minimum at least 85% of the maximum.
+- **Ruin 2 Staff Challenge:** centred at 0.06–0.94 × 0.04–0.96 (was 0.33–0.985). Feedback box 0.135–0.495; buttons moved to the bottom; two columns kept.
+- **Guided simulations:** bridge, staff and farm panels 0.04–0.96 tall, details column 0.03–0.97, with per-panel vertical bands sized for 5, 8 and 11 code lines and up to 5 frames.
+- **Bridge Challenge:** sidebar widened to 0.56–1.0 and re-banded.
+- **Jump Challenge:** card 440×258 → 760×480, still top-right.
+- **Spellbooks:** wells resized for Cascadia (R1 640×340 at 38 pt, R2 920×450 at 32 pt); still fixed, centred, Left, NoWrap, with no `ContentSizeFitter`/`FypTextBackdrop`.
+- **Fragment toast:** 36 pt in a 0.18–0.82 ribbon. Interaction hint 34; Ruin 2 locked message 32.
+- **Harvest Console:** sizes and layout unchanged; only the code font changed.
+
+**Validated (Play Mode, Game View, no paid AI):**
+- **Spellbooks:** all six pages forward and backward. The well never moves, code is inside its rect on every page, and there is no `<mspace>`. Captured at 1920×1080 and 1024×768.
+- **Staff Challenge:**
+  - Real playthrough: 12 Continue and 6 Submit, done at checkpoint 28/28.
+  - At maximum stack (5 frames), Continue shows and Submit/input are hidden; after the call-down, Submit shows.
+  - During the four restoration cinematics (1,894 frames) the panel was visible on **0** frames and was restored after each.
+  - On close, movement, camera follow and cursor lock were restored.
+- **Long hints (synthetic, presentation only):** about 300 characters in the Staff (6 lines at 28) and Bridge (4 lines at 24) feedback, and a long jump status, with no overflow.
+- **Stacks and layout:** maximum stacks in the staff and farm guides are readable; the farm guide and Staff Challenge at 1024×768 have no clipping.
+- **Console:** 0 errors. One Unity-internal "PlayerLoop called recursively" message appears during harness screenshots.
+
+**Limitations:**
+- Inline code fragments inside Vanilla prose (explanations, AI hints) stay in Vanilla.
+- The world-space `HarvestDebugDisplay` farm status board was not resized (its backdrop is sized to the current text).
+- The legacy `ChallengePanel` (disabled Final Portal quiz) and `RecursionVisualizationPanel` (old cube visualizer) were not restyled.
+- On 4:3 screens, guided-simulation button labels may shrink to 20 pt.
+- Not tested: real keyboard/mouse play, live AI text, and a player build.
+- The H3 farm check is still stale (section 22).
+
+**Confirmed future gameplay direction (documentation only; not implemented here):**
+- **Final Portal:** only restores the portal and triggers the ending story once the two required fragments (Ruin01 and Ruin02) are collected. This matches the existing `requireFinalPortalFragments` rule; no new challenge is planned there.
+- **Ruin III:** will be an **optional** advanced, independent recursive-programming challenge.
+- **Main story:** Ruin III must **not** be required to complete the main story or to open the Final Portal.
