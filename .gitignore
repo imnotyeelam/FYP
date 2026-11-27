@@ -148,3 +148,7 @@ __pycache__.meta
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Local scene/script backups created during development (kept on disk, not uploaded).
+# Files committed before this rule stay tracked until explicitly untracked.
+/LocalBackups/
