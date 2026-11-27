@@ -49,6 +49,8 @@ namespace Fyp.Development.Recursion
         public int RestorationCount=>actions.Count;
         public IReadOnlyList<int> VisitedCheckpoints=>visited;
         public IReadOnlyList<int> RestorationParameters=>actions;
+        [Tooltip("Established AI feedback pipeline for rejected answers (local text is the offline fallback).")]
+        public ChallengeAIFeedback aiFeedback;
         public string Feedback=>feedback;
         public string SelectedAnswerId=>selectedAnswer;
         public bool LastAnswerIncorrect=>incorrect;
@@ -109,6 +111,7 @@ namespace Fyp.Development.Recursion
         }
         public void Close()
         {
+            aiFeedback?.Cancel();
             if(!open)return;
             if(Waiting)
             {pendingClose=true;feedback="Finishing the current island motion before releasing player controls. Progress will be preserved.";Refresh();return;}
@@ -137,6 +140,20 @@ namespace Fyp.Development.Recursion
             if(result.Status==PracticeSubmissionStatus.Correct || result.Status==PracticeSubmissionStatus.Incorrect || result.Status==PracticeSubmissionStatus.UnknownAnswer)
             {
                 feedback=result.Feedback;incorrect=result.Status==PracticeSubmissionStatus.Incorrect;
+                if(incorrect && aiFeedback!=null)
+                {
+                    var decision=CurrentDecision;var picked=decision?.Answers.FirstOrDefault(a=>a.Id==answerId);
+                    var step=Current;var correct=decision?.Answers.FirstOrDefault(a=>a.Id==decision.CorrectAnswerId);
+                    aiFeedback.Request(new ChallengeFeedbackRequest{
+                            challengeId="Ruin01Bridge",ruinId="Ruin01",question=decision!=null?decision.Prompt:"",
+                            playerAnswer=picked!=null?picked.Text:answerId,phase=step.Phase.ToString(),currentStep=DecisionNumber,
+                            parameters=step.Parameter.HasValue?"n = "+step.Parameter.Value:"no active n",
+                            callStack=ChallengeAIFeedback.FormatStack("buildBridge",step.Frames),
+                            errorType="chose an incorrect next execution step",protectedAnswer=correct?.Text},
+                        result.Feedback,
+                        (text,live)=>{if(!open || !incorrect || CurrentDecision==null || CurrentDecision.Id!=questionId)return;feedback=text;Refresh();});
+                }
+                else aiFeedback?.Cancel();
                 if(result.Accepted){selectedQuestion=null;selectedAnswer=null;nextAt=Time.unscaledTime+.25f;}
                 Refresh();
             }

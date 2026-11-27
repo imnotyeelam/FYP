@@ -257,7 +257,7 @@ Ruin 2's `Ruin02FeedbackClient` references that same manager, with a saved timeo
 
 `Ruin02PracticeController` validates correctness locally first. For mistakes it can give syntax guidance immediately, otherwise requests AI advice with an attempt-aware fallback. Request versioning and current-question checks reject stale replies after closing or advancing. It rejects bridge-topic advice and some first-attempt answer leakage. AI never authorizes advancement, inventory, restoration, or rewards. Farm and bridge practice use local feedback; there is no farm AI request path in the inspected code.
 
-**Backend source found outside this repository:** `E:\AIBackend\server.py`. It is byte-identical at audit time to `LocalBackups/Ruin2AI_20261101/server.proposed.py`. The directory contains a local virtual environment and `.env`; no requirements file was found there. These external files are not delivered by cloning the Unity repository.
+**Backend source found outside this repository:** `E:\AIBackend\server.py`. It is byte-identical at audit time to `LocalBackups/Ruin2AI_20261101/server.proposed.py`. The directory contains a local virtual environment and `.env`; no requirements file was found there (historical; since section 26 it is its own git repository with `requirements.txt`). These external files are not delivered by cloning the Unity repository.
 
 Architecture: Unity UnityWebRequest -> local FastAPI `POST /feedback` -> Pydantic validation -> OpenAI Python SDK `client.responses.create()` using configured model string `gpt-4.1-mini` -> JSON feedback -> Unity hint/fallback. `GET /` is a basic service message. The Python source calls `load_dotenv()` and `OpenAI()`; credentials belong only in the external backend environment. No credential values are included here.
 
@@ -574,3 +574,225 @@ Player positioning next to interaction points was done by direct transform moves
 - Ruin 1 full collection → return route.
 - Real input or a player build.
 - The camera framing on arrival (the camera keeps its previous yaw).
+
+## 21. Phase D: Magical Farm Simulation Guide (27 November 2026, uncommitted)
+
+### Learning example
+
+`RecursiveGatherGuideLesson` is a pure model with no Unity world, farm or reward references. It traces `gather(4)` over four plots, with Plot 2 empty, as 32 `RecursionStep` checkpoints, plus per-checkpoint `Checked`, `Picked` and `Focus` arrays for the diagram:
+- the call `gather(4)`;
+- the descent 4 → 0, with Enter / base test / call each on its own line;
+- the base case `k == 0` → `return;` (line 3);
+- the return flow for k = 1..4: Resume (line 5), check `containsPlant(k)` (line 7), `pickPlant(k)` (line 8) for plots 1, 3 and 4 only, then return (line 9) with the frame popping;
+- completion with 4 checked, 3 picked and an empty stack.
+
+This was verified from the generated trace: check order 1, 2, 3, 4; Plot 2 has no pick step; final stack 0.
+
+### Components (presentation and gating only)
+
+- `Ruin02FarmGuideSimulation`: playback pattern from `Ruin02SpellbookSimulation`. It drives the shared themed `RecursionPanelView` and the `Ruin02FarmGuideDiagramView` four-plot diagram.
+- `Ruin02FarmGuideUI` (on `Ruin02_MagicalFarm/HarvestGuide`): modal pattern from `Ruin02GuidedSimulationUI`.
+  - It saves and restores PlayerMovement, CameraFollow (the real component) and cursor state.
+  - ESC / Close = `CloseEarly`, which never completes. Only Finish at the final checkpoint completes.
+- `Canvas/FarmGuidedSimulationPanel` is registered in `InteractionHintManager.modalPanels` (now 13).
+- `Ruin02HarvestConsole.guide`:
+  - while the guide is incomplete, E opens the guide and the hint reads "Study the Harvest Guide";
+  - after Finish, E opens the existing challenge.
+  - Developer Mode doesn't bypass the guide.
+- **Unchanged:** harvest mechanics, answers, teleport routing, fragment requirements and the completion UI.
+
+### Validation (Play Mode through MCP, real button listeners; Developer Farm teleport for access)
+
+- **Navigation:** Next ×5 → 5, Previous → 4, Replay → 0, slider → 15 (base case: active line 3, top frame `gather(0) [BaseCase]`).
+- **Diagram at checkpoint 22:** Plot 1 picked (blue), Plot 2 empty (amber, focused), Plots 3–4 unchecked with plants; status "Checked 2/4 | Picked 1/3". At checkpoint 19, `pickPlant(1)` on line 8 with four frames on the stack.
+- **Final checkpoint:** Finish appears and the stack is empty. **Close early → not completed**, and the next E reopens the guide. Finish → completed, and the next E opens the Harvest Challenge.
+- **Restoration:** movement, CameraFollow and cursor lock were restored after each close.
+- **Real farm untouched:** 0 rows, 0 checked, 0 crops, all 15 carrots active.
+- **Layout:** 1920×1080 and 1024×768 with no TMP overflow (after enlarging the code area). Console 0 errors.
+- The real ESC key wasn't sent this time; Close uses the same `CloseEarly` path.
+
+### Stale Editor check expectations
+
+- `Ruin02FarmH3Checks` presses E and expects the console to open directly. With Phase D it opens the guide first, so the check needs a guide-Finish step.
+- It also asserts console FOV == 66. Since UI-C Part 1 the FOV adapts to the aspect (66° at 4:3, 52° at 16:9).
+- Update these checks before relying on them. Don't treat the failures as gameplay regressions.
+
+### Not tested
+
+Real mouse and keyboard by a person, and a player build.
+
+## 22. Targeted polish and fix pass (27 November 2026, uncommitted)
+
+### AI feedback routing (mandatory requirement)
+
+All challenge feedback for rejected answers now goes through the established pipeline: `AIFeedbackManager` → `POST http://127.0.0.1:8000/feedback`. Local text is shown at once and kept **only as the offline/unusable fallback**. AI never decides correctness, progression or rewards. Stale replies after a close, an advance or a new answer are ignored.
+
+- **New `ChallengeAIFeedback`** (shared): wraps `AIFeedbackManager.GenerateFeedback`, sends the challenge name, situation, visible code and rejected answer (≤ 500 chars, the backend limit), and treats the manager's own failure strings as fallback.
+  - Bridge (`BridgePracticeController.aiFeedback`): wrong decisions.
+  - Magical Farm (`Ruin02HarvestConsole.aiFeedback`): wrong expressions. It sends the **blanked** code the player sees, so the AI is never given the answer.
+  - Magic jump (`Ruin01MagicJumpController.aiFeedback`): failed attempts (too small or too large n).
+- **Ruin 2 staff (`Ruin02PracticeController` + `Ruin02FeedbackClient`):** this was already AI-connected, but a pre-existing branch returned a local "input hint" and **skipped** the AI request for some answers. That branch now keeps the local hint as the fallback and still requests AI.
+- **Backend limitation (unchanged, backend not modified):** `server.py` has a context-aware prompt only for `ruinId == "Ruin02"` (`sealMagic`). Every other request uses the legacy `restoreMagic` base-case prompt. Bridge, farm and jump hints are therefore routed correctly, but the backend's prompt isn't specific to those challenges. A backend change (per-challenge prompts, or reusing the `ruinId`/`functionCode` fields) is recommended and needs approval.
+- **Validation** (backend not running, so no inference cost): the bridge, farm and staff wrong answers each issued a request (Pending → Offline) and fell back to the local hint with no progress change. The farm payload contains the blank, not the answer. The jump wiring was checked statically (the failure path needs the jump animation).
+
+### UI and world fixes
+
+- **Plain headers:** title ribbons were removed from 7 panels (Harvest Console, the 3 guided simulations, the farm guide, both list challenges) and replaced by a centred Ink bold title with a thin gold rule. Every title fits.
+- **Purple orb:** the unreferenced `MagicOrbPreview` was deleted from the Ruin 2 guided simulation, and the staff diagram widened.
+- **absorbMagic (Ruin 2 staff challenge):** a wide two-column layout. The panel now spans 0.33–0.985 of the screen; code and stack are on the left, explanation, question, input, feedback and actions on the right, all with larger type. No overflow.
+- **Spellbooks:** title, body and code rebalanced. The code is a centred, left-aligned, content-sized block (36 pt, `ContentSizeFitter`) in the auto-fitted code well.
+- **Farm interaction object:** the pedestal and spellbook were replaced by a **harvest cart** (ithappy `cart_001`) and a bucket, both with colliders; the console glow light was kept. This also removes the duplicate stone next to the Farm Return stone.
+  - The FW01_URP prop copies are unusable here (missing meshes and nested prefabs).
+- **Colliders:** the cart, bucket and Farm Return stone are solid. The player is stopped, the return stone and console stay in E range, and Farm Return still interacts.
+- **Ruin 2 stone label:** `Ruin02ReturnStoneLabel` shows **"Magic Farm Entrance"** until the farm is complete or the fragment is collected, then **"Magic Return Stone"** (verified both). It sits above and in front of the stone, with `FypBillboard`, so it stays readable. The farm return label was raised above its stone, with a billboard.
+
+**Not tested:** live AI replies (backend offline), the jump AI fallback in Play Mode, real input, and a player build.
+
+## 23. Unified context-aware AI feedback upgrade (27 November 2026, uncommitted)
+
+The user approved changes to `E:\AIBackend`. At that time the folder was not a git repository (it now is; see section 26); the pre-upgrade `server.py` is backed up at `LocalBackups/AIFeedbackUpgrade_20261127/server.py.before`, with copies of the Unity scripts as they were before this pass. Full backend documentation: `E:\AIBackend\README.md`.
+
+**Backend (`server.py`):**
+- One `/feedback` endpoint with per-challenge tutoring profiles: `Ruin01Bridge` (buildBridge), `Ruin01Jump` (magicJump), `Ruin02Staff` (sealMagic), `Ruin02Farm` (harvest), `FinalPortal` (placeholder; uses the client's code). Unknown ids get a generic profile.
+- Shared rules: explain the misconception, relate it to the phase/n/stack, give one hint, never reveal the answer, 1–3 beginner sentences, player input is untrusted data, never judge correctness.
+- Schema: new optional fields `challengeId, objective, question, parameters, callStack, errorType, localHint, protectedAnswer`. Limits widened: `currentN` −10..100, `currentStep` 0..100, `functionCode` 800, `phase` 40.
+- `protectedAnswer` is never sent to the model; it is used to withhold leaking replies (`source:"withheld"`).
+- Backward compatible: a `playerAnswer`-only request still gets the legacy restoreMagic prompt and `{"feedback"}`; a `ruinId:"Ruin02"` request without `challengeId` maps to the staff profile.
+- Added: `POST /feedback/preview` (free prompt dump), `FYP_AI_MOCK=1` (no OpenAI), an identical-request cache, a lazy client (10 s timeout, 1 retry), and reply tidying. The model is unchanged (`gpt-4.1-mini`).
+- `test_server.py`: 13 offline tests.
+
+**Unity:**
+- `ChallengeAIFeedback` now posts a structured `ChallengeFeedbackRequest` (JsonUtility) to `AIFeedbackManager.backendURL`.
+- Behaviour:
+  - local hint plus "thinking..." at once;
+  - 12 s timeout;
+  - an identical answer while pending sends no new request; an identical answer after a reply reuses it;
+  - stale replies are dropped after Cancel, close or advance;
+  - client-side leak check;
+  - a local hint that names the answer is not forwarded to the model;
+  - AI text is prefixed **Magic Tutor:**; on failure the local hint shows with "(Magic Tutor offline - local hint)".
+- The old string overload of `Request` is kept. `AIFeedbackManager` and the legacy `BaseCaseChallenge` are unchanged.
+- Per-challenge context:
+  - **Bridge:** decision prompt, picked text, phase, n, `buildBridge` stack; protected answer is the correct choice text.
+  - **Jump:** invalid non-empty entries (0, 7, text) and failed attempts (fell short/overshot, leaps, calls); protected answer is the destination count, which is never sent as context. A blank entry stays local.
+  - **Farm:** row question, blanked code, row/n, `ClassifyFarmAnswer` error type; protected answer is the row's expression.
+  - **Staff:** `Ruin02FeedbackRequest` gained `challengeId, question, callStack, parameters, errorType, localHint`. `Ruin02FeedbackClient` accepts `mock` and maps `withheld` to the new `Ruin02FeedbackSource.Withheld` (appended enum values `Mock, Withheld`). The controller reuses the AI hint for a repeated identical answer.
+- Classifiers (`ChallengeAIFeedback.ClassifyCallAnswer`, `Ruin02HarvestConsole.ClassifyFarmAnswer`, `Ruin02PracticeController.ClassifyStaffAnswer`) only describe the mistake for the AI; validation (`Matches`, lesson sessions) is untouched.
+- No scene, UI layout or gameplay changes.
+
+**Behaviour change:** the server leak guard now also withholds a staff reply containing `expectedOperation` on attempts after the first. Previously Unity allowed that from attempt 2; now the local hint shows instead.
+
+**Validated (no paid inference):**
+- 13/13 backend unit tests.
+- Play Mode against the mock backend, with logged bodies: 9 Unity requests, each on the correct profile with question, code, phase, parameters, stack, error type and attempt.
+  - farm: assignment `=`, wrong condition;
+  - bridge: two wrong choices;
+  - staff: wrong function name, missing parentheses, wrong argument;
+  - jump: `0`, failed `3`.
+- Duplicates: 3 repeated submissions sent no request.
+- Stale protection: a correct answer while pending and a close while pending both kept the reply from displaying.
+- Farm model input never contained the protected answer.
+- Stub failure modes: withheld (farm, staff), timeout at about 12.7 s (bridge), HTTP 502 (jump), offline (farm). All showed the local hint, with no change to progression.
+- Console: 0 errors.
+
+**Not tested:** live OpenAI replies and their quality (paid; needs approval), Final Portal (no Unity challenge exists yet), and a player build.
+
+## 24. World interaction fixes from manual playtest (27 November 2026, uncommitted)
+
+Backups: `LocalBackups/WorldFix_20261127/` (scene before this pass, `Ruin01FragmentReward.cs`, `Ruin02ReturnStoneLabel.cs`). Captures: `Temp/ClaudeCaptures/WorldFix/`.
+
+**Colliders.** Cause: the Ruin 1 Jump Rock collider was disabled. The Ruin 1 Return to Hub stone, Farm Return stone, cart and bucket used non-convex `MeshCollider`s on non-readable meshes (hollow shells). Each of the five objects now has a root `BoxCollider` fitted to its LOD0 mesh in local space, and the old mesh colliders are disabled. The Ruin 2 stone already had a solid `BoxCollider` (asserted by the Rock Navigation check) and was not changed.
+
+**Ruin 1 duplicate stone.** The reward area showed `FragmentOfCalling/FragmentAltar`, a MagicRock_01 with the blue rune (identical to the Jump Rock), beside the real Return to Hub stone (`Ruin01ReturnStoneVisual/TeleportStone`, routing via the `CollectionPoint` `RuinEntrance`). The altar was purely decorative (`Ruin01FragmentReward.altarVisual`). The new `showAltarVisual` (default false) keeps it hidden; the reference and object are kept. The real Jump Rock (`ReturnInteractionPoint/ReturnMagicRock`, the jump `interactionAnchor`) now has the new `Ruin01JumpRockVisibility` on `ReturnInteractionPoint`, which turns off its renderers, box collider and beacon light once `JumpChallengeCompleted`. The transform stays, and a developer reset shows it again.
+
+**Ruin 2 stone label.** `Ruin02ReturnStoneLabel` now has three states:
+- fragment collected → "Magic Return Stone";
+- else farm complete → "Collect the Magic Fragment";
+- else → "Magic Farm Entrance".
+
+Farm completion alone never shows the return name. The label was moved to centre over the rock at y 14.9 (it was 1.64 m in front at y 14.09), because the rock top hid it from the north side.
+
+**Validated (Play Mode, real progression, no developer bypass except where noted):**
+- **Collision.** `CharacterController.Move` from 8 directions: the capsule axis never came closer than its 0.3 m radius on any of the 6 colliders (Jump Rock, Ruin 1 Return, Ruin 2 stone, Farm Return, cart, bucket).
+- **Interaction ranges.** Jump Rock 8/8 sides; Ruin 1 Return 7/8; Farm Return 4/5 reachable sides; console 6/6; Ruin 2 stone front and back. The only misses are directly behind a stone.
+- **Ruin 1.**
+  - Bridge: 6 decisions, completed once.
+  - Jump guide Finish, then jump n = 5 (5 leaps, completed).
+  - Jump Rock hidden (renderers, collider and light off); altar stayed hidden; gem shown.
+  - E collect (1/2; a second E did not collect again).
+  - Return to Hub visible, solid and in range; E teleported exactly to `MainHub/Ruin1/Destination`.
+- **Ruin 2.**
+  - Label "Magic Farm Entrance" at start.
+  - Farm guide Finish plus 3 console rows → "Magical Farm Completed!" → label "Collect the Magic Fragment".
+  - The label stayed that way through the staff challenge (28 checkpoints) and the fragment reveal.
+  - E collect (2/2) → "Magic Return Stone"; gate hint "Press [E] to Return to Hub".
+- **Labels.** Ray tests from 8 directions at 5/7/10 m, 2.5 m camera height, using the longest text width: Ruin 2 24/24, Ruin 1 Return 8/8, farm gateway 5/5. The front and back captures are readable.
+- **Spawns.** 14 spawn/teleport/developer points do not overlap any new collider.
+- **Console:** 0 errors.
+
+**Not run:** the Rock Navigation, J1/J2, H3 and Fragment Editor checks (J1 asserts anchor name and range only; Rock Navigation asserts the unchanged Ruin 2 box), real keyboard/mouse play, and a player build.
+
+**Limitation:** the label shows "Collect the Magic Fragment" after the farm even if the staff challenge is unfinished and the fragment is therefore not yet revealed. That follows the requested rule.
+
+## 25. Second playtest fixes (27 November 2026, uncommitted)
+
+Backups: `LocalBackups/SpellbookFix_20261127/` (scene before this pass). Captures: `Temp/ClaudeCaptures/Spellbook/` (all six pages, forward and backward, plus 1024×768) and `Temp/ClaudeCaptures/WorldFix2/`.
+
+**Spellbooks.** Cause of the misalignment: `FypTextBackdrop` re-measures only when the text or position changes, while the `ContentSizeFitter` resized the code text afterwards, so the dark well and the code drifted between pages. On both `CodeWell`/`CodeText` pairs the two components were removed (scene only; `FypTextBackdrop.cs` is untouched and still drives `InteractionHintBackdrop`). Each book now has a fixed well and a fixed text rect with the same centre, Left alignment, no wrapping and a fixed Vanilla Caramel size:
+- Ruin 1: 480×380 well, 42 pt.
+- Ruin 2: 680×470 well, 34 pt.
+
+Teaching text and code strings are unchanged. Details are in `UI_STYLE_GUIDE.md` section 16.
+
+**Ruin 1 stones.** The scene state was rechecked: the only rock near the Return to Hub stone is the (hidden) altar; the Jump Rock is 130 m away at the jump start. `Ruin01JumpRockVisibility` now also hides the Jump Rock once the Ruin 1 fragment is collected (new optional `progress` field, wired), in addition to `JumpChallengeCompleted`. That covers any route where the fragment and Return to Hub stone could appear without the completed flag. Hiding switches off renderers, the box collider and the beacon light; the jump's own `CanSharedInteract` is already false once completed.
+
+**Validated (fresh Play session, real progression):**
+- **Spellbooks:** all six pages in the Game View, forward and backward, at 1920×1080, plus Ruin 2 page 3 at 1024×768. The well never moves, and all code is inside it with padding.
+- **Ruin 1 before the jump:** Jump Rock visible and solid; player stopped 0.84 m from its centre with "Press [E] to Cast Recursive Magic Jump"; Return to Hub hidden.
+- **Bridge, guide and jump:** 6 bridge decisions, guide Finish, jump n = 5. Then the Jump Rock was hidden (renderers, collider, interaction) and the gem appeared.
+- **After collecting:** only the Return to Hub stone is visible (Game View), it is in range, and the altar stays hidden. The jump start is empty.
+- **Colliders:** all five targets solid from every reachable direction.
+- **Ruin 2 label:** "Magic Farm Entrance" with the farm not done, and 24/24 sightlines clear at (800.05, 14.90, 211.85). The three-state label code is unchanged since section 24, where all three states were verified through full progression; it was not re-run end to end here.
+
+**Console:** no game errors. One Unity-internal "PlayerLoop called recursively" message appeared during harness-driven captures in Play Mode.
+
+**Not tested:** real keyboard/mouse play and a player build.
+
+## 26. Independent AI backend repository (27 November 2026)
+
+The backend is versioned **separately** from this Unity repository. Cloning `the-broken-portal` Unity project does not provide it.
+
+| | |
+|---|---|
+| Local path | `E:\AIBackend` |
+| Remote (private) | `https://github.com/imnotyeelam/the-broken-portal-ai-backend.git` (`origin`) |
+| Branch | `main`, tracking `origin/main` |
+| Commits | `acab643` Implement context-aware AI tutoring backend; `24e0f76` Add requirements.txt and .env.template |
+| Verified | After a fetch, local `main` = `origin/main` = `24e0f76`, 0 ahead / 0 behind; the remote tree matches the tracked files |
+
+**Tracked files:** `server.py`, `test_server.py`, `README.md`, `requirements.txt` (direct dependencies pinned to the installed `.venv`: fastapi 0.143.3, uvicorn 0.54.0, pydantic 2.14.1, openai 3.33.0, python-dotenv 1.2.4), `.env.template` (placeholders only) and `.gitignore`.
+
+**Never tracked (`.gitignore`):** `.env` (real `OPENAI_API_KEY`), `.venv/`, `__pycache__/`. A secret scan of the committed content found no key, token or private-key patterns; `.env` was never opened.
+
+**Fresh setup:**
+```powershell
+git clone https://github.com/imnotyeelam/the-broken-portal-ai-backend.git E:\AIBackend
+cd E:\AIBackend
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+Copy-Item .env.template .env   # then put the real key in .env (never commit it)
+.\.venv\Scripts\python -m unittest test_server -v      # 13 offline tests, no paid calls
+$env:FYP_AI_MOCK = "1"; .\.venv\Scripts\python -m uvicorn server:app --host 127.0.0.1 --port 8000
+```
+Unity expects the service at `http://127.0.0.1:8000/feedback`. Live mode (no `FYP_AI_MOCK`) makes paid OpenAI calls; see `E:\AIBackend\README.md`.
+
+**Git workflow:**
+- Commit backend changes in `E:\AIBackend` and Unity changes in `E:\FYP`, never mixed. When a change spans both (for example a new request field), commit each repository separately and mention the matching commit in the other's message or in this handover.
+- Before every backend commit:
+  - run the offline tests;
+  - check `git status --short --ignored`, so `.env`, `.venv/` and `__pycache__/` show as ignored (`!!`) and are never staged;
+  - review `git diff --cached`.
+- Push with `git push` (upstream is set). Do not force-push `main`.
+- Authentication uses Git Credential Manager (HTTPS). The first push from a new machine opens a sign-in window, so automated agents can't complete it unattended. Run it interactively, for example `! git -C E:/AIBackend push`.
+- If dependencies change, update `requirements.txt` with exact versions from `.venv` (`pip show <package>`). If a new setting is added, add a placeholder to `.env.template`, never the real value.
+- `LocalBackups/AIFeedbackUpgrade_20261127/server.py.before` remains the pre-upgrade reference; git history is now the authoritative record.

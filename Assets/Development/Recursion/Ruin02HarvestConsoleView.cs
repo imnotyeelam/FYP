@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Fyp.Development.Recursion
 {
-    public enum HarvestConsoleMessageKind { Info, Correct, Incorrect, Queued }
+    public enum HarvestConsoleMessageKind { Info, Correct, Incorrect, Queued, Hint }
 
     /// <summary>
     /// Presentation-only view for the Magic Harvest Console (UI-B prototype, UI_STYLE_GUIDE.md).
@@ -138,10 +138,10 @@ namespace Fyp.Development.Recursion
             if (feedbackBox != null) feedbackBox.SetActive(!complete && !string.IsNullOrEmpty(message));
             if (complete || string.IsNullOrEmpty(message)) return;
             if (closePending) kind = HarvestConsoleMessageKind.Queued;
-            Color fill = kind == HarvestConsoleMessageKind.Correct ? FypUiTheme.CorrectFill :
+            Color fill = kind == HarvestConsoleMessageKind.Hint ? FypUiTheme.HintFill : kind == HarvestConsoleMessageKind.Correct ? FypUiTheme.CorrectFill :
                 kind == HarvestConsoleMessageKind.Incorrect ? FypUiTheme.IncorrectFill :
                 kind == HarvestConsoleMessageKind.Queued ? FypUiTheme.HintFill : FypUiTheme.InfoFill;
-            Color accent = kind == HarvestConsoleMessageKind.Correct ? FypUiTheme.CorrectText :
+            Color accent = kind == HarvestConsoleMessageKind.Hint ? FypUiTheme.SkyBlue : kind == HarvestConsoleMessageKind.Correct ? FypUiTheme.CorrectText :
                 kind == HarvestConsoleMessageKind.Incorrect ? FypUiTheme.IncorrectText :
                 kind == HarvestConsoleMessageKind.Queued ? FypUiTheme.SkyBlue : FypUiTheme.MagicGold;
             if (feedbackFill != null) feedbackFill.color = fill;

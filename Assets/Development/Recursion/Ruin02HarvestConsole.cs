@@ -17,6 +17,8 @@ namespace Fyp.Development.Recursion
         public UnityEngine.UI.Button submit, close;
         [Tooltip("Optional presentation view (UI-B). Reads state only.")]
         public Ruin02HarvestConsoleView view;
+        [Tooltip("Established AI feedback pipeline for rejected expressions (local hint is the offline fallback).")]
+        public ChallengeAIFeedback aiFeedback;
         [Tooltip("Floating farm status board; hidden while the console is open, restored on close.")]
         public GameObject statusBoard;
         bool statusBoardBefore;
@@ -38,10 +40,18 @@ namespace Fyp.Development.Recursion
         public bool UsesSharedInteraction => true;
         public Transform InteractionOrigin => transform;
         public float SharedInteractionRange => 3f;
-        public bool CanSharedInteract => isActiveAndEnabled && !IsOpen && simulation != null &&
+        public bool CanSharedInteract => isActiveAndEnabled && !IsOpen && simulation != null && (guide == null || !guide.IsOpen) &&
             !simulation.IsRunning && player != null && CursorManager.allowCursorLock;
-        public string SharedHint => "Press [E] to use the Magic Harvest Console";
-        public void InteractFromShared() { if (CanSharedInteract) Open(); }
+        [Tooltip("Phase D: the Simulation Guide must be finished (explicit Finish) before the challenge opens.")]
+        public Ruin02FarmGuideUI guide;
+        bool GuideRequired => guide != null && !guide.GuidedLessonCompleted;
+        public string SharedHint => GuideRequired ? "Press [E] to Study the Harvest Guide" : "Press [E] to use the Magic Harvest Console";
+        public void InteractFromShared()
+        {
+            if (!CanSharedInteract) return;
+            if (GuideRequired) { if (!guide.IsOpen) guide.Open(); return; }
+            Open();
+        }
 
         void Start()
         {
@@ -72,6 +82,26 @@ namespace Fyp.Development.Recursion
             } while (compact != previous);
             return row == 1 ? compact == "n==0" || compact == "0==n" :
                 row == 2 ? compact == "n-1" : row == 3 && compact == "hasCrop(row,n)";
+        }
+
+        /// <summary>AI context only (never affects validation): what kind of mistake the rejected expression is.</summary>
+        public static string ClassifyFarmAnswer(int row, string answer)
+        {
+            string compact = Regex.Replace(answer ?? "", @"\s+", "");
+            if (compact.Length == 0) return "empty answer";
+            int depth = 0;
+            foreach (char c in compact) { if (c == '(') depth++; else if (c == ')' && --depth < 0) break; }
+            if (depth != 0 || compact.Contains(";")) return "invalid syntax";
+            if (row == 1)
+                return Regex.IsMatch(compact, @"(^|[^=!<>])=($|[^=])") ? "invalid syntax (assignment = instead of comparison)" :
+                    compact.Contains("==") || compact.Contains("<") || compact.Contains(">") || compact.Contains("!=") ? "incorrect base-case condition" :
+                    "not a true/false condition";
+            if (row == 2)
+                return compact.Contains("+") ? "argument grows instead of shrinking" :
+                    compact == "n" ? "argument does not change (infinite recursion)" : "incorrect argument";
+            var call = Regex.Match(compact, @"^(?<name>[A-Za-z_]\w*)\((?<args>.*)\)$");
+            if (!call.Success) return "not a function-call condition";
+            return call.Groups["name"].Value != "hasCrop" ? "wrong function name" : "incorrect arguments";
         }
 
         void Open()
@@ -117,9 +147,29 @@ namespace Fyp.Development.Recursion
                     row == 2 ? "Pass one fewer position so the next call approaches the base case." :
                     "Test whether the current row and position contain a crop.";
                 messageKind = HarvestConsoleMessageKind.Incorrect;
+                if (aiFeedback != null)
+                {
+                    int askedRow = row; string blank = row == 1 ? "the base-case condition" : row == 2 ? "the recursive call's argument" : "the plot occupancy check";
+                    // Send only the code the player can see (with this row's blank) so the AI is never given the answer.
+                    aiFeedback.functionCode =
+                        $"void harvest(int row, int n) {{ if ({(row == 1 ? "____" : "n == 0")}) return; harvest(row, {(row == 2 ? "____" : "n - 1")}); " +
+                        $"if ({(row == 3 ? "____" : "hasCrop(row, n)")}) collectCrop(row, n); }}  Initial call per row: harvest(row, 10)";
+                    aiFeedback.Request(new ChallengeFeedbackRequest {
+                            challengeId = "Ruin02Farm", ruinId = "Ruin02", playerAnswer = input.text, currentStep = row,
+                            question = $"Row {row} of 3: fill in {blank} (the ____) of harvest(row, n).",
+                            functionCode = aiFeedback.functionCode, phase = "Editing the code before the row runs",
+                            parameters = $"row = {row}, starting n = 10; rows harvested so far = {simulation.CompletedRows}",
+                            callStack = "(empty - harvest(row, 10) has not been called yet)",
+                            errorType = ClassifyFarmAnswer(row, input.text),
+                            protectedAnswer = row == 1 ? "n == 0" : row == 2 ? "n - 1" : "hasCrop(row, n)" },
+                        message,
+                        (text, live) => { if (!IsOpen || simulation.IsRunning || simulation.CompletedRows + 1 != askedRow) return;
+                            message = text; messageKind = live ? HarvestConsoleMessageKind.Hint : HarvestConsoleMessageKind.Incorrect; Refresh(); });
+                }
                 Refresh();
                 return;
             }
+            aiFeedback?.Cancel();
             message = "Correct! Watch the calls go down first, then each plot is checked on the way back.";
             messageKind = HarvestConsoleMessageKind.Correct;
             rowsAtMessage = simulation.CompletedRows;
@@ -193,6 +243,7 @@ namespace Fyp.Development.Recursion
 
         void ClosePanel()
         {
+            aiFeedback?.Cancel();
             IsOpen = false;
             panel.SetActive(false);
             RestorePlayerVisuals();

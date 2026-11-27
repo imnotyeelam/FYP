@@ -344,10 +344,10 @@ These were direct method or listener calls plus Input System events, not a human
 | Topic | Decision |
 | --- | --- |
 | **Text outlines** | **Don't use SDF outlines with Vanilla Caramel.** Its atlas has 6 px padding at 173 pt (gradient scale 7), so a 30 pt outline is under 1 px even with `OUTLINE_ON`. Get contrast from colour (Ink on light, Parchment on dark) or from a backdrop. The trial outline material was removed. |
-| Text backdrops | `Fyp.Development.UI.FypTextBackdrop`, a sibling Image placed before the text. It sizes itself to the text's rendered bounds plus padding, and hides when the text is empty or inactive. It's used for the interaction-hint pill and the spellbook code wells; reuse it for future code areas. |
+| Text backdrops | `Fyp.Development.UI.FypTextBackdrop`, a sibling Image placed before the text. It sizes itself to the text's rendered bounds plus padding, and hides when the text is empty or inactive. It's used for the interaction-hint pill. (The spellbook code wells stopped using it on 27 Nov 2026; see section 16.) Use it only for single text pills, not multi-page code. |
 | Interaction hint | Ink, bold, 30 pt on a `UI_ButtonPaper` pill (`Canvas/InteractionHintBackdrop`). `InteractionHintManager` still owns visibility; the pill follows it. |
 | Toast / locked message | A `UI_RibbonWood` banner (PPU ×2.2) with Parchment bold text, 28 pt (auto-size from 20). `FragmentRewardToast` timing and the shared label are unchanged. |
-| Spellbooks | Background art, buttons and page flow are unchanged. The dimmer is warm Ink at 45%. Title Ink 48 bold, body Ink 32 (auto-size from 22), page number InkSoft 24. Code is Parchment 30 in an auto-fitted InkSlate `CodeWell`. Buttons use theme ColorTint. Duplicate button labels are transparent (the sprites already show the arrows and X). The Ruin 2 `CodeText` box was enlarged to 640×330 so the whole function fits. |
+| Spellbooks | Background art, buttons and page flow are unchanged. The dimmer is warm Ink at 45%. Title Ink 48 bold, body Ink 32 (auto-size from 22), page number InkSoft 24. Code is Parchment in a fixed-size InkSlate `CodeWell` (section 16 supersedes the auto-fitted well). Buttons use theme ColorTint. Duplicate button labels are transparent (the sprites already show the arrows and X). The Ruin 2 `CodeText` box was enlarged to 640×330 so the whole function fits. |
 | World text (farm) | 35 `TextMesh` components were replaced in place by `TextMeshPro` on the same GameObjects; transform, orientation, children and active state are preserved. Sizes match the original rendered height. Plot numbers are Parchment bold on soil. Row labels and "RETURN TO RITUAL" are Ink bold on the pale platform. The status board is Ink text on a parchment card. `Ruin02FarmSimulation.statusDisplay` (TMP) is the runtime reference; the legacy `debugDisplay` (TextMesh) field is kept, now null, so old Editor tools still compile. Don't re-run them. |
 | Status board | Hidden while the console is open: `Ruin02HarvestConsole.statusBoard` stores its active state on Open and restores it on every close path. |
 | Farm framing | `FarmCameraView` was moved 8 m back along its own view direction, computed to fit every plot, carrot and row label at 4:3. FOV is chosen by aspect: `narrowAspectFov` 66 at 4:3 to `wideAspectFov` 52 at 16:9, so 16:9 fills the view. |
@@ -434,6 +434,19 @@ Panels: `RecursionPracticePanel` (bridge challenge, `BridgePracticePanel`), `Rui
 - **Not tested:** the jump animation for a valid `n`, the staff AI-hint colour (only checked in code), full six-decision runs, real input, and a player build.
 - In the narrow 4:3 side panel, body text renders at about 11 px: legible but small.
 
+## 14. Magical Farm Simulation Guide (Phase D, implemented 27 Nov 2026)
+
+`Canvas/FarmGuidedSimulationPanel` was built as a copy of the UI-C3 themed Ruin 2 guided panel, so it shares the exact standards in section 12. The farm accent (SkyBlue) tints the header ribbon and slider fill.
+
+| Element | Spec |
+| --- | --- |
+| Right column | Shared `RecursionPanelView` (`useFypTheme`, lesson label "Magical Farm", title "Harvest Guide &#124; gather(4)"). The code area is enlarged for the 11-line example: Code (0.05, 0.60)–(0.95, 0.885), min 13 pt. Close is visible. |
+| Four-plot diagram | `FarmGuideDiagram` (`Ruin02FarmGuideDiagramView`): heading, a "Learning only" note, 4 rounded plot cards, the Bamao `Pause/carrot` icon on plots 1, 3 and 4, a gold `UI_GoldFrame` outline (fillCenter off) on the plot being checked, status "Checked n / 4 &#124; Picked n / 3", and a legend. |
+| Plot colours | Unchecked = soil `#8A6545`; picked = `FarmHarvested` (SkyBlue); empty and skipped = `FarmEmpty` (amber). These match the real farm's highlight meanings. |
+| Finish | `UI_ButtonMoss`. It appears only after the final checkpoint has been reached and the guide isn't completed yet. |
+
+The carrot icon is the pack's illustrated carrot character. It reads on the soil cards; swap it if a plainer plant icon is wanted later.
+
 ---
 
 ## 9. Known risks and pre-existing issues found during this audit
@@ -442,3 +455,27 @@ Panels: `RecursionPracticePanel` (bridge challenge, `BridgePracticePanel`), `Rui
 - **Pre-existing teardown error:** stopping Play Mode while Ruin 2 practice is open throws a `MissingReferenceException` at `Ruin02PracticeController.cs:104` (`Close()` from `OnDisable` touches the destroyed panel). It isn't caused by the UI work; it could be a small separate fix.
 - **Auto-size shrink:** see 2.2. Re-tune sizes per panel; don't just swap the font.
 - **Installer re-runs:** they would regenerate the old style (see 1.4).
+
+## 15. Polish pass decisions (27 Nov 2026)
+
+- **Headers:** use a plain header, i.e. a centred Ink bold title over a thin `MagicGold` rule (`HeaderRule`). **Don't put long titles in ribbon graphics.** Ribbons are reserved for short banners (toasts, "Harvest Complete!", Developer panel).
+- **Spellbook code (superseded by section 16):** a content-sized code block (`ContentSizeFitter` preferred size, left-aligned, overflow mode Overflow) centred on the page, inside the `FypTextBackdrop` well. Don't centre-align code lines.
+- **Wide challenge layout:** the Ruin 2 staff challenge is the reference for crowded challenges. Use a two-column panel; code and stack on the left, prompt, input, feedback and actions on the right.
+- **World labels:** add `FypBillboard` and place them above and in front of their object. Role-dependent labels (e.g. `Ruin02ReturnStoneLabel`) only read state.
+- **AI hint state:** a pending AI hint shows the local hint plus an italic "The Magic Tutor is thinking..." line. A live AI hint uses the `HintFill` / SkyBlue style (farm `HarvestConsoleMessageKind.Hint`).
+
+## 16. Spellbook code panels: fixed layout (27 Nov 2026)
+The content-sized approach (section 15) misaligned in the real Game View. `FypTextBackdrop` only re-measures when the text or position changes, while the `ContentSizeFitter` resized the text afterwards, so the well and the code drifted from page to page. Both Spellbooks now use a fixed layout:
+
+| | Ruin 1 `AncientSpellbookPanel` | Ruin 2 `Ruin02AncientSpellbookPanel` |
+|---|---|---|
+| `CodeWell` (InkSlate Image) | 480×380, centre anchor, y −135 | 680×470, centre anchor, y −135 |
+| `CodeText` rect | 370×324, same centre | 560×414, same centre |
+| Font | Vanilla Caramel SDF 42, Parchment | Vanilla Caramel SDF 34, Parchment |
+| Largest page block | 356×278 | 547×370 |
+
+Rules:
+- No `ContentSizeFitter` and no `FypTextBackdrop` on spellbook code. The well and text never move between pages. `FypTextBackdrop.cs` itself is unchanged and still drives the interaction-hint pill.
+- Alignment is **Left (vertically middle)**, no wrapping, no auto-size. Indentation is kept, and the text rect is only as wide as the book's widest code, so the block sits centred in the well with about 55 px padding.
+- Size each book from its largest page: the font is the largest size whose biggest page fits the inner rect. Re-measure if any page's code changes.
+- Validate in the Game View on every page, forward and backward, at 1920×1080 and 1024×768, not only with TMP overflow flags.

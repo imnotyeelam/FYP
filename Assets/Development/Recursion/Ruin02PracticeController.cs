@@ -23,6 +23,7 @@ namespace Fyp.Development.Recursion
         readonly List<Behaviour> suspended=new List<Behaviour>();
         readonly Dictionary<string,int> attempts=new Dictionary<string,int>();
         int feedbackVersion;
+        string lastAiKey,lastAiText;
         Coroutine feedbackRoutine;
         string pendingFallback;
         float nextAt;
@@ -142,7 +143,14 @@ namespace Fyp.Development.Recursion
                 pendingFallback=count==1?result.Message:result.Message+" Review the highlighted statement and the top stack frame.";
                 if(Ruin02PracticeLesson.TryGetLocalInputHint(answer,q.Expected,out var syntaxHint))
                 {
-                    message=syntaxHint;LastFeedbackSource=Ruin02FeedbackSource.LocalFallback;
+                    // Show the local input hint at once, but still route through the AI pipeline;
+                    // the local hint remains the fallback if the backend is unavailable or unusable.
+                    message=syntaxHint;pendingFallback=syntaxHint;LastFeedbackSource=Ruin02FeedbackSource.LocalFallback;
+                    if(feedbackClient!=null && feedbackClient.enabled)
+                    {
+                        LastFeedbackSource=Ruin02FeedbackSource.Pending;
+                        feedbackRoutine=StartCoroutine(RequestFeedback(q,answer,count,feedbackVersion));
+                    }
                 }
                 else if(feedbackClient!=null && feedbackClient.enabled)
                 {
@@ -186,11 +194,21 @@ namespace Fyp.Development.Recursion
         IEnumerator RequestFeedback(Ruin02PracticeQuestion q,string answer,int attempt,int version)
         {
             var step=session.Current;
+            // Duplicate-request prevention: the same rejected answer to the same question reuses the earlier AI hint.
+            string aiKey=q.Id+"|"+System.Text.RegularExpressions.Regex.Replace(answer??"",@"\s+","").ToLowerInvariant();
+            if(aiKey==lastAiKey && lastAiText!=null)
+            {
+                feedbackRoutine=null;message=lastAiText;LastFeedbackSource=Ruin02FeedbackSource.LiveAI;
+                panel.Present();yield break;
+            }
             var request=new Ruin02FeedbackRequest {
                 playerAnswer=answer, currentStep=session.QuestionNumber, currentN=step.Parameter??0,
                 phase=q.Id.Contains(".call.")?"Call":q.Id.Contains(".base.")?"Base Case":"Return",
                 expectedOperation=q.Expected,attemptCount=attempt,
-                functionCode=string.Join("\n",session.Lesson.Trace.Code)
+                functionCode=string.Join("\n",session.Lesson.Trace.Code),
+                question=q.Prompt,callStack=ChallengeAIFeedback.FormatStack("sealMagic",step.Frames),
+                parameters=step.Parameter.HasValue?"n = "+step.Parameter.Value:"no active n",
+                errorType=ClassifyStaffAnswer(answer,q.Expected),localHint=pendingFallback
             };
             Ruin02FeedbackResult response=default;
             yield return feedbackClient.Generate(request,result=>response=result);
@@ -210,10 +228,20 @@ namespace Fyp.Development.Recursion
                         @"\bn\s*(?:=|is|equals)\s*"+(step.Parameter??0)+@"\b",
                         System.Text.RegularExpressions.RegexOptions.IgnoreCase))usable=false;
             }
+            if(usable){lastAiKey=aiKey;lastAiText=response.Text;}
             message=usable?response.Text:pendingFallback;
             LastFeedbackSource=usable?Ruin02FeedbackSource.LiveAI:
                 response.Source==Ruin02FeedbackSource.LiveAI?Ruin02FeedbackSource.LocalFallback:response.Source;
             panel.Present();
+        }
+
+        // AI context only; validation stays in Ruin02PracticeLesson.
+        static string ClassifyStaffAnswer(string answer,string expected)
+        {
+            var m=System.Text.RegularExpressions.Regex.Match(expected??"",@"^(?<name>[A-Za-z_]\w*)\(");
+            if(m.Success)return ChallengeAIFeedback.ClassifyCallAnswer(answer,m.Groups["name"].Value);
+            string v=System.Text.RegularExpressions.Regex.Replace(answer??"",@"\s+","").TrimEnd(';');
+            return v.Length==0?"empty answer":v.Contains("(")?"made a call where the function should stop":"incorrect statement";
         }
 
         void Update()

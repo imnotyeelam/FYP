@@ -29,6 +29,8 @@ namespace Fyp.Development.Recursion
         public Button castButton;
         public Button closeButton;
         public TMP_Text statusText;
+        [Tooltip("Established AI feedback pipeline after a failed attempt (local text is the offline fallback).")]
+        public ChallengeAIFeedback aiFeedback;
         [Min(.2f)] public float secondsPerLeap = .8f;
         [Min(1f)] public float interactionDistance = 3f;
         [Min(0f)] public float leapArcHeight = .8f;
@@ -157,7 +159,14 @@ namespace Fyp.Development.Recursion
             if (!open || playing) return;
             if (!int.TryParse(input.text, out int n) || n < 1 || n > 6)
             {
-                SetStatus("Enter one whole number from 1 to 6.");
+                const string rangeHint = "Enter one whole number from 1 to 6.";
+                SetStatus(rangeHint);
+                // A non-empty rejected entry (e.g. 0, 7 or "magicJump(5)") is a learning moment; blank stays local.
+                if (aiFeedback != null && !string.IsNullOrWhiteSpace(input.text))
+                    aiFeedback.Request(JumpContext(input.text.Trim(), int.TryParse(input.text, out int bad) ?
+                            "out-of-range n (" + bad + "); valid entries are 1 to 6" : "not a whole number",
+                            "Entry check", "no attempt started"),
+                        rangeHint, (text, live) => { if (open && !playing) SetStatus(text); });
                 return;
             }
             requested = n;
@@ -213,12 +222,27 @@ namespace Fyp.Development.Recursion
             castButton.gameObject.SetActive(true);
             playing = false;
             playback = null;
-            SetStatus(requested < destinations.Length
+            string localHint = requested < destinations.Length
                 ? "Not quite there! Your magic stopped before reaching the destination. Try a different n."
-                : "Too much magic! The spell would carry you beyond the safe route. Try a different n.");
+                : "Too much magic! The spell would carry you beyond the safe route. Try a different n.";
+            SetStatus(localHint);
+            if (aiFeedback != null)
+                aiFeedback.Request(JumpContext(requested.ToString(),
+                        requested < destinations.Length ? "fell short (too few leaps)" : "overshot (too many leaps)",
+                        "Attempt result", $"n = {requested}, leaps performed = {performed}, recursive calls = {calls}"),
+                    localHint, (text, live) => { if (open && !playing) SetStatus(text); });
             input.Select();
             input.ActivateInputField();
         }
+
+        // AI context only: never includes the destination count or the required n (kept as protectedAnswer for leak filtering).
+        ChallengeFeedbackRequest JumpContext(string answer, string errorType, string phase, string parameters) =>
+            new ChallengeFeedbackRequest {
+                challengeId = "Ruin01Jump", ruinId = "Ruin01", playerAnswer = answer, errorType = errorType, phase = phase,
+                question = "Choose the starting n so magicJump(n) makes exactly enough leaps to reach the far side.",
+                parameters = parameters, currentStep = attempts,
+                callStack = phase == "Attempt result" ? $"descended magicJump({requested}) to magicJump(0), then {performed} calls returned with a leap; stack now empty" : "(empty)",
+                protectedAnswer = destinations != null ? destinations.Length.ToString() : null };
 
         // Each invocation adds one stack frame. The n=0 frame does not move the player.
         IEnumerator MagicJump(int n)
@@ -376,6 +400,7 @@ namespace Fyp.Development.Recursion
         public void Close()
         {
             if (!open || playing) return;
+            aiFeedback?.Cancel();
             open = false;
             if (panel != null) panel.SetActive(false);
             if (CursorManager.Instance != null) CursorManager.Instance.SetUIOpen(false);

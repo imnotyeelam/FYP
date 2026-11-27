@@ -7,7 +7,8 @@ using UnityEngine.Networking;
 
 namespace Fyp.Development.Recursion
 {
-    public enum Ruin02FeedbackSource { Pending, LiveAI, LocalFallback, Offline, HttpError, Timeout, InvalidJson }
+    // Appended values only (Mock, Withheld) so existing ordinals stay stable.
+    public enum Ruin02FeedbackSource { Pending, LiveAI, LocalFallback, Offline, HttpError, Timeout, InvalidJson, Mock, Withheld }
 
     [Serializable]
     public sealed class Ruin02FeedbackRequest
@@ -20,6 +21,13 @@ namespace Fyp.Development.Recursion
         public string expectedOperation;
         public int attemptCount;
         public string functionCode;
+        // Unified challenge context (optional on the backend; older backends ignore extra fields).
+        public string challengeId="Ruin02Staff";
+        public string question;
+        public string callStack;
+        public string parameters;
+        public string errorType;
+        public string localHint;
     }
 
     public readonly struct Ruin02FeedbackResult
@@ -74,7 +82,11 @@ namespace Fyp.Development.Recursion
                 {
                     Response parsed=null;
                     try{parsed=JsonUtility.FromJson<Response>(request.downloadHandler.text);}catch(ArgumentException){}
-                    result=parsed!=null && !string.IsNullOrWhiteSpace(parsed.feedback) && parsed.source=="openai"?
+                    // "mock" (FYP_AI_MOCK=1 backend) exercises the same display path without paid inference;
+                    // "withheld" means the backend blocked a reply that leaked the answer.
+                    result=parsed!=null && parsed.source=="withheld"?
+                        new Ruin02FeedbackResult(Ruin02FeedbackSource.Withheld,null,request.responseCode):
+                        parsed!=null && !string.IsNullOrWhiteSpace(parsed.feedback) && (parsed.source=="openai" || parsed.source=="mock")?
                         new Ruin02FeedbackResult(Ruin02FeedbackSource.LiveAI,TrimFeedback(parsed.feedback),request.responseCode):
                         new Ruin02FeedbackResult(Ruin02FeedbackSource.InvalidJson,null,request.responseCode);
                 }

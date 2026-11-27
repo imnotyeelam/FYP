@@ -14,6 +14,8 @@ namespace Fyp.Development.Recursion
         public Transform interactionPoint;
         public GameObject gemVisual;
         public GameObject altarVisual;
+        [Tooltip("The altar rock duplicated the Jump Rock beside the Return to Hub stone; kept as a reference but hidden by default.")]
+        public bool showAltarVisual = false;
         public RuinEntrance targetReturn;
         public TMP_Text confirmationText;
         [Min(1f)] public float interactionDistance = 2.6f;
@@ -68,7 +70,7 @@ namespace Fyp.Development.Recursion
         {
             bool collected = FragmentCollected;
             gemVisual.SetActive(challengeSolved && !collected);
-            altarVisual.SetActive(challengeSolved || collected);
+            altarVisual.SetActive(showAltarVisual && (challengeSolved || collected));
             targetReturn.enabled = collected;
         }
 
